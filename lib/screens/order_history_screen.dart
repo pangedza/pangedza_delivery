@@ -61,6 +61,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           Text(
                               '${item.dish.name} ${item.variant.title} x${item.quantity}'),
                         const SizedBox(height: 4),
+                        if (order.pickup)
+                          const Text(
+                              'Самовывоз: г. Новороссийск, ул. Коммунистическая, д. 51')
+                        else
+                          Text(
+                              '${order.city}, ${order.district}, ${order.street}, д. ${order.house}'),
+                        const SizedBox(height: 4),
                         Text('Итого: ${order.total} ₽'),
                         Align(
                           alignment: Alignment.centerRight,

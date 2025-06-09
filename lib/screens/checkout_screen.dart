@@ -13,6 +13,7 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 enum PaymentMethod { cash, terminal, online }
+enum CheckoutMode { delivery, pickup }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
@@ -27,6 +28,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   PaymentMethod _payment = PaymentMethod.cash;
   bool _leaveAtDoor = false;
+  CheckoutMode _mode = CheckoutMode.delivery;
+  String _district = 'Центральный';
 
   @override
   void dispose() {
@@ -40,6 +43,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _confirm() {
+    final bool pickup = _mode == CheckoutMode.pickup;
     final order = Order(
       date: DateTime.now(),
       items: cart.items
@@ -50,14 +54,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ))
           .toList(),
       total: cart.total,
-      city: cityCtrl.text,
-      street: streetCtrl.text,
-      house: houseCtrl.text,
-      flat: flatCtrl.text,
-      intercom: intercomCtrl.text,
+      city: pickup ? 'Новороссийск' : cityCtrl.text,
+      district: pickup ? '' : _district,
+      street: pickup ? 'Коммунистическая' : streetCtrl.text,
+      house: pickup ? '51' : houseCtrl.text,
+      flat: pickup ? '' : flatCtrl.text,
+      intercom: pickup ? '' : intercomCtrl.text,
       comment: commentCtrl.text,
       payment: _payment.name,
       leaveAtDoor: _payment == PaymentMethod.online && _leaveAtDoor,
+      pickup: pickup,
     );
     history.addOrder(order);
     cart.clear();
@@ -86,25 +92,78 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              controller: cityCtrl,
-              decoration: const InputDecoration(labelText: 'Город'),
+            ToggleButtons(
+              isSelected: [
+                _mode == CheckoutMode.delivery,
+                _mode == CheckoutMode.pickup
+              ],
+              onPressed: (index) => setState(() =>
+                  _mode = index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup),
+              children: const [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Доставка'),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Text('Самовывоз'),
+                ),
+              ],
             ),
-            TextField(
-              controller: streetCtrl,
-              decoration: const InputDecoration(labelText: 'Улица'),
-            ),
-            TextField(
-              controller: houseCtrl,
-              decoration: const InputDecoration(labelText: 'Дом'),
-            ),
-            TextField(
-              controller: flatCtrl,
-              decoration: const InputDecoration(labelText: 'Квартира'),
-            ),
-            TextField(
-              controller: intercomCtrl,
-              decoration: const InputDecoration(labelText: 'Домофон'),
+            const SizedBox(height: 16),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: _mode == CheckoutMode.pickup
+                  ? const Text(
+                      'г. Новороссийск, ул. Коммунистическая, д. 51',
+                      key: ValueKey('pickup'),
+                    )
+                  : Column(
+                      key: const ValueKey('delivery'),
+                      children: [
+                        TextField(
+                          controller: cityCtrl,
+                          decoration:
+                              const InputDecoration(labelText: 'Город'),
+                        ),
+                        DropdownButtonFormField<String>(
+                          value: _district,
+                          decoration:
+                              const InputDecoration(labelText: 'Район'),
+                          items: const [
+                            DropdownMenuItem(
+                                value: 'Центральный', child: Text('Центральный')),
+                            DropdownMenuItem(value: 'Южный', child: Text('Южный')),
+                            DropdownMenuItem(
+                                value: 'Восточный', child: Text('Восточный')),
+                            DropdownMenuItem(
+                                value: 'Приморский', child: Text('Приморский')),
+                          ],
+                          onChanged: (val) =>
+                              setState(() => _district = val ?? _district),
+                        ),
+                        TextField(
+                          controller: streetCtrl,
+                          decoration:
+                              const InputDecoration(labelText: 'Улица'),
+                        ),
+                        TextField(
+                          controller: houseCtrl,
+                          decoration:
+                              const InputDecoration(labelText: 'Дом'),
+                        ),
+                        TextField(
+                          controller: flatCtrl,
+                          decoration:
+                              const InputDecoration(labelText: 'Квартира'),
+                        ),
+                        TextField(
+                          controller: intercomCtrl,
+                          decoration:
+                              const InputDecoration(labelText: 'Домофон'),
+                        ),
+                      ],
+                    ),
             ),
             TextField(
               controller: commentCtrl,
