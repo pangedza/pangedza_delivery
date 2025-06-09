@@ -16,12 +16,12 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   @override
   void initState() {
     super.initState();
-    _selected = widget.dish.variants.first;
+    _selected = widget.dish.modifiers.first;
   }
 
   void _add() {
     // ignore: avoid_print
-    print('Добавлено: ${widget.dish.name} - ${_selected.weight} - ${_selected.price} ₽');
+    print('Добавлено: ${widget.dish.name} - ${_selected.title} - ${_selected.price} ₽');
     Navigator.of(context).pop();
   }
 
@@ -53,17 +53,17 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                 Text(dish.description!),
               ],
               const SizedBox(height: 16),
-              if (dish.variants.length > 1)
-                ...dish.variants.map(
+              if (dish.modifiers.length > 1)
+                ...dish.modifiers.map(
                   (v) => RadioListTile<DishVariant>(
-                    title: Text('${v.weight} - ${v.price} ₽'),
+                    title: Text('${v.title} - ${v.price} ₽'),
                     value: v,
                     groupValue: _selected,
                     onChanged: (val) => setState(() => _selected = val!),
                   ),
                 )
               else
-                Text('${_selected.weight} - ${_selected.price} ₽'),
+                Text('${_selected.title} - ${_selected.price} ₽'),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
