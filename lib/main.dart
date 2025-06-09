@@ -55,6 +55,136 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text(_titles[_currentIndex]),
       ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Column(
+            children: [
+              const DrawerHeader(
+                child: Text('Навигация'),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.person),
+                      title: const Text('Профиль'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Профиль');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.location_on),
+                      title: const Text('Новороссийск'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Город / Адрес');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.restaurant_menu),
+                      title: const Text('Меню'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Меню');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.shopping_cart),
+                      title: const Text('Корзина'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Корзина');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.history),
+                      title: const Text('История заказов'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: История заказов');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.rate_review),
+                      title: const Text('Отзывы'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Отзывы');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.notifications),
+                      title: const Text('Уведомления'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Уведомления');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.info_outline),
+                      title: const Text('О нас'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: О нас');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.settings),
+                      title: const Text('Настройки'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Настройки');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.phone),
+                      title: const Text('Позвонить нам'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: Позвонить нам');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.mobile_friendly),
+                      title: const Text('О приложении'),
+                      onTap: () {
+                        // ignore: avoid_print
+                        print('Переход: О приложении');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.image),
+                      onPressed: () {
+                        // ignore: avoid_print
+                        print('Открыть VK');
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    IconButton(
+                      icon: const Icon(Icons.image),
+                      onPressed: () {
+                        // ignore: avoid_print
+                        print('Открыть OK');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
