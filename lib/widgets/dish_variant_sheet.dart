@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import '../models/dish.dart';
+import '../models/dish_variant.dart';
+
+class DishVariantSheet extends StatefulWidget {
+  final Dish dish;
+  const DishVariantSheet({super.key, required this.dish});
+
+  @override
+  State<DishVariantSheet> createState() => _DishVariantSheetState();
+}
+
+class _DishVariantSheetState extends State<DishVariantSheet> {
+  late DishVariant _selected;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.dish.variants.first;
+  }
+
+  void _add() {
+    // ignore: avoid_print
+    print('Добавлено: ${widget.dish.name} - ${_selected.weight} - ${_selected.price} ₽');
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dish = widget.dish;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 120,
+                width: double.infinity,
+                color: Colors.grey.shade300,
+                alignment: Alignment.center,
+                child: const Icon(Icons.fastfood, size: 64),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                dish.name,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              if (dish.description != null) ...[
+                const SizedBox(height: 8),
+                Text(dish.description!),
+              ],
+              const SizedBox(height: 16),
+              if (dish.variants.length > 1)
+                ...dish.variants.map(
+                  (v) => RadioListTile<DishVariant>(
+                    title: Text('${v.weight} - ${v.price} ₽'),
+                    value: v,
+                    groupValue: _selected,
+                    onChanged: (val) => setState(() => _selected = val!),
+                  ),
+                )
+              else
+                Text('${_selected.weight} - ${_selected.price} ₽'),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _add,
+                  child: const Text('Добавить'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
