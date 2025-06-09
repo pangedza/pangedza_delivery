@@ -5,7 +5,7 @@ void main() {
   testWidgets('Start page shows main buttons', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    expect(find.text('Войти'), findsOneWidget);
+    expect(find.text('Вход'), findsOneWidget);
     expect(find.text('Регистрация'), findsOneWidget);
     expect(find.text('Быстрый заказ'), findsOneWidget);
   });
