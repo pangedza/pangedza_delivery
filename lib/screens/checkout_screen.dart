@@ -23,7 +23,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final streetCtrl = TextEditingController();
   final houseCtrl = TextEditingController();
   final flatCtrl = TextEditingController();
+  final floorCtrl = TextEditingController();
   final intercomCtrl = TextEditingController();
+  final promoCtrl = TextEditingController();
   final commentCtrl = TextEditingController();
 
   PaymentMethod _payment = PaymentMethod.cash;
@@ -37,7 +39,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     streetCtrl.dispose();
     houseCtrl.dispose();
     flatCtrl.dispose();
+    floorCtrl.dispose();
     intercomCtrl.dispose();
+    promoCtrl.dispose();
     commentCtrl.dispose();
     super.dispose();
   }
@@ -97,8 +101,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 _mode == CheckoutMode.delivery,
                 _mode == CheckoutMode.pickup
               ],
-              onPressed: (index) => setState(() =>
-                  _mode = index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup),
+              onPressed: (index) => setState(() {
+                    _mode =
+                        index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup;
+                    if (_mode == CheckoutMode.pickup &&
+                        _payment == PaymentMethod.online) {
+                      _payment = PaymentMethod.cash;
+                    }
+                  }),
               children: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -147,20 +157,37 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           decoration:
                               const InputDecoration(labelText: 'Улица'),
                         ),
-                        TextField(
-                          controller: houseCtrl,
-                          decoration:
-                              const InputDecoration(labelText: 'Дом'),
-                        ),
-                        TextField(
-                          controller: flatCtrl,
-                          decoration:
-                              const InputDecoration(labelText: 'Квартира'),
-                        ),
-                        TextField(
-                          controller: intercomCtrl,
-                          decoration:
-                              const InputDecoration(labelText: 'Домофон'),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextField(
+                                controller: houseCtrl,
+                                decoration:
+                                    const InputDecoration(labelText: 'Дом'),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: TextField(
+                                controller: flatCtrl,
+                                decoration: const InputDecoration(labelText: 'Квартира'),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: TextField(
+                                controller: floorCtrl,
+                                decoration: const InputDecoration(labelText: 'Этаж'),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: TextField(
+                                controller: intercomCtrl,
+                                decoration: const InputDecoration(labelText: 'Домофон'),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -177,23 +204,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               onChanged: (val) => setState(() => _payment = val!),
             ),
             RadioListTile<PaymentMethod>(
-              title: const Text('Терминал курьеру'),
+              title: Text(_mode == CheckoutMode.delivery
+                  ? 'Оплата картой курьеру'
+                  : 'Оплата картой'),
               value: PaymentMethod.terminal,
               groupValue: _payment,
               onChanged: (val) => setState(() => _payment = val!),
             ),
-            RadioListTile<PaymentMethod>(
-              title: const Text('Онлайн'),
-              value: PaymentMethod.online,
-              groupValue: _payment,
-              onChanged: (val) => setState(() => _payment = val!),
-            ),
-            if (_payment == PaymentMethod.online)
+            if (_mode == CheckoutMode.delivery)
+              RadioListTile<PaymentMethod>(
+                title: const Text('Онлайн-оплата'),
+                value: PaymentMethod.online,
+                groupValue: _payment,
+                onChanged: (val) => setState(() => _payment = val!),
+              ),
+            if (_mode == CheckoutMode.delivery &&
+                _payment == PaymentMethod.online)
               CheckboxListTile(
                 title: const Text('Оставить у двери'),
                 value: _leaveAtDoor,
                 onChanged: (val) => setState(() => _leaveAtDoor = val ?? false),
               ),
+            TextField(
+              controller: promoCtrl,
+              decoration: const InputDecoration(labelText: 'Введите промокод'),
+              onChanged: (val) => print('Промокод: $val'),
+            ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
