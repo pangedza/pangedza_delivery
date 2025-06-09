@@ -46,8 +46,8 @@ class DishCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: double.infinity,
+            Align(
+              alignment: Alignment.bottomCenter,
               child: ElevatedButton(
                 onPressed: hasMods
                     ? () => _openSheet(context)
@@ -63,7 +63,8 @@ class DishCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 ),
                 child: const Text('Добавить'),
               ),

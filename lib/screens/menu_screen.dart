@@ -15,17 +15,28 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   final ScrollController _listController = ScrollController();
   final ScrollController _categoryController = ScrollController();
+  late final TextEditingController _searchController;
 
   static const double _categoryBarHeight = 56;
+  static const double _searchBarHeight = 56;
+  static const double _headerHeight = _categoryBarHeight + _searchBarHeight;
 
   int _activeCategory = 0;
   late List<GlobalKey> _categoryKeys;
   late List<GlobalKey> _buttonKeys;
 
   @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    _searchController.addListener(() => setState(() {}));
+  }
+
+  @override
   void dispose() {
     _listController.dispose();
     _categoryController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -102,7 +113,7 @@ class _MenuScreenState extends State<MenuScreen> {
               controller: _listController,
               padding: EdgeInsets.fromLTRB(
                 16,
-                _categoryBarHeight + 16,
+                _headerHeight + 16,
                 16,
                 16,
               ),
@@ -130,19 +141,29 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            childAspectRatio: 2.4,
-                          ),
-                          itemCount: categories[i].dishes.length,
-                          itemBuilder: (_, index) =>
-                              DishCard(dish: categories[i].dishes[index]),
+                        Builder(
+                          builder: (_) {
+                            final filtered = categories[i]
+                                .dishes
+                                .where((d) => d.name
+                                    .toLowerCase()
+                                    .contains(_searchController.text.toLowerCase()))
+                                .toList();
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                childAspectRatio: 2.4,
+                              ),
+                              itemCount: filtered.length,
+                              itemBuilder: (_, index) =>
+                                  DishCard(dish: filtered[index]),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -155,38 +176,56 @@ class _MenuScreenState extends State<MenuScreen> {
               right: 0,
               child: Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                height: _categoryBarHeight,
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: SingleChildScrollView(
-                  controller: _categoryController,
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (var i = 0; i < categories.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: TextButton(
-                            key: _buttonKeys[i],
-                            onPressed: () {
-                              setState(() => _activeCategory = i);
-                              _scrollToCategory(i);
-                            },
-                            style: TextButton.styleFrom(
-                              backgroundColor: _activeCategory == i
-                                  ? Colors.grey.shade800
-                                  : Colors.grey.shade200,
-                              foregroundColor: _activeCategory == i
-                                  ? Colors.white
-                                  : Colors.black,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            child: Text(categories[i].name),
-                          ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          hintText: 'Поиск',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
                         ),
-                    ],
-                  ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: _categoryBarHeight,
+                      child: SingleChildScrollView(
+                        controller: _categoryController,
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            for (var i = 0; i < categories.length; i++)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: TextButton(
+                                  key: _buttonKeys[i],
+                                  onPressed: () {
+                                    setState(() => _activeCategory = i);
+                                    _scrollToCategory(i);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: _activeCategory == i
+                                        ? Colors.grey.shade800
+                                        : Colors.grey.shade200,
+                                    foregroundColor: _activeCategory == i
+                                        ? Colors.white
+                                        : Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(categories[i].name),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
