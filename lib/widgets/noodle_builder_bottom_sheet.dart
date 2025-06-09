@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import '../models/cart_model.dart';
+import '../models/dish.dart';
+import '../models/dish_variant.dart';
 
 /// Bottom sheet widget allowing users to build their own noodles.
 class NoodleBuilderBottomSheet extends StatefulWidget {
@@ -73,9 +76,18 @@ class _NoodleBuilderBottomSheetState extends State<NoodleBuilderBottomSheet> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // ignore: avoid_print
-                    print('Добавлено: $_selectedNoodle с $_selectedFilling - $_price ₽');
+                    final dish = Dish(
+                      name: '$_selectedNoodle с $_selectedFilling',
+                      weight: '',
+                      price: _price,
+                      modifiers: const [],
+                    );
+                    CartModel.instance
+                        .addItem(dish, DishVariant(title: '', price: _price));
                     Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Добавлено в корзину')),
+                    );
                   },
                   child: const Text('Добавить в корзину'),
                 ),

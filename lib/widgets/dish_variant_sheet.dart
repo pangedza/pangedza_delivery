@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
+import '../models/cart_model.dart';
 
 class DishVariantSheet extends StatefulWidget {
   final Dish dish;
@@ -20,9 +21,11 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   }
 
   void _add() {
-    // ignore: avoid_print
-    print('Добавлено: ${widget.dish.name} - ${_selected.title} - ${_selected.price} ₽');
+    CartModel.instance.addItem(widget.dish, _selected);
     Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Добавлено в корзину')),
+    );
   }
 
   @override

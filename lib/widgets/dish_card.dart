@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
+import '../models/cart_model.dart';
 import 'dish_variant_sheet.dart';
 
 class DishCard extends StatelessWidget {
@@ -51,8 +52,10 @@ class DishCard extends StatelessWidget {
                 onPressed: hasMods
                     ? () => _openSheet(context)
                     : () {
-                        // ignore: avoid_print
-                        print('Добавлено: ${dish.name} - ${firstVariant.title} - ${firstVariant.price} ₽');
+                        CartModel.instance.addItem(dish, firstVariant);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Добавлено в корзину')),
+                        );
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
