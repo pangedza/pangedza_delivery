@@ -5,6 +5,7 @@ class Order {
   final List<CartItem> items;
   final int total;
   final String city;
+  final String district;
   final String street;
   final String house;
   final String flat;
@@ -12,12 +13,14 @@ class Order {
   final String comment;
   final String payment;
   final bool leaveAtDoor;
+  final bool pickup;
 
   Order({
     required this.date,
     required this.items,
     required this.total,
     required this.city,
+    required this.district,
     required this.street,
     required this.house,
     required this.flat,
@@ -25,5 +28,6 @@ class Order {
     required this.comment,
     required this.payment,
     required this.leaveAtDoor,
+    required this.pickup,
   });
 }
