@@ -4,6 +4,8 @@ import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/reviews_screen.dart';
+import 'screens/review_admin_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -123,8 +125,26 @@ class _MainScreenState extends State<MainScreen> {
                       leading: const Icon(Icons.rate_review),
                       title: const Text('Отзывы'),
                       onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Отзывы');
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ReviewsScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.admin_panel_settings),
+                      title: const Text('Админ-панель'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => ReviewAdminScreen(),
+                          ),
+                        );
                       },
                     ),
                     ListTile(
