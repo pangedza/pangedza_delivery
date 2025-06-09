@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/dish.dart';
+import '../models/dish_variant.dart';
 import 'dish_variant_sheet.dart';
 
 class DishCard extends StatelessWidget {
@@ -16,17 +17,23 @@ class DishCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final variant = dish.variants.first;
+    final hasMods = dish.modifiers.isNotEmpty;
+    final firstVariant = hasMods
+        ? dish.modifiers.first
+        : DishVariant(title: dish.weight, price: dish.price);
     return Card(
       child: ListTile(
-        onTap: () => _openSheet(context),
+        onTap: hasMods ? () => _openSheet(context) : null,
         title: Text(dish.name),
-        subtitle: Text('${variant.weight} - ${variant.price} ₽'),
+        subtitle: Text(
+            '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽'),
         trailing: TextButton(
-          onPressed: () {
-            // ignore: avoid_print
-            print('Добавлено: ${dish.name} - ${variant.weight} - ${variant.price} ₽');
-          },
+          onPressed: hasMods
+              ? () => _openSheet(context)
+              : () {
+                  // ignore: avoid_print
+                  print('Добавлено: ${dish.name} - ${firstVariant.title} - ${firstVariant.price} ₽');
+                },
           child: const Text('Добавить'),
         ),
       ),
