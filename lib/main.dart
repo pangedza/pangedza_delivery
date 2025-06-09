@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'registration_page.dart';
 import 'quick_order_page.dart';
+import 'menu_page.dart';
+import 'cart_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,13 +15,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pangedza Delivery',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => CartProvider(),
+      child: MaterialApp(
+        title: 'Pangedza Delivery',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: const MyHomePage(),
       ),
-      home: const MyHomePage(),
     );
   }
 }
@@ -62,6 +68,16 @@ class MyHomePage extends StatelessWidget {
                 );
               },
               child: const Text('Быстрый заказ'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MenuPage()),
+                );
+              },
+              child: const Text('Меню'),
             ),
           ],
         ),
