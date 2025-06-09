@@ -22,19 +22,50 @@ class DishCard extends StatelessWidget {
         ? dish.modifiers.first
         : DishVariant(title: dish.weight, price: dish.price);
     return Card(
-      child: ListTile(
-        onTap: hasMods ? () => _openSheet(context) : null,
-        title: Text(dish.name),
-        subtitle: Text(
-            '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽'),
-        trailing: TextButton(
-          onPressed: hasMods
-              ? () => _openSheet(context)
-              : () {
-                  // ignore: avoid_print
-                  print('Добавлено: ${dish.name} - ${firstVariant.title} - ${firstVariant.price} ₽');
-                },
-          child: const Text('Добавить'),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: hasMods ? () => _openSheet(context) : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dish.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: hasMods
+                    ? () => _openSheet(context)
+                    : () {
+                        // ignore: avoid_print
+                        print('Добавлено: ${dish.name} - ${firstVariant.title} - ${firstVariant.price} ₽');
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                ),
+                child: const Text('Добавить'),
+              ),
+            ),
+          ],
         ),
       ),
     );
