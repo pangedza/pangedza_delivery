@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/menu_screen.dart';
+import 'screens/cart_screen.dart';
+import 'screens/order_history_screen.dart';
+import 'screens/profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
       case 0:
         return const MenuScreen();
       case 1:
-        return const SizedBox.shrink();
+        return const CartScreen();
       case 2:
         return const Center(child: Text('Игра — скоро'));
       default:
@@ -70,8 +73,13 @@ class _MainScreenState extends State<MainScreen> {
                       leading: const Icon(Icons.person),
                       title: const Text('Профиль'),
                       onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Профиль');
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileScreen(),
+                          ),
+                        );
                       },
                     ),
                     ListTile(
@@ -86,24 +94,29 @@ class _MainScreenState extends State<MainScreen> {
                       leading: const Icon(Icons.restaurant_menu),
                       title: const Text('Меню'),
                       onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Меню');
+                        setState(() => _currentIndex = 0);
+                        Navigator.pop(context);
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.shopping_cart),
                       title: const Text('Корзина'),
                       onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Корзина');
+                        setState(() => _currentIndex = 1);
+                        Navigator.pop(context);
                       },
                     ),
                     ListTile(
                       leading: const Icon(Icons.history),
                       title: const Text('История заказов'),
                       onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: История заказов');
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const OrderHistoryScreen(),
+                          ),
+                        );
                       },
                     ),
                     ListTile(
