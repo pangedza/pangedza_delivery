@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../models/menu_loader.dart';
 import '../widgets/dish_card.dart';
@@ -22,8 +23,8 @@ class _MenuScreenState extends State<MenuScreen> {
   static const double _headerHeight = _categoryBarHeight + _searchBarHeight;
 
   int _activeCategory = 0;
-  late List<GlobalKey> _categoryKeys;
-  late List<GlobalKey> _buttonKeys;
+  List<GlobalKey> _categoryKeys = [];
+  List<GlobalKey> _buttonKeys = [];
 
   @override
   void initState() {
@@ -50,15 +51,26 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void _scrollToCategory(int index) {
     final ctx = _categoryKeys[index].currentContext;
-    if (ctx != null) {
-      Scrollable.ensureVisible(
-        ctx,
-        duration: const Duration(milliseconds: 300),
-        alignment: 0.1,
-        curve: Curves.easeInOut,
-      );
+    if (ctx == null || !_listController.hasClients) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final renderObject = ctx.findRenderObject();
+      if (renderObject != null) {
+        final viewport = RenderAbstractViewport.of(renderObject);
+        if (viewport != null) {
+          final offset =
+              viewport.getOffsetToReveal(renderObject, 0).offset - _headerHeight;
+          _listController.animateTo(
+            offset.clamp(
+              _listController.position.minScrollExtent,
+              _listController.position.maxScrollExtent,
+            ),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      }
       _centerCategoryButton(index);
-    }
+    });
   }
 
   void _centerCategoryButton(int index) {
@@ -80,7 +92,7 @@ class _MenuScreenState extends State<MenuScreen> {
       final ctx = _categoryKeys[i].currentContext;
       if (ctx != null) {
         final box = ctx.findRenderObject() as RenderBox;
-        final pos = box.localToGlobal(Offset.zero).dy;
+        final pos = box.localToGlobal(Offset.zero).dy - _headerHeight;
         final diff = pos.abs();
         if (diff < minDiff) {
           minDiff = diff;
@@ -103,8 +115,10 @@ class _MenuScreenState extends State<MenuScreen> {
           return const Center(child: CircularProgressIndicator());
         }
         final categories = snapshot.data!;
-        _categoryKeys = List.generate(categories.length, (_) => GlobalKey());
-        _buttonKeys = List.generate(categories.length, (_) => GlobalKey());
+        if (_categoryKeys.length != categories.length) {
+          _categoryKeys = List.generate(categories.length, (_) => GlobalKey());
+          _buttonKeys = List.generate(categories.length, (_) => GlobalKey());
+        }
         _listController.removeListener(_onScroll);
         _listController.addListener(_onScroll);
         return Stack(
