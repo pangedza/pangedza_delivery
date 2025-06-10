@@ -23,9 +23,6 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   void _add() {
     CartModel.instance.addItem(widget.dish, _selected);
     Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Добавлено в корзину')),
-    );
   }
 
   @override

@@ -22,51 +22,77 @@ class DishCard extends StatelessWidget {
     final firstVariant = hasMods
         ? dish.modifiers.first
         : DishVariant(title: dish.weight, price: dish.price);
+
+    final cart = CartModel.instance;
+    final count = cart.items
+        .where((i) => i.dish.name == dish.name)
+        .fold<int>(0, (sum, i) => sum + i.quantity);
+
+    void add() {
+      cart.addItem(dish, firstVariant);
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
           children: [
-            Expanded(
-              child: InkWell(
-                onTap: hasMods ? () => _openSheet(context) : null,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dish.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: hasMods ? () => _openSheet(context) : null,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dish.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: hasMods
-                    ? () => _openSheet(context)
-                    : () {
-                        CartModel.instance.addItem(dish, firstVariant);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Добавлено в корзину')),
-                        );
-                      },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 ),
-                child: const Text('Добавить'),
+                const SizedBox(height: 24),
+              ],
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  InkWell(
+                    onTap: hasMods ? () => _openSheet(context) : add,
+                    child: const CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.redAccent,
+                      child: Icon(Icons.add, color: Colors.white),
+                    ),
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      right: -4,
+                      top: -4,
+                      child: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.white,
+                        child: Text(
+                          '$count',
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
           ],

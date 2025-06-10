@@ -85,9 +85,6 @@ class _NoodleBuilderBottomSheetState extends State<NoodleBuilderBottomSheet> {
                     CartModel.instance
                         .addItem(dish, DishVariant(title: '', price: _price));
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Добавлено в корзину')),
-                    );
                   },
                   child: const Text('Добавить в корзину'),
                 ),
