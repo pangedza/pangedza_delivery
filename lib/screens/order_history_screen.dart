@@ -81,7 +81,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                                 onPressed: () => _repeat(order),
                                 child: const Text('Повторить заказ'),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
