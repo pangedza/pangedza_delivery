@@ -1,5 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import '../models/profile_model.dart';
+
+class DateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    var text = '';
+    for (var i = 0; i < digits.length && i < 8; i++) {
+      if (i == 2 || i == 4) text += '/';
+      text += digits[i];
+    }
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({super.key});
@@ -11,6 +32,7 @@ class ProfileEditScreen extends StatefulWidget {
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final profile = ProfileModel.instance;
   late final TextEditingController _nameController;
+  late final TextEditingController _dateController;
   DateTime? _birthDate;
   String _gender = 'не выбрано';
 
@@ -19,12 +41,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     super.initState();
     _nameController = TextEditingController(text: profile.name);
     _birthDate = profile.birthDate;
+    _dateController = TextEditingController(
+      text: _birthDate != null
+          ? DateFormat('dd/MM/yyyy', 'ru').format(_birthDate!)
+          : '',
+    );
     _gender = profile.gender;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _dateController.dispose();
     super.dispose();
   }
 
@@ -36,13 +64,23 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
       initialDate: initial,
       firstDate: DateTime(1900),
       lastDate: now,
+      locale: const Locale('ru'),
     );
     if (picked != null) {
-      setState(() => _birthDate = picked);
+      setState(() {
+        _birthDate = picked;
+        _dateController.text =
+            DateFormat('dd/MM/yyyy', 'ru').format(_birthDate!);
+      });
     }
   }
 
   void _save() {
+    DateTime? manualDate;
+    try {
+      manualDate = DateFormat('dd/MM/yyyy', 'ru').parseStrict(_dateController.text);
+    } catch (_) {}
+    _birthDate = manualDate ?? _birthDate;
     profile.updateName(_nameController.text);
     profile.updateBirthDate(_birthDate);
     profile.updateGender(_gender);
@@ -68,11 +106,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
               onTap: _pickDate,
               child: AbsorbPointer(
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _dateController,
+                  keyboardType: TextInputType.datetime,
+                  inputFormatters: [DateInputFormatter()],
+                  decoration: const InputDecoration(
                     labelText: 'Дата рождения',
-                    hintText: _birthDate != null
-                        ? '${_birthDate!.day.toString().padLeft(2, '0')}.${_birthDate!.month.toString().padLeft(2, '0')}.${_birthDate!.year}'
-                        : '',
                   ),
                 ),
               ),

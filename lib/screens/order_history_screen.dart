@@ -69,9 +69,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               itemCount: history.orders.length,
               itemBuilder: (_, index) {
                 final order = history.orders[index];
-                final dateStr = DateFormat(
-                  'dd.MM.yyyy HH:mm',
-                ).format(order.date);
+                final dateStr =
+                    DateFormat('dd/MM/yyyy HH:mm', 'ru').format(order.date);
                 final priceStr = NumberFormat.decimalPattern(
                   'ru',
                 ).format(order.total);
