@@ -33,7 +33,17 @@ class AddressesScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (_) => const AddressFormSheet(),
+      isDismissible: true,
+      enableDrag: true,
+      backgroundColor: Colors.white,
+      builder: (_) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => Navigator.pop(context),
+        child: GestureDetector(
+          onTap: () {},
+          child: const AddressFormSheet(),
+        ),
+      ),
     );
   }
 
