@@ -24,8 +24,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/pangedza_menu_final_modifiers.json
-    - assets/images/panda.new.png
-    - assets/images/fon.jpeg
-    - assets/images/logo.png
-    - assets/icons/logo_vk.png
-    - assets/icons/logo_inst.png
+    - assets/images/
+    - assets/icons/
