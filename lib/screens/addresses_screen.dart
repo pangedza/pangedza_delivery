@@ -6,6 +6,29 @@ import '../widgets/address_form_sheet.dart';
 class AddressesScreen extends StatelessWidget {
   const AddressesScreen({super.key});
 
+  Future<void> _confirmDelete(
+      BuildContext context, AddressModel address, AddressBookModel model) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Удалить адрес?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Удалить'),
+          ),
+        ],
+      ),
+    );
+    if (result == true) {
+      model.remove(address);
+    }
+  }
+
   void _add(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -34,6 +57,10 @@ class AddressesScreen extends StatelessWidget {
                 leading: const Icon(Icons.place),
                 title: Text(a.title ?? '${a.street}, ${a.house}'),
                 subtitle: Text(subtitle),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _confirmDelete(context, a, model),
+                ),
               );
             },
           );
