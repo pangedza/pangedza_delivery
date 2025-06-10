@@ -26,4 +26,5 @@ flutter:
     - assets/images/panda.new.png
     - assets/images/fon.jpeg
     - assets/images/logo.png
-
+    - assets/icons/logo_vk.png
+    - assets/icons/logo_inst.png
