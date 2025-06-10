@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/review_model.dart';
+import '../widgets/app_drawer.dart';
 
 class ReviewAdminScreen extends StatelessWidget {
   ReviewAdminScreen({super.key});
@@ -9,7 +10,16 @@ class ReviewAdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Админ: отзывы')),
+      drawer: const MyAppDrawer(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: const Text('Админ: отзывы'),
+      ),
       body: AnimatedBuilder(
         animation: model,
         builder: (_, __) {

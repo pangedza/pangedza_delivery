@@ -7,6 +7,7 @@ import '../models/category.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/noodle_builder_bottom_sheet.dart';
+import '../widgets/app_drawer.dart';
 
 /// Menu screen with category navigation and a 2x2 grid of dishes.
 class MenuScreen extends StatefulWidget {
@@ -25,7 +26,8 @@ class _MenuScreenState extends State<MenuScreen> {
 
   static const double _categoryBarHeight = 56;
   static const double _searchBarHeight = 56;
-  static const double _headerHeight = _categoryBarHeight + _searchBarHeight;
+  static const double _headerHeight =
+      _categoryBarHeight + _searchBarHeight + kToolbarHeight;
 
   int _activeCategory = 0;
   List<GlobalKey> _categoryKeys = [];
@@ -124,6 +126,16 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MyAppDrawer(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: const Text('Меню'),
+      ),
       body: Stack(
         children: [
           FutureBuilder(

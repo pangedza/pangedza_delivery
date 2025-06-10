@@ -5,6 +5,7 @@ import '../models/cart_model.dart';
 import 'package:intl/intl.dart';
 import '../widgets/empty_placeholder.dart';
 import '../main.dart';
+import '../widgets/app_drawer.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -42,7 +43,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('История заказов')),
+      drawer: const MyAppDrawer(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: const Text('История заказов'),
+      ),
       body: history.orders.isEmpty
           ? EmptyPlaceholder(
               message: 'Вы еще не сделали у нас ни одного заказа',
