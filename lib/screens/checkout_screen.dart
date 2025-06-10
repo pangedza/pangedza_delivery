@@ -336,25 +336,63 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            ToggleButtons(
-              isSelected: [
-                _mode == CheckoutMode.delivery,
-                _mode == CheckoutMode.pickup,
-              ],
-              onPressed: (index) => setState(() {
-                _mode = index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup;
-                if (_mode == CheckoutMode.pickup && _payment == PaymentMethod.online) {
-                  _payment = null;
-                }
-              }),
-              children: const [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Доставка'),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() {
+                      _mode = CheckoutMode.delivery;
+                    }),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: _mode == CheckoutMode.delivery ? const Color(0xFFD80027) : Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: const Color(0xFFD80027)),
+                      ),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Доставка',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: _mode == CheckoutMode.delivery ? Colors.white : const Color(0xFFD80027),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('Самовывоз'),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() {
+                      _mode = CheckoutMode.pickup;
+                      if (_payment == PaymentMethod.online) {
+                        _payment = null;
+                      }
+                    }),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: _mode == CheckoutMode.pickup ? const Color(0xFFD80027) : Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(color: const Color(0xFFD80027)),
+                      ),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Самовывоз',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: _mode == CheckoutMode.pickup ? Colors.white : const Color(0xFFD80027),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
