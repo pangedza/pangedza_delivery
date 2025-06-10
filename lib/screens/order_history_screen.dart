@@ -43,14 +43,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('История заказов')),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
-          ),
-          history.orders.isEmpty
-              ? const Center(child: Text('Заказы отсутствуют'))
-              : ListView.builder(
+      body: history.orders.isEmpty
+          ? const Center(child: Text('Заказы отсутствуют'))
+          : ListView.builder(
                   itemCount: history.orders.length,
                   itemBuilder: (_, index) {
                     final order = history.orders[index];
@@ -92,9 +87,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                       ),
                     );
                   },
-                ),
-          ],
-        ),
+                  );
     );
   }
 }

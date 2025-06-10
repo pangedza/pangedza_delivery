@@ -115,17 +115,15 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
-        ),
-        FutureBuilder(
-          future: loadMenu(context),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return Scaffold(
+      body: Stack(
+        children: [
+          FutureBuilder(
+            future: loadMenu(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('Меню пусто'));
             }
@@ -290,12 +288,6 @@ class _MenuScreenState extends State<MenuScreen> {
           ],
         );
       },
-    ),
-        Positioned(
-          top: 40,
-          left: 20,
-          right: 20,
-          child: Image.asset('assets/images/logo.png', height: 80),
         ),
         if (cart.items.isNotEmpty)
           Positioned(
@@ -330,6 +322,6 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
           ),
       ],
-    );
+    ));
   }
 }

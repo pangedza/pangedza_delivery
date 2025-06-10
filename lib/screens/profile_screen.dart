@@ -7,16 +7,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Профиль')),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             const Text('Имя: Гость', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 8),
             const Text('Телефон: -', style: TextStyle(fontSize: 18)),
@@ -28,10 +23,8 @@ class ProfileScreen extends StatelessWidget {
                 child: const Text('Выйти'),
               ),
             )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
