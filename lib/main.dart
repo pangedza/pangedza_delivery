@@ -7,6 +7,8 @@ import 'screens/profile_screen.dart';
 import 'screens/reviews_screen.dart';
 import 'screens/review_admin_screen.dart';
 import 'screens/game_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/about_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +26,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const WelcomeScreen(),
+        '/main': (_) => const MainScreen(),
+        '/profile': (_) => const ProfileScreen(),
+        '/cart': (_) => const CartScreen(),
+        '/history': (_) => const OrderHistoryScreen(),
+        '/reviews': (_) => const ReviewsScreen(),
+        '/admin': (_) => ReviewAdminScreen(),
+        '/notifications': (_) => const NotificationsScreen(),
+        '/about': (_) => const AboutScreen(),
+      },
     );
   }
 }
