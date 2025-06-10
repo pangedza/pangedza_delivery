@@ -123,10 +123,13 @@ class _MenuScreenState extends State<MenuScreen> {
         FutureBuilder(
           future: loadMenu(context),
           builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final categories = snapshot.data!;
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text('Меню пусто'));
+            }
+            final categories = snapshot.data!;
         if (_categoryKeys.length != categories.length) {
           _categoryKeys = List.generate(categories.length, (_) => GlobalKey());
           _buttonKeys = List.generate(categories.length, (_) => GlobalKey());
@@ -175,6 +178,12 @@ class _MenuScreenState extends State<MenuScreen> {
                                     .toLowerCase()
                                     .contains(_searchController.text.toLowerCase()))
                                 .toList();
+                            if (filtered.isEmpty) {
+                              return const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text('Блюда не найдены'),
+                              );
+                            }
                             return GridView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
