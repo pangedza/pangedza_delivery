@@ -11,6 +11,8 @@ class CartModel extends ChangeNotifier {
   final List<CartItem> items = [];
 
   int get total => items.fold(0, (sum, item) => sum + item.total);
+  int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
+  int get totalPrice => total;
 
   void addItem(Dish dish, DishVariant variant) {
     try {
