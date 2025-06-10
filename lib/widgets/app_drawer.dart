@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Common application drawer used across multiple screens.
 class MyAppDrawer extends StatelessWidget {
@@ -77,6 +78,39 @@ class MyAppDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/about');
               },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      final uri = Uri.parse(
+                        'https://www.instagram.com/pangedza.nvrsk?igsh=MWQyOWh0c2FvNnRxZA==',
+                      );
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    },
+                    icon: Image.asset(
+                      'assets/icons/logo_inst.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  IconButton(
+                    onPressed: () async {
+                      final uri = Uri.parse('https://vk.com/pangedza');
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    },
+                    icon: Image.asset(
+                      'assets/icons/logo_vk.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
