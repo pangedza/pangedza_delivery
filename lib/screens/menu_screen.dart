@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../models/menu_loader.dart';
+import '../models/cart_model.dart';
+import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/noodle_builder_bottom_sheet.dart';
 
@@ -17,6 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
   final ScrollController _listController = ScrollController();
   final ScrollController _categoryController = ScrollController();
   late final TextEditingController _searchController;
+  final CartModel cart = CartModel.instance;
 
   static const double _categoryBarHeight = 56;
   static const double _searchBarHeight = 56;
@@ -31,6 +34,7 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
     _searchController = TextEditingController();
     _searchController.addListener(() => setState(() {}));
+    cart.addListener(_cartUpdate);
   }
 
   @override
@@ -38,8 +42,11 @@ class _MenuScreenState extends State<MenuScreen> {
     _listController.dispose();
     _categoryController.dispose();
     _searchController.dispose();
+    cart.removeListener(_cartUpdate);
     super.dispose();
   }
+
+  void _cartUpdate() => setState(() {});
 
   void _openBuilder(BuildContext context) {
     showModalBottomSheet(
@@ -281,6 +288,38 @@ class _MenuScreenState extends State<MenuScreen> {
           right: 20,
           child: Image.asset('assets/images/logo.png', height: 80),
         ),
+        if (cart.items.isNotEmpty)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CartScreen()),
+                  );
+                },
+                child: Container(
+                  height: 60,
+                  color: Colors.redAccent,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'В КОРЗИНЕ ${cart.itemCount} ТОВАР(ОВ) НА ${cart.totalPrice} ₽',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
