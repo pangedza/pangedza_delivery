@@ -5,6 +5,7 @@ import '../models/cart_item.dart';
 import '../widgets/empty_placeholder.dart';
 import '../main.dart';
 import 'checkout_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -41,6 +42,16 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const MyAppDrawer(),
+      appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: const Text('Корзина'),
+      ),
       body: SafeArea(
         child: cart.items.isEmpty
             ? EmptyPlaceholder(

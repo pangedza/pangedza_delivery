@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/review_model.dart';
 import '../models/review.dart';
+import '../widgets/app_drawer.dart';
 
 class ReviewsScreen extends StatefulWidget {
   const ReviewsScreen({super.key});
@@ -186,7 +187,14 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        drawer: const MyAppDrawer(),
         appBar: AppBar(
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+            ),
+          ),
           title: const Text('Отзывы'),
           bottom: const TabBar(
             tabs: [
