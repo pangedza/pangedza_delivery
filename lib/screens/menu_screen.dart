@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -21,6 +22,8 @@ class _MenuScreenState extends State<MenuScreen> {
   final ScrollController _listController = ScrollController();
   final ScrollController _categoryController = ScrollController();
   late final TextEditingController _searchController;
+  Timer? _debounce;
+  String _searchQuery = '';
   final CartModel cart = CartModel.instance;
   Future<List<Category>>? _menuFuture;
 
@@ -37,7 +40,7 @@ class _MenuScreenState extends State<MenuScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
-    _searchController.addListener(() => setState(() {}));
+    _searchController.addListener(_onSearchChanged);
     cart.addListener(_cartUpdate);
   }
 
@@ -51,12 +54,23 @@ class _MenuScreenState extends State<MenuScreen> {
   void dispose() {
     _listController.dispose();
     _categoryController.dispose();
+    _debounce?.cancel();
     _searchController.dispose();
     cart.removeListener(_cartUpdate);
     super.dispose();
   }
 
   void _cartUpdate() => setState(() {});
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      setState(() {
+        _searchQuery = _searchController.text;
+        _activeCategory = 0;
+      });
+    });
+  }
 
   void _openBuilder(BuildContext context) {
     showModalBottomSheet(
@@ -146,6 +160,19 @@ class _MenuScreenState extends State<MenuScreen> {
                 return const Center(child: Text('Меню пусто'));
               }
               final categories = snapshot.data!;
+              final query = _searchQuery.trim().toLowerCase();
+              final visible = <int>[];
+              for (var i = 0; i < categories.length; i++) {
+                if (query.isEmpty ||
+                    categories[i]
+                        .dishes
+                        .any((d) => d.name.toLowerCase().contains(query))) {
+                  visible.add(i);
+                }
+              }
+              if (query.isNotEmpty && visible.isEmpty) {
+                return const Center(child: Text('Блюдо не найдено'));
+              }
               if (_categoryKeys.length != categories.length) {
                 _categoryKeys = List.generate(
                   categories.length,
@@ -157,7 +184,9 @@ class _MenuScreenState extends State<MenuScreen> {
                 );
               }
               _listController.removeListener(_onScroll);
-              _listController.addListener(_onScroll);
+              if (query.isEmpty) {
+                _listController.addListener(_onScroll);
+              }
               return Stack(
                 children: [
                   ListView(
@@ -177,15 +206,15 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      for (var i = 0; i < categories.length; i++)
+                      for (var idx in visible)
                         Container(
-                          key: _categoryKeys[i],
+                          key: _categoryKeys[idx],
                           margin: const EdgeInsets.only(bottom: 16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                categories[i].name,
+                                categories[idx].name,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -194,19 +223,14 @@ class _MenuScreenState extends State<MenuScreen> {
                               const SizedBox(height: 8),
                               Builder(
                                 builder: (_) {
-                                  final filtered = categories[i].dishes
-                                      .where(
-                                        (d) => d.name.toLowerCase().contains(
-                                          _searchController.text.toLowerCase(),
-                                        ),
-                                      )
-                                      .toList();
-                                  if (filtered.isEmpty) {
-                                    return const Padding(
-                                      padding: EdgeInsets.all(8),
-                                      child: Text('Блюда не найдены'),
-                                    );
-                                  }
+                                  final filtered = query.isEmpty
+                                      ? categories[idx].dishes
+                                      : categories[idx]
+                                          .dishes
+                                          .where((d) => d.name
+                                              .toLowerCase()
+                                              .contains(query))
+                                          .toList();
                                   return GridView.builder(
                                     shrinkWrap: true,
                                     physics:
@@ -255,7 +279,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               child: TextField(
                                 controller: _searchController,
                                 decoration: InputDecoration(
-                                  hintText: 'Найди то, что хочешь съесть',
+                                  hintText: 'Найди блюдо по названию',
                                   prefixIcon: const Icon(Icons.search),
                                   suffixIcon: _searchController.text.isNotEmpty
                                       ? IconButton(
@@ -281,16 +305,16 @@ class _MenuScreenState extends State<MenuScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
-                                  for (var i = 0; i < categories.length; i++)
+                                  for (var i = 0; i < visible.length; i++)
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 4,
                                       ),
                                       child: TextButton(
-                                        key: _buttonKeys[i],
+                                        key: _buttonKeys[visible[i]],
                                         onPressed: () {
                                           setState(() => _activeCategory = i);
-                                          _scrollToCategory(i);
+                                          _scrollToCategory(visible[i]);
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor: _activeCategory == i
@@ -305,7 +329,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                             ),
                                           ),
                                         ),
-                                        child: Text(categories[i].name),
+                                        child: Text(categories[visible[i]].name),
                                       ),
                                     ),
                                 ],
