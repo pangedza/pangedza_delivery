@@ -4,6 +4,7 @@ import '../models/cart_model.dart';
 import '../models/cart_item.dart';
 import '../models/order.dart';
 import '../models/order_history_model.dart';
+import '../models/address_model.dart';
 import '../widgets/app_drawer.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ enum CheckoutMode { delivery, pickup }
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
   final history = OrderHistoryModel.instance;
+  final addressBook = AddressBookModel.instance;
 
   final cityCtrl = TextEditingController(text: 'Новороссийск');
   final streetCtrl = TextEditingController();
@@ -33,6 +35,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _leaveAtDoor = false;
   CheckoutMode _mode = CheckoutMode.delivery;
   String _district = 'Центральный';
+  AddressModel? _selectedAddress;
 
   @override
   void dispose() {
@@ -102,9 +105,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
         title: const Text('Оформление заказа'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      body: AnimatedBuilder(
+        animation: addressBook,
+        builder: (_, __) => SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
           children: [
             ToggleButtons(
               isSelected: [
@@ -141,6 +146,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   : Column(
                       key: const ValueKey('delivery'),
                       children: [
+                        if (addressBook.addresses.isNotEmpty)
+                          DropdownButtonFormField<AddressModel>(
+                            value: _selectedAddress,
+                            decoration: const InputDecoration(labelText: 'Выберите адрес'),
+                            items: addressBook.addresses
+                                .map(
+                                  (a) => DropdownMenuItem(
+                                    value: a,
+                                    child: Text(a.title ?? '${a.street}, ${a.house}'),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (val) {
+                              setState(() {
+                                _selectedAddress = val;
+                                if (val != null) {
+                                  streetCtrl.text = val.street;
+                                  houseCtrl.text = val.house;
+                                  flatCtrl.text = val.flat ?? '';
+                                  floorCtrl.text = val.floor ?? '';
+                                  intercomCtrl.text = val.entrance ?? '';
+                                }
+                              });
+                            },
+                          ),
                         TextField(
                           controller: cityCtrl,
                           decoration:

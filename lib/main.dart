@@ -9,6 +9,7 @@ import 'screens/review_admin_screen.dart';
 import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
+import 'screens/addresses_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/admin': (_) => ReviewAdminScreen(),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
+        '/addresses': (_) => const AddressesScreen(),
       },
     );
   }

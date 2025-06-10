@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../models/profile_model.dart';
 import 'profile_edit_screen.dart';
-import 'address_input_screen.dart';
+import 'addresses_screen.dart';
 import 'welcome_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -88,15 +88,12 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.home),
-                  title: const Text('Адрес'),
-                  subtitle: Text(
-                      profile.address.isEmpty ? 'Не указан' : profile.address),
+                  title: const Text('Адреса'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (_) => const AddressInputScreen()),
+                      MaterialPageRoute(builder: (_) => const AddressesScreen()),
                     );
                   },
                 ),
