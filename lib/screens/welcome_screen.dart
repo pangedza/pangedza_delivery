@@ -1,56 +1,62 @@
 import 'package:flutter/material.dart';
-import '../main.dart';
-import 'phone_auth_screen.dart';
 
 /// A simple welcome screen displayed on app start.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
-  void _openAuth(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const PhoneAuthScreen()),
-    );
-  }
-
-  void _quickOrder(BuildContext context) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const MainScreen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/panda.new.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.only(bottom: 60),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(height: 80),
-                  ElevatedButton(
-                    onPressed: () => _openAuth(context),
-                    child: const Text('Вход'),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text('Продолжить'),
+                    ),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => _openAuth(context),
-                    child: const Text('Регистрация'),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => _quickOrder(context),
-                    child: const Text('Быстрый заказ'),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 50,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.white),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text('Быстрый заказ'),
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
