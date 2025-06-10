@@ -37,70 +37,66 @@ class DishCard extends StatelessWidget {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-          child: Stack(
-          children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: hasMods ? () => _openSheet(context) : null,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          dish.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
-                        ),
-                      ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: hasMods ? () => _openSheet(context) : null,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      dish.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
-              ],
-            ),
-            Positioned(
-              bottom: 8,
-              right: 0,
-              child: Stack(
-                clipBehavior: Clip.none,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: hasMods ? () => _openSheet(context) : add,
-                    child: const CircleAvatar(
-                      radius: 18,
-                      backgroundColor: Colors.redAccent,
-                      child: Icon(Icons.add, color: Colors.white),
+                  Text(
+                    '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                  if (count > 0)
-                    Positioned(
-                      right: -4,
-                      top: -4,
-                      child: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          '$count',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      InkWell(
+                        onTap: hasMods ? () => _openSheet(context) : add,
+                        child: const CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.redAccent,
+                          child: Icon(Icons.add, color: Colors.white),
                         ),
                       ),
-                    ),
+                      if (count > 0)
+                        Positioned(
+                          right: -4,
+                          top: -4,
+                          child: CircleAvatar(
+                            radius: 8,
+                            backgroundColor: Colors.white,
+                            child: Text(
+                              '$count',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
