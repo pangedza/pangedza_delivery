@@ -30,7 +30,11 @@ class _ReviewsScreenState extends State<ReviewsScreen>
   }
 
   void _submit() {
-    if (_selectedDish == null) return;
+    if (_selectedDish == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Выберите блюдо')));
+      return;
+    }
     final review = Review(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       userId: currentUserId,
@@ -83,6 +87,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           _buildStarPicker(),
           TextField(
             controller: _textController,
+            maxLength: 200,
             decoration: const InputDecoration(labelText: 'Комментарий'),
           ),
           const SizedBox(height: 16),

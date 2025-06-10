@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/order_history_model.dart';
 import '../models/cart_model.dart';
+import 'package:intl/intl.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -50,43 +51,48 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           history.orders.isEmpty
               ? const Center(child: Text('Заказы отсутствуют'))
               : ListView.builder(
-              itemCount: history.orders.length,
-              itemBuilder: (_, index) {
-                final order = history.orders[index];
-                return Card(
-                  margin: const EdgeInsets.all(8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(order.date.toString()),
-                        const SizedBox(height: 4),
-                        for (final item in order.items)
-                          Text(
-                              '${item.dish.name} ${item.variant.title} x${item.quantity}'),
-                        const SizedBox(height: 4),
-                        if (order.pickup)
-                          const Text(
-                              'Самовывоз: г. Новороссийск, ул. Коммунистическая, д. 51')
-                        else
-                          Text(
-                              '${order.city}, ${order.district}, ${order.street}, д. ${order.house}'),
-                        const SizedBox(height: 4),
-                        Text('Итого: ${order.total} ₽'),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton(
-                            onPressed: () => _repeat(order),
-                            child: const Text('Повторить заказ'),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-              ),
+                  itemCount: history.orders.length,
+                  itemBuilder: (_, index) {
+                    final order = history.orders[index];
+                    final dateStr =
+                        DateFormat('dd.MM.yyyy HH:mm').format(order.date);
+                    final priceStr =
+                        NumberFormat.decimalPattern('ru').format(order.total);
+                    return Card(
+                      key: ValueKey(order.date.toIso8601String()),
+                      margin: const EdgeInsets.all(8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(dateStr),
+                            const SizedBox(height: 4),
+                            for (final item in order.items)
+                              Text(
+                                  '${item.dish.name} ${item.variant.title} x${item.quantity}'),
+                            const SizedBox(height: 4),
+                            if (order.pickup)
+                              const Text(
+                                  'Самовывоз: г. Новороссийск, ул. Коммунистическая, д. 51')
+                            else
+                              Text(
+                                  '${order.city}, ${order.district}, ${order.street}, д. ${order.house}'),
+                            const SizedBox(height: 4),
+                            Text('Итого: $priceStr ₽'),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () => _repeat(order),
+                                child: const Text('Повторить заказ'),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
           ],
         ),
       ),
