@@ -39,10 +39,15 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: cart.items.isEmpty
-            ? const Center(child: Text('Корзина пуста'))
-            : Column(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
+          ),
+          SafeArea(
+            child: cart.items.isEmpty
+                ? const Center(child: Text('Корзина пуста'))
+                : Column(
                 children: [
                   Expanded(
                     child: ListView.builder(
@@ -106,8 +111,10 @@ class _CartScreenState extends State<CartScreen> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                  ],
+                ),
+          ),
+        ],
       ),
     );
   }
