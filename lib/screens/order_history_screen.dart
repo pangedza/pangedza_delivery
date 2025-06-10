@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../models/order_history_model.dart';
 import '../models/cart_model.dart';
 import 'package:intl/intl.dart';
+import '../widgets/empty_placeholder.dart';
+import '../main.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -45,7 +47,17 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('История заказов')),
       body: history.orders.isEmpty
-          ? const Center(child: Text('Заказы отсутствуют'))
+          ? EmptyPlaceholder(
+              message: 'Вы еще не сделали у нас ни одного заказа',
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const MainScreen(),
+                  ),
+                );
+              },
+            )
           : ListView.builder(
               itemCount: history.orders.length,
               itemBuilder: (_, index) {
