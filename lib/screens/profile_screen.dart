@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../widgets/app_drawer.dart';
 import '../models/profile_model.dart';
 import 'profile_edit_screen.dart';
@@ -13,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
     final profile = ProfileModel.instance;
     String formatDate(DateTime? date) {
       if (date == null) return '';
-      return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
+      return DateFormat('dd/MM/yyyy', 'ru').format(date);
     }
 
     return Scaffold(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/cart_model.dart';
 import '../models/cart_item.dart';
@@ -79,11 +80,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       firstDate: now,
       lastDate: now.add(const Duration(days: 30)),
       initialDate: now,
+      locale: const Locale('ru'),
     );
     if (date == null) return;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (context, child) => Localizations.override(
+        context: context,
+        locale: const Locale('ru'),
+        child: child,
+      ),
     );
     if (time == null) return;
     setState(() {
@@ -95,7 +102,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         time.minute,
       );
       timeCtrl.text =
-          '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')} ${time.format(context)}';
+          '${DateFormat('dd/MM/yyyy', 'ru').format(date)} ${time.format(context)}';
     });
   }
 
