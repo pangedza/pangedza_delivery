@@ -100,9 +100,19 @@ class _AddressFormSheetState extends State<AddressFormSheet> {
   }
 
   void _save() {
+    if (_streetCtrl.text.trim().isEmpty ||
+        _houseCtrl.text.trim().isEmpty ||
+        _type.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Заполните обязательные поля')),
+      );
+      return;
+    }
+
     final model = AddressBookModel.instance;
     final address = AddressModel(
-      id: widget.address?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      id: widget.address?.id ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
       title: _titleCtrl.text.isEmpty ? null : _titleCtrl.text,
       type: _type,
       street: _streetCtrl.text,
@@ -120,7 +130,7 @@ class _AddressFormSheetState extends State<AddressFormSheet> {
     } else {
       model.update(address);
     }
-    Navigator.pop(context);
+    Navigator.pop(context, address);
   }
 
   @override
