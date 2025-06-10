@@ -136,18 +136,26 @@ class _AddressFormSheetState extends State<AddressFormSheet> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          left: 16,
-          right: 16,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
         ),
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+        body: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 16,
+            right: 16,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
                   const SizedBox(height: 16),
               TextField(
                 controller: _titleCtrl,
@@ -215,16 +223,9 @@ class _AddressFormSheetState extends State<AddressFormSheet> {
               ),
             ],
           ),
-          Positioned(
-            top: 16,
-            right: 16,
-            child: IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-        ],
+        ),
       ),
-    );
+    ),
+  );
   }
 }
