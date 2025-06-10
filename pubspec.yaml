@@ -21,3 +21,5 @@ flutter:
   assets:
     - assets/data/pangedza_menu_final_modifiers.json
     - assets/images/panda.new.png
+    - assets/images/fon.jpeg
+    - assets/images/logo.png
