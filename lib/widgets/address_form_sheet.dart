@@ -137,6 +137,13 @@ class _AddressFormSheetState extends State<AddressFormSheet> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
               TextField(
                 controller: _titleCtrl,
                 decoration: const InputDecoration(labelText: 'Название адреса'),
