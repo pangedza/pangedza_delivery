@@ -10,6 +10,8 @@ class ProfileModel extends ChangeNotifier {
   DateTime? birthDate;
   String gender = 'не выбрано';
   String address = '';
+  double? lat;
+  double? lng;
 
   void updateName(String newName) {
     name = newName;
@@ -26,8 +28,10 @@ class ProfileModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateAddress(String newAddress) {
+  void updateAddress(String newAddress, {double? latitude, double? longitude}) {
     address = newAddress;
+    lat = latitude;
+    lng = longitude;
     notifyListeners();
   }
 }
