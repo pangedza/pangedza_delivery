@@ -92,9 +92,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Оформление заказа')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
+          ),
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
           children: [
             ToggleButtons(
               isSelected: [
@@ -243,6 +248,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ],
         ),
       ),
-    );
+    ],
+  ),
+);
   }
 }

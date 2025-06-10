@@ -108,9 +108,14 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: loadMenu(context),
-      builder: (context, snapshot) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Image.asset('assets/images/fon.jpeg', fit: BoxFit.cover),
+        ),
+        FutureBuilder(
+          future: loadMenu(context),
+          builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -269,6 +274,14 @@ class _MenuScreenState extends State<MenuScreen> {
           ],
         );
       },
+    ),
+        Positioned(
+          top: 40,
+          left: 20,
+          right: 20,
+          child: Image.asset('assets/images/logo.png', height: 80),
+        ),
+      ],
     );
   }
 }
