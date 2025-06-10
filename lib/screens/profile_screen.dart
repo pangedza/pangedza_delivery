@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/app_drawer.dart';
 import '../models/profile_model.dart';
 import 'profile_edit_screen.dart';
-import 'address_edit_screen.dart';
+import 'address_input_screen.dart';
 import 'welcome_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -96,7 +96,7 @@ class ProfileScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const AddressEditScreen()),
+                          builder: (_) => const AddressInputScreen()),
                     );
                   },
                 ),
