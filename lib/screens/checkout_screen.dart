@@ -5,6 +5,8 @@ import '../models/cart_item.dart';
 import '../models/order.dart';
 import '../models/order_history_model.dart';
 import '../models/address_model.dart';
+import '../models/profile_model.dart';
+import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -21,33 +23,143 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
   final history = OrderHistoryModel.instance;
   final addressBook = AddressBookModel.instance;
+  final profile = ProfileModel.instance;
 
-  final cityCtrl = TextEditingController(text: 'Новороссийск');
-  final streetCtrl = TextEditingController();
-  final houseCtrl = TextEditingController();
-  final flatCtrl = TextEditingController();
-  final floorCtrl = TextEditingController();
-  final intercomCtrl = TextEditingController();
-  final promoCtrl = TextEditingController();
-  final commentCtrl = TextEditingController();
+  late final TextEditingController nameCtrl;
+  late final TextEditingController phoneCtrl;
+  final TextEditingController personsCtrl = TextEditingController();
+  final TextEditingController commentCtrl = TextEditingController();
+  final TextEditingController timeCtrl = TextEditingController();
 
-  PaymentMethod _payment = PaymentMethod.cash;
-  bool _leaveAtDoor = false;
   CheckoutMode _mode = CheckoutMode.delivery;
-  String _district = 'Центральный';
+  PaymentMethod? _payment;
   AddressModel? _selectedAddress;
+  DateTime? _dateTime;
+
+  @override
+  void initState() {
+    super.initState();
+    nameCtrl = TextEditingController(text: profile.name);
+    phoneCtrl = TextEditingController(text: profile.phone);
+    nameCtrl.addListener(_update);
+    phoneCtrl.addListener(_update);
+    personsCtrl.addListener(_update);
+  }
 
   @override
   void dispose() {
-    cityCtrl.dispose();
-    streetCtrl.dispose();
-    houseCtrl.dispose();
-    flatCtrl.dispose();
-    floorCtrl.dispose();
-    intercomCtrl.dispose();
-    promoCtrl.dispose();
+    nameCtrl.dispose();
+    phoneCtrl.dispose();
+    personsCtrl.dispose();
     commentCtrl.dispose();
+    timeCtrl.dispose();
     super.dispose();
+  }
+
+  void _update() => setState(() {});
+
+  bool get _canSubmit {
+    if (nameCtrl.text.isEmpty ||
+        phoneCtrl.text.isEmpty ||
+        personsCtrl.text.isEmpty ||
+        _payment == null) {
+      return false;
+    }
+    if (_mode == CheckoutMode.delivery && _selectedAddress == null) {
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _pickDateTime() async {
+    final now = DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 30)),
+      initialDate: now,
+    );
+    if (date == null) return;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (time == null) return;
+    setState(() {
+      _dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      timeCtrl.text =
+          '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')} ${time.format(context)}';
+    });
+  }
+
+  Future<void> _selectPayment() async {
+    final result = await showModalBottomSheet<PaymentMethod>(
+      context: context,
+      builder: (_) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('Наличные'),
+              onTap: () => Navigator.pop(context, PaymentMethod.cash),
+            ),
+            ListTile(
+              title: Text(_mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта'),
+              onTap: () => Navigator.pop(context, PaymentMethod.terminal),
+            ),
+            if (_mode == CheckoutMode.delivery)
+              ListTile(
+                title: const Text('Онлайн-оплата'),
+                onTap: () => Navigator.pop(context, PaymentMethod.online),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (result != null) {
+      setState(() => _payment = result);
+    }
+  }
+
+  Future<void> _chooseAddress() async {
+    while (true) {
+      final addr = await showModalBottomSheet<AddressModel?>(
+        context: context,
+        builder: (_) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final a in addressBook.addresses)
+                ListTile(
+                  leading: const Icon(Icons.place),
+                  title: Text(a.title ?? '${a.street}, ${a.house}'),
+                  subtitle: Text([
+                    a.street,
+                    a.house,
+                    if (a.flat != null && a.flat!.isNotEmpty) 'кв. ${a.flat}'
+                  ].join(', ')),
+                  onTap: () => Navigator.pop(context, a),
+                ),
+              ListTile(
+                leading: const Icon(Icons.add),
+                title: const Text('Добавить адрес'),
+                onTap: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (addr != null) {
+        setState(() => _selectedAddress = addr);
+        break;
+      } else {
+        await showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          builder: (_) => const AddressFormSheet(),
+        );
+      }
+    }
   }
 
   void _confirm() {
@@ -55,22 +167,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final order = Order(
       date: DateTime.now(),
       items: cart.items
-          .map((e) => CartItem(
-                dish: e.dish,
-                variant: e.variant,
-                quantity: e.quantity,
-              ))
+          .map((e) => CartItem(dish: e.dish, variant: e.variant, quantity: e.quantity))
           .toList(),
       total: cart.total,
-      city: pickup ? 'Новороссийск' : cityCtrl.text,
-      district: pickup ? '' : _district,
-      street: pickup ? 'Коммунистическая' : streetCtrl.text,
-      house: pickup ? '51' : houseCtrl.text,
-      flat: pickup ? '' : flatCtrl.text,
-      intercom: pickup ? '' : intercomCtrl.text,
+      city: 'Новороссийск',
+      district: '',
+      street: pickup ? 'Коммунистическая' : (_selectedAddress?.street ?? ''),
+      house: pickup ? '51' : (_selectedAddress?.house ?? ''),
+      flat: pickup ? '' : (_selectedAddress?.flat ?? ''),
+      intercom: pickup ? '' : (_selectedAddress?.entrance ?? ''),
       comment: commentCtrl.text,
-      payment: _payment.name,
-      leaveAtDoor: _payment == PaymentMethod.online && _leaveAtDoor,
+      payment: _payment!.name,
+      leaveAtDoor: false,
       pickup: pickup,
     );
     history.addOrder(order);
@@ -92,6 +200,125 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
+  Widget _buildContactFields() {
+    return Column(
+      children: [
+        TextField(
+          controller: nameCtrl,
+          decoration: const InputDecoration(
+            labelText: 'Имя *',
+            prefixIcon: Icon(Icons.text_fields, color: Colors.red),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: phoneCtrl,
+          keyboardType: TextInputType.phone,
+          decoration: const InputDecoration(
+            labelText: 'Телефон *',
+            prefixIcon: Icon(Icons.phone, color: Colors.red),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAdditionalFields() {
+    return Column(
+      children: [
+        TextField(
+          controller: personsCtrl,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Количество персон *',
+            prefixIcon: Icon(Icons.people, color: Colors.red),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: commentCtrl,
+          decoration: const InputDecoration(
+            labelText: 'Комментарий',
+            prefixIcon: Icon(Icons.chat_bubble_outline),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeAndPayment({required String timeLabel}) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: _pickDateTime,
+          child: AbsorbPointer(
+            child: TextField(
+              controller: timeCtrl,
+              decoration: InputDecoration(
+                labelText: timeLabel,
+                prefixIcon: const Icon(Icons.schedule),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        ListTile(
+          leading: const Icon(Icons.payment, color: Colors.red),
+          title: Text(_payment == null
+              ? 'Способ оплаты *'
+              : _payment == PaymentMethod.cash
+                  ? 'Наличные'
+                  : _payment == PaymentMethod.terminal
+                      ? (_mode == CheckoutMode.delivery
+                          ? 'Карта курьеру'
+                          : 'Карта')
+                      : 'Онлайн-оплата'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: _selectPayment,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeliveryForm() {
+    final addressText = _selectedAddress == null
+        ? 'Выбрать / Добавить адрес'
+        : '${_selectedAddress!.street}, ${_selectedAddress!.house}' +
+            (_selectedAddress!.flat != null && _selectedAddress!.flat!.isNotEmpty
+                ? ', кв. ${_selectedAddress!.flat}'
+                : '');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildContactFields(),
+        const SizedBox(height: 16),
+        ListTile(
+          leading: const Icon(Icons.place, color: Colors.red),
+          title: Text(addressText),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: _chooseAddress,
+        ),
+        const SizedBox(height: 16),
+        _buildAdditionalFields(),
+        const SizedBox(height: 16),
+        _buildTimeAndPayment(timeLabel: 'Доставить к'),
+      ],
+    );
+  }
+
+  Widget _buildPickupForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildContactFields(),
+        const SizedBox(height: 16),
+        _buildAdditionalFields(),
+        const SizedBox(height: 16),
+        _buildTimeAndPayment(timeLabel: 'Приготовить к'),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,25 +332,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
         title: const Text('Оформление заказа'),
       ),
-      body: AnimatedBuilder(
-        animation: addressBook,
-        builder: (_, __) => SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           children: [
             ToggleButtons(
               isSelected: [
                 _mode == CheckoutMode.delivery,
-                _mode == CheckoutMode.pickup
+                _mode == CheckoutMode.pickup,
               ],
               onPressed: (index) => setState(() {
-                    _mode =
-                        index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup;
-                    if (_mode == CheckoutMode.pickup &&
-                        _payment == PaymentMethod.online) {
-                      _payment = PaymentMethod.cash;
-                    }
-                  }),
+                _mode = index == 0 ? CheckoutMode.delivery : CheckoutMode.pickup;
+                if (_mode == CheckoutMode.pickup && _payment == PaymentMethod.online) {
+                  _payment = null;
+                }
+              }),
               children: const [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -138,146 +361,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             const SizedBox(height: 16),
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
-              child: _mode == CheckoutMode.pickup
-                  ? const Text(
-                      'г. Новороссийск, ул. Коммунистическая, д. 51',
-                      key: ValueKey('pickup'),
-                    )
-                  : Column(
-                      key: const ValueKey('delivery'),
-                      children: [
-                        if (addressBook.addresses.isNotEmpty)
-                          DropdownButtonFormField<AddressModel>(
-                            value: _selectedAddress,
-                            decoration: const InputDecoration(labelText: 'Выберите адрес'),
-                            items: addressBook.addresses
-                                .map(
-                                  (a) => DropdownMenuItem(
-                                    value: a,
-                                    child: Text(a.title ?? '${a.street}, ${a.house}'),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (val) {
-                              setState(() {
-                                _selectedAddress = val;
-                                if (val != null) {
-                                  streetCtrl.text = val.street;
-                                  houseCtrl.text = val.house;
-                                  flatCtrl.text = val.flat ?? '';
-                                  floorCtrl.text = val.floor ?? '';
-                                  intercomCtrl.text = val.entrance ?? '';
-                                }
-                              });
-                            },
-                          ),
-                        TextField(
-                          controller: cityCtrl,
-                          decoration:
-                              const InputDecoration(labelText: 'Город'),
-                        ),
-                        DropdownButtonFormField<String>(
-                          value: _district,
-                          decoration:
-                              const InputDecoration(labelText: 'Район'),
-                          items: const [
-                            DropdownMenuItem(
-                                value: 'Центральный', child: Text('Центральный')),
-                            DropdownMenuItem(value: 'Южный', child: Text('Южный')),
-                            DropdownMenuItem(
-                                value: 'Восточный', child: Text('Восточный')),
-                            DropdownMenuItem(
-                                value: 'Приморский', child: Text('Приморский')),
-                          ],
-                          onChanged: (val) =>
-                              setState(() => _district = val ?? _district),
-                        ),
-                        TextField(
-                          controller: streetCtrl,
-                          decoration:
-                              const InputDecoration(labelText: 'Улица'),
-                        ),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: TextField(
-                                controller: houseCtrl,
-                                decoration:
-                                    const InputDecoration(labelText: 'Дом'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: TextField(
-                                controller: flatCtrl,
-                                decoration: const InputDecoration(labelText: 'Квартира'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: TextField(
-                                controller: floorCtrl,
-                                decoration: const InputDecoration(labelText: 'Этаж'),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: TextField(
-                                controller: intercomCtrl,
-                                decoration: const InputDecoration(labelText: 'Домофон'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-            ),
-            TextField(
-              controller: commentCtrl,
-              decoration: const InputDecoration(labelText: 'Комментарий'),
-            ),
-            const SizedBox(height: 16),
-            RadioListTile<PaymentMethod>(
-              title: const Text('Наличные'),
-              value: PaymentMethod.cash,
-              groupValue: _payment,
-              onChanged: (val) => setState(() => _payment = val!),
-            ),
-            RadioListTile<PaymentMethod>(
-              title: Text(_mode == CheckoutMode.delivery
-                  ? 'Оплата картой курьеру'
-                  : 'Оплата картой'),
-              value: PaymentMethod.terminal,
-              groupValue: _payment,
-              onChanged: (val) => setState(() => _payment = val!),
-            ),
-            if (_mode == CheckoutMode.delivery)
-              RadioListTile<PaymentMethod>(
-                title: const Text('Онлайн-оплата'),
-                value: PaymentMethod.online,
-                groupValue: _payment,
-                onChanged: (val) => setState(() => _payment = val!),
-              ),
-            if (_mode == CheckoutMode.delivery &&
-                _payment == PaymentMethod.online)
-              CheckboxListTile(
-                title: const Text('Оставить у двери'),
-                value: _leaveAtDoor,
-                onChanged: (val) => setState(() => _leaveAtDoor = val ?? false),
-              ),
-            TextField(
-              controller: promoCtrl,
-              decoration: const InputDecoration(labelText: 'Введите промокод'),
-              onChanged: (val) => print('Промокод: $val'),
+              child: _mode == CheckoutMode.delivery
+                  ? _buildDeliveryForm()
+                  : _buildPickupForm(),
             ),
             const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _confirm,
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Text('Подтвердить заказ'),
+                onPressed: _canSubmit ? _confirm : null,
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text('ОТПРАВИТЬ ЗАКАЗ'),
               ),
             ),
           ],
