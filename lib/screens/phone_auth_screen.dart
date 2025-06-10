@@ -7,7 +7,10 @@ class PhoneAuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Телефон')), 
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        title: const Text('Вход / Регистрация'),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -22,8 +25,8 @@ class PhoneAuthScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Далее'),
+                  onPressed: () {},
+                  child: const Text('Продолжить'),
                 ),
               ],
             ),
