@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 
 import '../models/menu_loader.dart';
 import '../models/cart_model.dart';
+import '../models/category.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/noodle_builder_bottom_sheet.dart';
@@ -20,6 +21,7 @@ class _MenuScreenState extends State<MenuScreen> {
   final ScrollController _categoryController = ScrollController();
   late final TextEditingController _searchController;
   final CartModel cart = CartModel.instance;
+  Future<List<Category>>? _menuFuture;
 
   static const double _categoryBarHeight = 56;
   static const double _searchBarHeight = 56;
@@ -35,6 +37,12 @@ class _MenuScreenState extends State<MenuScreen> {
     _searchController = TextEditingController();
     _searchController.addListener(() => setState(() {}));
     cart.addListener(_cartUpdate);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _menuFuture ??= loadMenu(context);
   }
 
   @override
@@ -119,7 +127,7 @@ class _MenuScreenState extends State<MenuScreen> {
       body: Stack(
         children: [
           FutureBuilder(
-            future: loadMenu(context),
+            future: _menuFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
