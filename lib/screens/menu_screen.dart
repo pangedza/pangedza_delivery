@@ -216,7 +216,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                           crossAxisCount: 2,
                                           mainAxisSpacing: 8,
                                           crossAxisSpacing: 8,
-                                          childAspectRatio: 2.4,
+                                          childAspectRatio: 0.8,
                                         ),
                                     itemCount: filtered.length,
                                     itemBuilder: (_, index) =>

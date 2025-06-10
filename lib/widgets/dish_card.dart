@@ -32,12 +32,15 @@ class DishCard extends StatelessWidget {
       cart.addItem(dish, firstVariant);
     }
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Stack(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 215),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Stack(
           children: [
             Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
@@ -58,11 +61,11 @@ class DishCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 32),
               ],
             ),
             Positioned(
-              bottom: 0,
+              bottom: 8,
               right: 0,
               child: Stack(
                 clipBehavior: Clip.none,
