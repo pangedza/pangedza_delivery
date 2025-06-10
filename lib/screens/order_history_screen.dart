@@ -37,9 +37,6 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         cart.addItem(item.dish, item.variant);
       }
     }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Товары добавлены в корзину')));
   }
 
   @override
