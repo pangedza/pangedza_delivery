@@ -101,6 +101,7 @@ class DishCard extends StatelessWidget {
           ],
         ),
       ),
+      ),
     );
   }
 }
