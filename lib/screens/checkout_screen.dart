@@ -9,6 +9,7 @@ import '../models/address_model.dart';
 import '../models/profile_model.dart';
 import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
+import '../services/telegram_service.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -216,6 +217,24 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       pickup: pickup,
     );
     history.addOrder(order);
+
+    final addressText = pickup
+        ? 'г. Новороссийск, ул. Коммунистическая, д. 51'
+        : '${order.city}, ${order.street}, д. ${order.house}' +
+            (order.flat.isNotEmpty ? ', кв. ${order.flat}' : '');
+    final itemsText = order.items
+        .map((e) => '• ${e.dish.name} ${e.variant.title} x${e.quantity} — ${e.variant.price} ₽')
+        .join('\\n');
+    final message = '''
+📦 *Новый заказ!*
+🏠 Адрес: $addressText
+🚚 Способ: ${pickup ? 'Самовывоз' : 'Доставка'}
+🍽 Блюда:
+$itemsText
+💰 Сумма: ${order.total} ₽
+🕒 Время: ${DateFormat('dd.MM.yyyy HH:mm').format(order.date)}
+''';
+    TelegramService.sendOrder(message);
     cart.clear();
     showDialog(
       context: context,
