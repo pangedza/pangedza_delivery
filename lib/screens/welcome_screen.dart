@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'phone_auth_screen.dart';
+import '../main.dart';
+
 /// A simple welcome screen displayed on app start.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -32,8 +35,15 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text('Продолжить'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const PhoneAuthScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('Вход / Регистрация'),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -48,7 +58,14 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const MainScreen(),
+                          ),
+                        );
+                      },
                       child: const Text('Быстрый заказ'),
                     ),
                   ),
