@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/cart_model.dart';
 import '../models/cart_item.dart';
+import '../widgets/empty_placeholder.dart';
+import '../main.dart';
 import 'checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
@@ -41,7 +43,18 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
       body: SafeArea(
         child: cart.items.isEmpty
-            ? const Center(child: Text('Корзина пуста'))
+            ? EmptyPlaceholder(
+                message:
+                    'Вы еще не добавили ни одного товара в корзину',
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const MainScreen(),
+                    ),
+                  );
+                },
+              )
             : Column(
                 children: [
                   Expanded(
