@@ -170,9 +170,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   visible.add(i);
                 }
               }
-              if (query.isNotEmpty && visible.isEmpty) {
-                return const Center(child: Text('Блюдо не найдено'));
-              }
               if (_categoryKeys.length != categories.length) {
                 _categoryKeys = List.generate(
                   categories.length,
@@ -187,22 +184,27 @@ class _MenuScreenState extends State<MenuScreen> {
               if (query.isEmpty) {
                 _listController.addListener(_onScroll);
               }
-              return Stack(
-                children: [
-                  ListView(
-                    controller: _listController,
-                    padding: EdgeInsets.fromLTRB(
-                      16,
-                      _headerHeight + 16,
-                      16,
-                      16,
-                    ),
-                    children: [
-                      Card(
-                        child: ListTile(
-                          title: const Text('Собери лапшу сам'),
-                          trailing: const Icon(Icons.arrow_forward_ios),
-                          onTap: () => _openBuilder(context),
+              final listWidget = query.isNotEmpty && visible.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Блюдо не найдено',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )
+                  : ListView(
+                      controller: _listController,
+                      padding: EdgeInsets.fromLTRB(
+                        16,
+                        _headerHeight + 16,
+                        16,
+                        16,
+                      ),
+                      children: [
+                        Card(
+                          child: ListTile(
+                            title: const Text('Собери лапшу сам'),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                            onTap: () => _openBuilder(context),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -251,8 +253,12 @@ class _MenuScreenState extends State<MenuScreen> {
                             ],
                           ),
                         ),
-                    ],
-                  ),
+                      ],
+                    );
+
+              return Stack(
+                children: [
+                  listWidget,
                   Positioned(
                     top: 0,
                     left: 0,
