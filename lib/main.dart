@@ -6,6 +6,7 @@ import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/reviews_screen.dart';
 import 'screens/review_admin_screen.dart';
+import 'screens/game_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,8 +40,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  static const List<String> _titles = ['Меню', 'Корзина', 'Игра'];
-
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
@@ -48,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
       case 1:
         return const CartScreen();
       case 2:
-        return const Center(child: Text('Игра — скоро'));
+        return const GameScreen();
       default:
         return const SizedBox.shrink();
     }
@@ -57,167 +56,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_titles[_currentIndex]),
-      ),
-      drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            children: [
-              const DrawerHeader(
-                child: Text('Навигация'),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.person),
-                      title: const Text('Профиль'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ProfileScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.location_on),
-                      title: const Text('Новороссийск'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Город / Адрес');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.restaurant_menu),
-                      title: const Text('Меню'),
-                      onTap: () {
-                        setState(() => _currentIndex = 0);
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.shopping_cart),
-                      title: const Text('Корзина'),
-                      onTap: () {
-                        setState(() => _currentIndex = 1);
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.history),
-                      title: const Text('История заказов'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const OrderHistoryScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.rate_review),
-                      title: const Text('Отзывы'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ReviewsScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.admin_panel_settings),
-                      title: const Text('Админ-панель'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ReviewAdminScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.notifications),
-                      title: const Text('Уведомления'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Уведомления');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.info_outline),
-                      title: const Text('О нас'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: О нас');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.settings),
-                      title: const Text('Настройки'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Настройки');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.phone),
-                      title: const Text('Позвонить нам'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: Позвонить нам');
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.mobile_friendly),
-                      title: const Text('О приложении'),
-                      onTap: () {
-                        // ignore: avoid_print
-                        print('Переход: О приложении');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.image),
-                      onPressed: () {
-                        // ignore: avoid_print
-                        print('Открыть VK');
-                      },
-                    ),
-                    const SizedBox(width: 16),
-                    IconButton(
-                      icon: const Icon(Icons.image),
-                      onPressed: () {
-                        // ignore: avoid_print
-                        print('Открыть OK');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
