@@ -11,7 +11,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profile = ProfileModel.instance;
-    String _formatDate(DateTime? date) {
+    String formatDate(DateTime? date) {
       if (date == null) return '';
       return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
     }
@@ -47,8 +47,10 @@ class ProfileScreen extends StatelessWidget {
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.perm_identity, color: Colors.red),
-                  title: const Text('ID пользователя',
-                      style: TextStyle(color: Colors.red)),
+                  title: const Text(
+                    'ID пользователя',
+                    style: TextStyle(color: Colors.red),
+                  ),
                   subtitle: Text(profile.id),
                 ),
               ),
@@ -73,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.calendar_today),
                   title: const Text('Дата рождения'),
-                  subtitle: Text(_formatDate(profile.birthDate)),
+                  subtitle: Text(formatDate(profile.birthDate)),
                 ),
               ),
               const SizedBox(height: 8),
@@ -93,7 +95,9 @@ class ProfileScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const AddressesScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => const AddressesScreen(),
+                      ),
                     );
                   },
                 ),
@@ -109,9 +113,7 @@ class ProfileScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const WelcomeScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
                       (route) => false,
                     );
                   },

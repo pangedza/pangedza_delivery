@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 
 import '../models/profile_model.dart';
-import '../google_maps_api_key.dart';
 
 class AddressInputScreen extends StatefulWidget {
   const AddressInputScreen({super.key});
@@ -27,13 +26,16 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
     super.initState();
     final parts = profile.address.split(',');
     _cityCtrl = TextEditingController(
-        text: parts.isNotEmpty && parts.first.isNotEmpty
-            ? parts.first.trim()
-            : 'Новороссийск');
+      text: parts.isNotEmpty && parts.first.isNotEmpty
+          ? parts.first.trim()
+          : 'Новороссийск',
+    );
     _streetCtrl = TextEditingController(
-        text: parts.length > 1 ? parts[1].trim() : '');
+      text: parts.length > 1 ? parts[1].trim() : '',
+    );
     _houseCtrl = TextEditingController(
-        text: parts.length > 2 ? parts[2].trim() : '');
+      text: parts.length > 2 ? parts[2].trim() : '',
+    );
     if (profile.lat != null && profile.lng != null) {
       _latLng = LatLng(profile.lat!, profile.lng!);
     }
@@ -49,8 +51,8 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
   }
 
   Future<void> _showOnMap() async {
-    final address =
-        '${_cityCtrl.text}, ${_streetCtrl.text} ${_houseCtrl.text}'.trim();
+    final address = '${_cityCtrl.text}, ${_streetCtrl.text} ${_houseCtrl.text}'
+        .trim();
     try {
       final list = await locationFromAddress(address);
       if (list.isNotEmpty) {
@@ -67,10 +69,13 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
   }
 
   void _save() {
-    final addr =
-        '${_cityCtrl.text}, ${_streetCtrl.text}, ${_houseCtrl.text}'.trim();
-    profile.updateAddress(addr,
-        latitude: _latLng?.latitude, longitude: _latLng?.longitude);
+    final addr = '${_cityCtrl.text}, ${_streetCtrl.text}, ${_houseCtrl.text}'
+        .trim();
+    profile.updateAddress(
+      addr,
+      latitude: _latLng?.latitude,
+      longitude: _latLng?.longitude,
+    );
     Navigator.pop(context);
   }
 
@@ -108,11 +113,15 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
             if (Platform.isAndroid || Platform.isIOS)
               Expanded(
                 child: _latLng == null
-                    ? const Center(child: Text('Введите адрес и нажмите кнопку'))
+                    ? const Center(
+                        child: Text('Введите адрес и нажмите кнопку'),
+                      )
                     : GoogleMap(
                         onMapCreated: (c) => _mapCtrl = c,
-                        initialCameraPosition:
-                            CameraPosition(target: _latLng!, zoom: 16),
+                        initialCameraPosition: CameraPosition(
+                          target: _latLng!,
+                          zoom: 16,
+                        ),
                         markers: {
                           Marker(
                             markerId: const MarkerId('addr'),

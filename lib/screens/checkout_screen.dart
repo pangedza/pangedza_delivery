@@ -17,6 +17,7 @@ class CheckoutScreen extends StatefulWidget {
 }
 
 enum PaymentMethod { cash, terminal, online }
+
 enum CheckoutMode { delivery, pickup }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
@@ -86,7 +87,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
     if (time == null) return;
     setState(() {
-      _dateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      _dateTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
       timeCtrl.text =
           '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')} ${time.format(context)}';
     });
@@ -104,7 +111,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               onTap: () => Navigator.pop(context, PaymentMethod.cash),
             ),
             ListTile(
-              title: Text(_mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта'),
+              title: Text(
+                _mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта',
+              ),
               onTap: () => Navigator.pop(context, PaymentMethod.terminal),
             ),
             if (_mode == CheckoutMode.delivery)
@@ -133,11 +142,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ListTile(
                   leading: const Icon(Icons.place),
                   title: Text(a.title ?? '${a.street}, ${a.house}'),
-                  subtitle: Text([
-                    a.street,
-                    a.house,
-                    if (a.flat != null && a.flat!.isNotEmpty) 'кв. ${a.flat}'
-                  ].join(', ')),
+                  subtitle: Text(
+                    [
+                      a.street,
+                      a.house,
+                      if (a.flat != null && a.flat!.isNotEmpty) 'кв. ${a.flat}',
+                    ].join(', '),
+                  ),
                   onTap: () => Navigator.pop(context, a),
                 ),
               ListTile(
@@ -167,7 +178,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final order = Order(
       date: DateTime.now(),
       items: cart.items
-          .map((e) => CartItem(dish: e.dish, variant: e.variant, quantity: e.quantity))
+          .map(
+            (e) => CartItem(
+              dish: e.dish,
+              variant: e.variant,
+              quantity: e.quantity,
+            ),
+          )
           .toList(),
       total: cart.total,
       city: 'Новороссийск',
@@ -264,15 +281,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         const SizedBox(height: 8),
         ListTile(
           leading: const Icon(Icons.payment, color: Colors.red),
-          title: Text(_payment == null
-              ? 'Способ оплаты *'
-              : _payment == PaymentMethod.cash
-                  ? 'Наличные'
-                  : _payment == PaymentMethod.terminal
-                      ? (_mode == CheckoutMode.delivery
-                          ? 'Карта курьеру'
-                          : 'Карта')
-                      : 'Онлайн-оплата'),
+          title: Text(
+            _payment == null
+                ? 'Способ оплаты *'
+                : _payment == PaymentMethod.cash
+                ? 'Наличные'
+                : _payment == PaymentMethod.terminal
+                ? (_mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта')
+                : 'Онлайн-оплата',
+          ),
           trailing: const Icon(Icons.chevron_right),
           onTap: _selectPayment,
         ),
@@ -283,10 +300,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _buildDeliveryForm() {
     final addressText = _selectedAddress == null
         ? 'Выбрать / Добавить адрес'
-        : '${_selectedAddress!.street}, ${_selectedAddress!.house}' +
-            (_selectedAddress!.flat != null && _selectedAddress!.flat!.isNotEmpty
-                ? ', кв. ${_selectedAddress!.flat}'
-                : '');
+        : '${_selectedAddress!.street}, ${_selectedAddress!.house}${_selectedAddress!.flat != null && _selectedAddress!.flat!.isNotEmpty ? ', кв. ${_selectedAddress!.flat}' : ''}';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -346,7 +360,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        color: _mode == CheckoutMode.delivery ? const Color(0xFFD80027) : Colors.white,
+                        color: _mode == CheckoutMode.delivery
+                            ? const Color(0xFFD80027)
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(color: const Color(0xFFD80027)),
                       ),
@@ -358,7 +374,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           fontFamily: 'Roboto',
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: _mode == CheckoutMode.delivery ? Colors.white : const Color(0xFFD80027),
+                          color: _mode == CheckoutMode.delivery
+                              ? Colors.white
+                              : const Color(0xFFD80027),
                         ),
                       ),
                     ),
@@ -376,7 +394,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: Container(
                       height: 48,
                       decoration: BoxDecoration(
-                        color: _mode == CheckoutMode.pickup ? const Color(0xFFD80027) : Colors.white,
+                        color: _mode == CheckoutMode.pickup
+                            ? const Color(0xFFD80027)
+                            : Colors.white,
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(color: const Color(0xFFD80027)),
                       ),
@@ -388,7 +408,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           fontFamily: 'Roboto',
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: _mode == CheckoutMode.pickup ? Colors.white : const Color(0xFFD80027),
+                          color: _mode == CheckoutMode.pickup
+                              ? Colors.white
+                              : const Color(0xFFD80027),
                         ),
                       ),
                     ),

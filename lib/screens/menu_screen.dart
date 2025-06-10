@@ -73,18 +73,16 @@ class _MenuScreenState extends State<MenuScreen> {
       final renderObject = ctx.findRenderObject();
       if (renderObject != null) {
         final viewport = RenderAbstractViewport.of(renderObject);
-        if (viewport != null) {
-          final offset =
-              viewport.getOffsetToReveal(renderObject, 0).offset - _headerHeight;
-          _listController.animateTo(
-            offset.clamp(
-              _listController.position.minScrollExtent,
-              _listController.position.maxScrollExtent,
-            ),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
+        final offset =
+            viewport.getOffsetToReveal(renderObject, 0).offset - _headerHeight;
+        _listController.animateTo(
+          offset.clamp(
+            _listController.position.minScrollExtent,
+            _listController.position.maxScrollExtent,
+          ),
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
       }
       _centerCategoryButton(index);
     });
@@ -144,204 +142,218 @@ class _MenuScreenState extends State<MenuScreen> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('Меню пусто'));
-            }
-            final categories = snapshot.data!;
-        if (_categoryKeys.length != categories.length) {
-          _categoryKeys = List.generate(categories.length, (_) => GlobalKey());
-          _buttonKeys = List.generate(categories.length, (_) => GlobalKey());
-        }
-        _listController.removeListener(_onScroll);
-        _listController.addListener(_onScroll);
-        return Stack(
-          children: [
-            ListView(
-              controller: _listController,
-              padding: EdgeInsets.fromLTRB(
-                16,
-                _headerHeight + 16,
-                16,
-                16,
-              ),
-              children: [
-                Card(
-                  child: ListTile(
-                    title: const Text('Собери лапшу сам'),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () => _openBuilder(context),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                for (var i = 0; i < categories.length; i++)
-                  Container(
-                    key: _categoryKeys[i],
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          categories[i].name,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Builder(
-                          builder: (_) {
-                            final filtered = categories[i]
-                                .dishes
-                                .where((d) => d.name
-                                    .toLowerCase()
-                                    .contains(_searchController.text.toLowerCase()))
-                                .toList();
-                            if (filtered.isEmpty) {
-                              return const Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Text('Блюда не найдены'),
-                              );
-                            }
-                            return GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                childAspectRatio: 2.4,
-                              ),
-                              itemCount: filtered.length,
-                              itemBuilder: (_, index) =>
-                                  DishCard(dish: filtered[index]),
-                            );
-                          },
-                        ),
-                      ],
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('Меню пусто'));
+              }
+              final categories = snapshot.data!;
+              if (_categoryKeys.length != categories.length) {
+                _categoryKeys = List.generate(
+                  categories.length,
+                  (_) => GlobalKey(),
+                );
+                _buttonKeys = List.generate(
+                  categories.length,
+                  (_) => GlobalKey(),
+                );
+              }
+              _listController.removeListener(_onScroll);
+              _listController.addListener(_onScroll);
+              return Stack(
+                children: [
+                  ListView(
+                    controller: _listController,
+                    padding: EdgeInsets.fromLTRB(
+                      16,
+                      _headerHeight + 16,
+                      16,
+                      16,
                     ),
-                  ),
-              ],
-            ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(32),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
+                    children: [
+                      Card(
+                        child: ListTile(
+                          title: const Text('Собери лапшу сам'),
+                          trailing: const Icon(Icons.arrow_forward_ios),
+                          onTap: () => _openBuilder(context),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      for (var i = 0; i < categories.length; i++)
+                        Container(
+                          key: _categoryKeys[i],
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                categories[i].name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Builder(
+                                builder: (_) {
+                                  final filtered = categories[i].dishes
+                                      .where(
+                                        (d) => d.name.toLowerCase().contains(
+                                          _searchController.text.toLowerCase(),
+                                        ),
+                                      )
+                                      .toList();
+                                  if (filtered.isEmpty) {
+                                    return const Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Text('Блюда не найдены'),
+                                    );
+                                  }
+                                  return GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 8,
+                                          crossAxisSpacing: 8,
+                                          childAspectRatio: 2.4,
+                                        ),
+                                    itemCount: filtered.length,
+                                    itemBuilder: (_, index) =>
+                                        DishCard(dish: filtered[index]),
+                                  );
+                                },
                               ),
                             ],
                           ),
-                          child: TextField(
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Найди то, что хочешь съесть',
-                              prefixIcon: const Icon(Icons.search),
-                              suffixIcon: _searchController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear),
-                                      onPressed: () {
-                                        _searchController.clear();
-                                      },
-                                    )
-                                  : null,
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 14),
-                            ),
-                          ),
                         ),
-                      ),
-                    SizedBox(
-                      height: _categoryBarHeight,
-                      child: SingleChildScrollView(
-                        controller: _categoryController,
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            for (var i = 0; i < categories.length; i++)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: TextButton(
-                                  key: _buttonKeys[i],
-                                  onPressed: () {
-                                    setState(() => _activeCategory = i);
-                                    _scrollToCategory(i);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    backgroundColor: _activeCategory == i
-                                        ? Colors.grey.shade800
-                                        : Colors.grey.shade200,
-                                    foregroundColor: _activeCategory == i
-                                        ? Colors.white
-                                        : Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(32),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
                                   ),
-                                  child: Text(categories[i].name),
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: InputDecoration(
+                                  hintText: 'Найди то, что хочешь съесть',
+                                  prefixIcon: const Icon(Icons.search),
+                                  suffixIcon: _searchController.text.isNotEmpty
+                                      ? IconButton(
+                                          icon: const Icon(Icons.clear),
+                                          onPressed: () {
+                                            _searchController.clear();
+                                          },
+                                        )
+                                      : null,
+                                  border: InputBorder.none,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 14,
+                                  ),
                                 ),
                               ),
-                          ],
-                        ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: _categoryBarHeight,
+                            child: SingleChildScrollView(
+                              controller: _categoryController,
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  for (var i = 0; i < categories.length; i++)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
+                                      child: TextButton(
+                                        key: _buttonKeys[i],
+                                        onPressed: () {
+                                          setState(() => _activeCategory = i);
+                                          _scrollToCategory(i);
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: _activeCategory == i
+                                              ? Colors.grey.shade800
+                                              : Colors.grey.shade200,
+                                          foregroundColor: _activeCategory == i
+                                              ? Colors.white
+                                              : Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(categories[i].name),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
+                ],
+              );
+            },
+          ),
+          if (cart.items.isNotEmpty)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).padding.bottom,
                 ),
-              ),
-            ),
-          ],
-        );
-      },
-        ),
-        if (cart.items.isNotEmpty)
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).padding.bottom,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const CartScreen()),
-                  );
-                },
-                child: Container(
-                  height: 60,
-                  color: Colors.redAccent,
-                  alignment: Alignment.center,
-                  child: Text(
-                    'В КОРЗИНЕ ${cart.itemCount} ТОВАР(ОВ) НА ${cart.totalPrice} ₽',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CartScreen()),
+                    );
+                  },
+                  child: Container(
+                    height: 60,
+                    color: Colors.redAccent,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'В КОРЗИНЕ ${cart.itemCount} ТОВАР(ОВ) НА ${cart.totalPrice} ₽',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 }
