@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "238246111987",
+    "project_id": "pangedza-delivery-6c518",
+    "storage_bucket": "pangedza-delivery-6c518.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238246111987:android:e38e1323e2007919016586",
+        "android_client_info": {
+          "package_name": "com.example.pangedza_delivery"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMJv4_GYDsVuCLc7lf4envfRhNT5DL4Kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
