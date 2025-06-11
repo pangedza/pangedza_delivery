@@ -1,9 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../models/profile_model.dart';
+
 /// Common application drawer used across multiple screens.
-class MyAppDrawer extends StatelessWidget {
+class MyAppDrawer extends StatefulWidget {
   const MyAppDrawer({super.key});
+
+  @override
+  State<MyAppDrawer> createState() => _MyAppDrawerState();
+}
+
+class _MyAppDrawerState extends State<MyAppDrawer> {
+  final profile = ProfileModel.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    profile.addListener(_onProfileChange);
+    profile.load();
+  }
+
+  @override
+  void dispose() {
+    profile.removeListener(_onProfileChange);
+    super.dispose();
+  }
+
+  void _onProfileChange() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +79,15 @@ class MyAppDrawer extends StatelessWidget {
                 Navigator.pushNamed(context, '/reviews');
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.admin_panel_settings),
-              title: const Text('Админ-панель'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/admin');
-              },
-            ),
+            if (profile.role == 'admin')
+              ListTile(
+                leading: const Icon(Icons.admin_panel_settings),
+                title: const Text('Админ-панель'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/admin');
+                },
+              ),
             ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Уведомления'),
