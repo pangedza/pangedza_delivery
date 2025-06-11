@@ -6,12 +6,24 @@ import 'profile_edit_screen.dart';
 import 'addresses_screen.dart';
 import 'welcome_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final profile = ProfileModel.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    profile.load();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final profile = ProfileModel.instance;
     String formatDate(DateTime? date) {
       if (date == null) return '';
       return DateFormat('dd/MM/yyyy', 'ru').format(date);
