@@ -11,8 +11,11 @@ import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
+import 'services/firebase_service.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FirebaseService.instance.init();
   runApp(const MyApp());
 }
 

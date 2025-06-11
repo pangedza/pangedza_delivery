@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../models/profile_model.dart';
+import '../services/firebase_service.dart';
 
 class DateInputFormatter extends TextInputFormatter {
   @override
@@ -84,6 +85,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     profile.updateName(_nameController.text);
     profile.updateBirthDate(_birthDate);
     profile.updateGender(_gender);
+    FirebaseService.instance.saveUserProfile(_nameController.text);
     Navigator.pop(context);
   }
 

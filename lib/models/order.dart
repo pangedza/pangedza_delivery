@@ -30,4 +30,27 @@ class Order {
     required this.leaveAtDoor,
     required this.pickup,
   });
+
+  Map<String, dynamic> toMap() => {
+        'date': date.toIso8601String(),
+        'items': items
+            .map((e) => {
+                  'dish': e.dish.name,
+                  'variant': e.variant.title,
+                  'price': e.variant.price,
+                  'quantity': e.quantity,
+                })
+            .toList(),
+        'total': total,
+        'city': city,
+        'district': district,
+        'street': street,
+        'house': house,
+        'flat': flat,
+        'intercom': intercom,
+        'comment': comment,
+        'payment': payment,
+        'leaveAtDoor': leaveAtDoor,
+        'pickup': pickup,
+      };
 }

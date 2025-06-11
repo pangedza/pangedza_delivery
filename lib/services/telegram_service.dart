@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../config.dart';
 
 class TelegramService {
-  static const _token = '7595933366:AAHoRHTUz0-q-PqUvhBcp2kHYJjU9JMsjN8';
-  static const _chatId = '765808288';
+  static String get _token => dotenv.env['TELEGRAM_BOT_TOKEN'] ?? '';
+  static String get _chatId => dotenv.env['TELEGRAM_CHAT_ID'] ?? '';
 
   static Future<void> sendOrder(String message) async {
+    if (!kEnableTelegramOrderForwarding) return;
     final url = Uri.parse('https://api.telegram.org/bot$_token/sendMessage');
     try {
       final response = await http.post(

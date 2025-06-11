@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../services/firebase_service.dart';
 
 class ProfileModel extends ChangeNotifier {
   ProfileModel._();
@@ -12,6 +13,22 @@ class ProfileModel extends ChangeNotifier {
   String address = '';
   double? lat;
   double? lng;
+
+  Future<void> load() async {
+    final user = FirebaseService.instance.auth.currentUser;
+    if (user == null) return;
+    final doc = await FirebaseService.instance.firestore
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    id = user.uid;
+    phone = user.phoneNumber ?? '';
+    if (doc.exists) {
+      final data = doc.data()!;
+      name = data['name'] ?? name;
+    }
+    notifyListeners();
+  }
 
   void updateName(String newName) {
     name = newName;
