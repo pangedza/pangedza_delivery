@@ -8,6 +8,8 @@ class ProfileModel extends ChangeNotifier {
   String id = 'user123';
   String phone = '+7(900)000-00-00';
   String name = 'Гость';
+  /// Role of the current user. Defaults to `user`.
+  String role = 'user';
   DateTime? birthDate;
   String gender = 'не выбрано';
   String address = '';
@@ -26,6 +28,7 @@ class ProfileModel extends ChangeNotifier {
     if (doc.exists) {
       final data = doc.data()!;
       name = data['name'] ?? name;
+      role = data['role'] ?? role;
     }
     notifyListeners();
   }
