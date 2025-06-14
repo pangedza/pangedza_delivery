@@ -10,7 +10,7 @@ import '../models/profile_model.dart';
 import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
 import '../services/telegram_service.dart';
-import '../services/firebase_service.dart';
+import '../di.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -218,7 +218,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       pickup: pickup,
     );
     history.addOrder(order);
-    FirebaseService.instance.saveOrder(order.toMap());
+    firestoreService.saveOrder(order.toMap());
 
     final addressText = pickup
         ? 'г. Новороссийск, ул. Коммунистическая, д. 51'
