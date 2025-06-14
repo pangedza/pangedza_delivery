@@ -203,10 +203,10 @@ class _MenuScreenState extends State<MenuScreen> {
                         Card(
                           child: ListTile(
                             title: const Text('Собери лапшу сам'),
-                            trailing: const Icon(Icons.arrow_forward_ios),
+                            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                             onTap: () => _openBuilder(context),
+                          ),
                         ),
-                      ),
                       const SizedBox(height: 16),
                       for (var idx in visible)
                         Container(
@@ -218,7 +218,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               Text(
                                 categories[idx].name,
                                 style: const TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -272,20 +272,13 @@ class _MenuScreenState extends State<MenuScreen> {
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(32),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
+                                color: const Color(0xFFF6F6F6),
+                                borderRadius: BorderRadius.circular(24),
                               ),
                               child: TextField(
                                 controller: _searchController,
                                 decoration: InputDecoration(
-                                  hintText: 'Найди блюдо по названию',
+                                  hintText: 'Найти',
                                   prefixIcon: const Icon(Icons.search),
                                   suffixIcon: _searchController.text.isNotEmpty
                                       ? IconButton(
@@ -324,7 +317,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor: _activeCategory == i
-                                              ? Colors.grey.shade800
+                                              ? Theme.of(context).primaryColor
                                               : Colors.grey.shade200,
                                           foregroundColor: _activeCategory == i
                                               ? Colors.white

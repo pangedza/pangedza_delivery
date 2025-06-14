@@ -19,9 +19,8 @@ class DishCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasMods = dish.modifiers.isNotEmpty;
-    final firstVariant = hasMods
-        ? dish.modifiers.first
-        : DishVariant(title: dish.weight, price: dish.price);
+    final firstVariant =
+        hasMods ? dish.modifiers.first : DishVariant(title: dish.weight, price: dish.price);
 
     final cart = CartModel.instance;
     final count = cart.items
@@ -33,33 +32,43 @@ class DishCard extends StatelessWidget {
     }
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 215),
+      constraints: const BoxConstraints(minHeight: 230),
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: InkWell(
-                  onTap: hasMods ? () => _openSheet(context) : null,
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      dish.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(12),
                   ),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.image, size: 48, color: Colors.grey),
                 ),
               ),
+              const SizedBox(height: 8),
+              Text(
+                dish.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              if (dish.weight.isNotEmpty)
+                Text(
+                  dish.weight,
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                ),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${firstVariant.title.isNotEmpty ? '${firstVariant.title} - ' : ''}${firstVariant.price} ₽',
+                    '${firstVariant.price} ₽',
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   Stack(
@@ -67,10 +76,10 @@ class DishCard extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: hasMods ? () => _openSheet(context) : add,
-                        child: const CircleAvatar(
+                        child: CircleAvatar(
                           radius: 18,
-                          backgroundColor: Colors.redAccent,
-                          child: Icon(Icons.add, color: Colors.white),
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: const Icon(Icons.add, color: Colors.white),
                         ),
                       ),
                       if (count > 0)

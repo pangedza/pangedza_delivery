@@ -57,71 +57,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.perm_identity, color: Colors.red),
-                  title: const Text(
-                    'ID пользователя',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  subtitle: Text(profile.id),
+              ListTile(
+                leading: const Icon(Icons.perm_identity, color: Colors.red),
+                title: const Text(
+                  'ID пользователя',
+                  style: TextStyle(color: Colors.red),
                 ),
+                subtitle: Text(profile.id),
               ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.phone),
-                  title: const Text('Телефон'),
-                  subtitle: Text(profile.phone),
-                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.phone),
+                title: const Text('Телефон'),
+                subtitle: Text(profile.phone),
               ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.text_fields),
-                  title: const Text('Имя'),
-                  subtitle: Text(profile.name),
-                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.text_fields),
+                title: const Text('Имя'),
+                subtitle: Text(profile.name),
               ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.calendar_today),
-                  title: const Text('Дата рождения'),
-                  subtitle: Text(formatDate(profile.birthDate)),
-                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text('Дата рождения'),
+                subtitle: Text(formatDate(profile.birthDate)),
               ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.transgender),
-                  title: const Text('Пол'),
-                  subtitle: Text(profile.gender),
-                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.transgender),
+                title: const Text('Пол'),
+                subtitle: Text(profile.gender),
               ),
-              const SizedBox(height: 8),
-              Card(
-                child: ListTile(
-                  leading: const Icon(Icons.home),
-                  title: const Text('Адреса'),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AddressesScreen(),
-                      ),
-                    );
-                  },
-                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.home),
+                title: const Text('Адреса'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AddressesScreen(),
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                   ),
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
@@ -130,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       (route) => false,
                     );
                   },
-                  child: const Text('ВЫЙТИ'),
+                  child: const Text('Выйти'),
                 ),
               ),
             ],

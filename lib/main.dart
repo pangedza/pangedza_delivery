@@ -11,6 +11,7 @@ import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
+import 'widgets/bottom_navigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        scaffoldBackgroundColor: Colors.white,
+        primaryColor: const Color(0xFFE30613),
+        fontFamily: 'Roboto',
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 0,
+        ),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          selectedItemColor: Color(0xFFE30613),
+          unselectedItemColor: Colors.black54,
+          backgroundColor: Colors.white,
+          type: BottomNavigationBarType.fixed,
+        ),
+        colorScheme: const ColorScheme.light(
+          primary: Color(0xFFE30613),
+          background: Colors.white,
+        ),
         useMaterial3: true,
       ),
       localizationsDelegates: const [
@@ -60,16 +78,20 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
+  int _currentIndex = 1;
 
   Widget _buildBody() {
     switch (_currentIndex) {
       case 0:
-        return const MenuScreen();
+        return const ProfileScreen();
       case 1:
-        return const CartScreen();
+        return const MenuScreen();
       case 2:
-        return const GameScreen();
+        return const CartScreen();
+      case 3:
+        return const OrderHistoryScreen();
+      case 4:
+        return const ReviewsScreen();
       default:
         return const SizedBox.shrink();
     }
@@ -79,23 +101,9 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.restaurant_menu),
-            label: 'Меню',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Корзина',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.videogame_asset),
-            label: 'Игра',
-          ),
-        ],
       ),
     );
   }
