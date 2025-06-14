@@ -16,7 +16,7 @@ import 'widgets/bottom_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
+  await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
 
