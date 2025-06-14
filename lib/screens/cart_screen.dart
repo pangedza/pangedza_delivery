@@ -122,10 +122,14 @@ class _CartScreenState extends State<CartScreen> {
                         ElevatedButton(
                           onPressed: _checkout,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.black,
+                            backgroundColor: Theme.of(context).primaryColor,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size.fromHeight(48),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
                           ),
-                          child: const Text('Оформить заказ'),
+                          child: const Text('Оформить'),
                         ),
                       ],
                     ),
