@@ -206,12 +206,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           )
           .toList(),
       total: cart.total,
+      name: nameCtrl.text,
+      phone: phoneCtrl.text,
       city: 'Новороссийск',
       district: '',
       street: pickup ? 'Коммунистическая' : (_selectedAddress?.street ?? ''),
       house: pickup ? '51' : (_selectedAddress?.house ?? ''),
       flat: pickup ? '' : (_selectedAddress?.flat ?? ''),
-      intercom: pickup ? '' : (_selectedAddress?.entrance ?? ''),
+      floor: pickup ? '' : (_selectedAddress?.floor ?? ''),
+      intercom: pickup ? '' : (_selectedAddress?.code ?? ''),
       comment: commentCtrl.text,
       payment: _payment!.name,
       leaveAtDoor: false,
@@ -222,15 +225,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     final addressText = pickup
         ? 'г. Новороссийск, ул. Коммунистическая, д. 51'
-        : '${order.city}, ${order.street}, д. ${order.house}' +
-            (order.flat.isNotEmpty ? ', кв. ${order.flat}' : '');
+        : 'г. ${order.city}, ул. ${order.street}, д. ${order.house}' +
+            (order.flat.isNotEmpty ? ', кв. ${order.flat}' : '') +
+            (order.floor.isNotEmpty ? ', этаж ${order.floor}' : '') +
+            (order.intercom.isNotEmpty ? ', домофон ${order.intercom}' : '');
     final itemsText = order.items
         .map((e) => '• ${e.dish.name} ${e.variant.title} x${e.quantity} — ${e.variant.price} ₽')
         .join('\\n');
+    final paymentText = _payment == PaymentMethod.cash
+        ? 'Наличные'
+        : _payment == PaymentMethod.terminal
+            ? (_mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта')
+            : 'Онлайн-оплата';
     final message = '''
 📦 *Новый заказ!*
+🧍 Клиент: ${order.name}
+📞 Телефон: ${order.phone}
 🏠 Адрес: $addressText
 🚚 Способ: ${pickup ? 'Самовывоз' : 'Доставка'}
+💳 Оплата: $paymentText
+📝 Комментарий: "${order.comment}"
 🍽 Блюда:
 $itemsText
 💰 Сумма: ${order.total} ₽
