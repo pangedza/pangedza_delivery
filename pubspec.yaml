@@ -33,6 +33,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/data/pangedza_menu_final_modifiers.json
     - assets/images/
     - assets/icons/
