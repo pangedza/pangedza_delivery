@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -16,6 +17,7 @@ import 'widgets/bottom_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print('Checking .env exists: ${File('.env').existsSync()}');
   await dotenv.load(fileName: '.env');
   runApp(const MyApp());
 }
