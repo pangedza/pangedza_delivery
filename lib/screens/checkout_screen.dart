@@ -223,34 +223,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     history.addOrder(order);
     firestoreService.saveOrder(order.toMap());
 
-    final addressText = pickup
-        ? 'г. Новороссийск, ул. Коммунистическая, д. 51'
-        : 'г. ${order.city}, ул. ${order.street}, д. ${order.house}' +
-            (order.flat.isNotEmpty ? ', кв. ${order.flat}' : '') +
-            (order.floor.isNotEmpty ? ', этаж ${order.floor}' : '') +
-            (order.intercom.isNotEmpty ? ', домофон ${order.intercom}' : '');
-    final itemsText = order.items
-        .map((e) => '• ${e.dish.name} ${e.variant.title} x${e.quantity} — ${e.variant.price} ₽')
-        .join('\\n');
-    final paymentText = _payment == PaymentMethod.cash
-        ? 'Наличные'
-        : _payment == PaymentMethod.terminal
-            ? (_mode == CheckoutMode.delivery ? 'Карта курьеру' : 'Карта')
-            : 'Онлайн-оплата';
-    final message = '''
-📦 *Новый заказ!*
-🧍 Клиент: ${order.name}
-📞 Телефон: ${order.phone}
-🏠 Адрес: $addressText
-🚚 Способ: ${pickup ? 'Самовывоз' : 'Доставка'}
-💳 Оплата: $paymentText
-📝 Комментарий: "${order.comment}"
-🍽 Блюда:
-$itemsText
-💰 Сумма: ${order.total} ₽
-🕒 Время: ${DateFormat('dd.MM.yyyy HH:mm').format(order.date)}
-''';
-    TelegramService.sendOrder(message);
+    TelegramService.sendOrderToTelegram(order);
     cart.clear();
     showDialog(
       context: context,
