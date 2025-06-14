@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
@@ -13,7 +14,9 @@ import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
 import 'widgets/bottom_navigation.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   runApp(const MyApp());
 }
 
