@@ -85,7 +85,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     profile.updateName(_nameController.text);
     profile.updateBirthDate(_birthDate);
     profile.updateGender(_gender);
-    firestoreService.saveUserProfile(_nameController.text);
+    authService.saveUserProfile({
+      'name': _nameController.text,
+      'birthDate': _birthDate?.toIso8601String(),
+      'gender': _gender,
+    });
     Navigator.pop(context);
   }
 
