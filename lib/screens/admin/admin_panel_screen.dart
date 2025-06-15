@@ -22,6 +22,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     Center(child: Text('Доставка')),
     Center(child: Text('Аналитика')),
     Center(child: Text('Настройки')),
+    SizedBox.shrink(), // placeholder for back action
   ];
 
   @override
@@ -33,7 +34,13 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
         children: [
           NavigationRail(
             selectedIndex: _selected,
-            onDestinationSelected: (i) => setState(() => _selected = i),
+            onDestinationSelected: (i) {
+              if (i == 9) {
+                Navigator.pop(context);
+                return;
+              }
+              setState(() => _selected = i);
+            },
             labelType: NavigationRailLabelType.all,
             destinations: const [
               NavigationRailDestination(
@@ -71,6 +78,10 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
               NavigationRailDestination(
                 icon: Icon(Icons.settings),
                 label: Text('Настройки'),
+              ),
+              NavigationRailDestination(
+                icon: Icon(Icons.arrow_back),
+                label: Text('Назад'),
               ),
             ],
           ),
