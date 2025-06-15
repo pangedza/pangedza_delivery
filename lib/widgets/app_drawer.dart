@@ -80,14 +80,6 @@ class _MyAppDrawerState extends State<MyAppDrawer> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.admin_panel_settings),
-              title: const Text('Админ'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/admin_panel');
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Уведомления'),
               onTap: () {

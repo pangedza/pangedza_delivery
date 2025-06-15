@@ -9,7 +9,6 @@ import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/reviews/reviews_screen.dart';
-import 'screens/admin/admin_panel_screen.dart';
 import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
@@ -70,8 +69,6 @@ class MyApp extends StatelessWidget {
         '/cart': (_) => const MainScreen(initialIndex: 2),
         '/history': (_) => const MainScreen(initialIndex: 3),
         '/reviews': (_) => const MainScreen(initialIndex: 4),
-        '/admin': (_) => const AdminPanelScreen(),
-        '/admin_panel': (_) => const AdminPanelScreen(),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -129,13 +126,7 @@ class _MainScreenState extends State<MainScreen> {
       body: _buildBody(),
       bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,
-        onTap: (index) {
-          if (index == 5) {
-            Navigator.pushNamed(context, '/admin_panel');
-            return;
-          }
-          setState(() => _currentIndex = index);
-        },
+        onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
   }
