@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 class BottomNavigation extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
-  final bool isAdmin;
 
   const BottomNavigation({
     super.key,
     required this.currentIndex,
     required this.onTap,
-    this.isAdmin = false,
   });
 
   @override
@@ -36,12 +34,10 @@ class BottomNavigation extends StatelessWidget {
         label: 'Отзывы',
       ),
     ];
-    if (isAdmin) {
-      items.add(const BottomNavigationBarItem(
-        icon: Icon(Icons.admin_panel_settings),
-        label: 'Админ',
-      ));
-    }
+    items.add(const BottomNavigationBarItem(
+      icon: Icon(Icons.admin_panel_settings),
+      label: 'Админ',
+    ));
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,
