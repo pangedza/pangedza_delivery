@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9261addadbfce796ef6cb1536727ddf096153b90
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -13,6 +16,7 @@ class ApiService {
       throw Exception('Failed to load stop list');
     }
   }
+<<<<<<< HEAD
 
   static Future<void> addStopItem(String name) async {
     await http.post(
@@ -25,4 +29,6 @@ class ApiService {
   static Future<void> removeStopItem(int id) async {
     await http.delete(Uri.parse('$baseUrl/stoplist/$id'));
   }
+=======
+>>>>>>> 9261addadbfce796ef6cb1536727ddf096153b90
 }

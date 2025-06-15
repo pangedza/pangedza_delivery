@@ -10,6 +10,7 @@ import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
 import '../services/telegram_service.dart';
 import '../services/order_service.dart';
+import '../services/admin_panel_service.dart';
 import '../di.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -223,6 +224,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     firestoreService.saveOrder(order.toMap());
 
     TelegramService.sendOrderToTelegram(order);
+    AdminPanelService.sendOrderToAdmin(order);
     cart.clear();
     showDialog(
       context: context,
