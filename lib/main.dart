@@ -66,12 +66,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (_) => const WelcomeScreen(),
         '/main': (_) => const MainScreen(),
-        '/profile': (_) => const ProfileScreen(),
-        '/cart': (_) => const CartScreen(),
-        '/history': (_) => const OrderHistoryScreen(),
-        '/reviews': (_) => const ReviewsScreen(),
-        '/admin': (_) => const AdminPanelScreen(),
-        '/admin_panel': (_) => const AdminPanelScreen(),
+        '/profile': (_) => const MainScreen(initialIndex: 0),
+        '/cart': (_) => const MainScreen(initialIndex: 2),
+        '/history': (_) => const MainScreen(initialIndex: 3),
+        '/reviews': (_) => const MainScreen(initialIndex: 4),
+        '/admin': (_) => const MainScreen(initialIndex: 5),
+        '/admin_panel': (_) => const MainScreen(initialIndex: 5),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -82,19 +82,22 @@ class MyApp extends StatelessWidget {
 
 /// Stateful widget that holds bottom navigation logic.
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex;
+
+  const MainScreen({super.key, this.initialIndex = 1});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 1;
+  late int _currentIndex;
   final profile = ProfileModel.instance;
 
   @override
   void initState() {
     super.initState();
+    _currentIndex = widget.initialIndex;
     profile.addListener(_profileChanged);
     profile.load();
   }
@@ -113,22 +116,15 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildBody() {
-    switch (_currentIndex) {
-      case 0:
-        return const ProfileScreen();
-      case 1:
-        return const MenuScreen();
-      case 2:
-        return const CartScreen();
-      case 3:
-        return const OrderHistoryScreen();
-      case 4:
-        return const ReviewsScreen();
-      case 5:
-        return const AdminPanelScreen();
-      default:
-        return const SizedBox.shrink();
-    }
+    const screens = [
+      ProfileScreen(),
+      MenuScreen(),
+      CartScreen(),
+      OrderHistoryScreen(),
+      ReviewsScreen(),
+      AdminPanelScreen(),
+    ];
+    return IndexedStack(index: _currentIndex, children: screens);
   }
 
   @override
