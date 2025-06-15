@@ -8,7 +8,7 @@ import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/reviews/reviews_screen.dart';
-import 'screens/review_admin_screen.dart';
+import 'screens/admin/admin_panel_screen.dart';
 import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
         '/cart': (_) => const CartScreen(),
         '/history': (_) => const OrderHistoryScreen(),
         '/reviews': (_) => const ReviewsScreen(),
-        '/admin': (_) => ReviewAdminScreen(),
+        '/admin': (_) => const AdminPanelScreen(),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -84,6 +84,27 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 1;
+  final profile = ProfileModel.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    profile.addListener(_profileChanged);
+    profile.load();
+  }
+
+  @override
+  void dispose() {
+    profile.removeListener(_profileChanged);
+    super.dispose();
+  }
+
+  void _profileChanged() {
+    if (profile.role != 'admin' && _currentIndex == 5) {
+      _currentIndex = 1;
+    }
+    setState(() {});
+  }
 
   Widget _buildBody() {
     switch (_currentIndex) {
@@ -97,6 +118,8 @@ class _MainScreenState extends State<MainScreen> {
         return const OrderHistoryScreen();
       case 4:
         return const ReviewsScreen();
+      case 5:
+        return const AdminPanelScreen();
       default:
         return const SizedBox.shrink();
     }
@@ -109,6 +132,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
+        isAdmin: profile.role == 'admin',
       ),
     );
   }
