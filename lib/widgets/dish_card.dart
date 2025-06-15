@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
 import '../models/cart_model.dart';
+import '../services/stop_list_service.dart';
+import '../di.dart';
 import 'dish_variant_sheet.dart';
 
 class DishCard extends StatelessWidget {
@@ -23,23 +25,30 @@ class DishCard extends StatelessWidget {
         hasMods ? dish.modifiers.first : DishVariant(title: dish.weight, price: dish.price);
 
     final cart = CartModel.instance;
+    final StopListService stopService = stopListService;
+    final bool stopped = stopService.isStopped(dish.name);
+    final int? left = stopService.leftover(dish.name);
     final count = cart.items
         .where((i) => i.dish.name == dish.name)
         .fold<int>(0, (sum, i) => sum + i.quantity);
 
     void add() {
       cart.addItem(dish, firstVariant);
+      stopService.consume(dish.name);
     }
 
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 230),
-      child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+      child: Stack(
+        children: [
+          Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
@@ -71,15 +80,30 @@ class DishCard extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+                  if (left != null && !stopped)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: Text(
+                        'Осталось: $left',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
                   Stack(
                     clipBehavior: Clip.none,
                     children: [
                       InkWell(
-                        onTap: hasMods ? () => _openSheet(context) : add,
+                        onTap: stopped
+                            ? null
+                            : hasMods
+                                ? () => _openSheet(context)
+                                : add,
                         child: CircleAvatar(
                           radius: 18,
-                          backgroundColor: Theme.of(context).primaryColor,
-                          child: const Icon(Icons.add, color: Colors.white),
+                          backgroundColor: stopped
+                              ? Colors.grey
+                              : Theme.of(context).primaryColor,
+                          child:
+                              const Icon(Icons.add, color: Colors.white),
                         ),
                       ),
                       if (count > 0)
@@ -106,6 +130,29 @@ class DishCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+          if (stopped)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                alignment: Alignment.center,
+                child: Transform.rotate(
+                  angle: -0.5,
+                  child: const Text(
+                    'Закончилось',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

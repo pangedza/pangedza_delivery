@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'admin_orders_screen.dart';
 import 'admin_reviews_screen.dart';
+import 'admin_stop_list_screen.dart';
 
 class AdminPanelScreen extends StatefulWidget {
   const AdminPanelScreen({super.key});
@@ -15,7 +16,7 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
   final List<Widget> _screens = const [
     AdminOrdersScreen(),
     AdminReviewsScreen(),
-    Center(child: Text('Стоп-лист')),
+    AdminStopListScreen(),
     Center(child: Text('Меню')),
     Center(child: Text('Промокоды')),
     Center(child: Text('Пользователи')),
