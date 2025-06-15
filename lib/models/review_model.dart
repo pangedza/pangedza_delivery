@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import 'review.dart';
+import 'legacy_review.dart';
 
 class ReviewModel extends ChangeNotifier {
   ReviewModel._();
   static final ReviewModel instance = ReviewModel._();
 
-  final List<Review> reviews = [
-    Review(
+  final List<LegacyReview> reviews = [
+    LegacyReview(
       id: '1',
       userId: 'user2',
       dishId: 'Жареный рай',
@@ -16,7 +16,7 @@ class ReviewModel extends ChangeNotifier {
       emoji: '😍',
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
     ),
-    Review(
+    LegacyReview(
       id: '2',
       userId: 'user3',
       dishId: 'Острые ощущения',
@@ -27,12 +27,12 @@ class ReviewModel extends ChangeNotifier {
     ),
   ];
 
-  void addReview(Review review) {
+  void addReview(LegacyReview review) {
     reviews.insert(0, review);
     notifyListeners();
   }
 
-  void updateReview(Review review) {
+  void updateReview(LegacyReview review) {
     final index = reviews.indexWhere((r) => r.id == review.id);
     if (index != -1) {
       reviews[index] = review;
@@ -40,12 +40,12 @@ class ReviewModel extends ChangeNotifier {
     }
   }
 
-  void deleteReview(Review review) {
+  void deleteReview(LegacyReview review) {
     reviews.removeWhere((r) => r.id == review.id);
     notifyListeners();
   }
 
-  void toggleHidden(Review review) {
+  void toggleHidden(LegacyReview review) {
     final index = reviews.indexWhere((r) => r.id == review.id);
     if (index != -1) {
       reviews[index].hidden = !reviews[index].hidden;
