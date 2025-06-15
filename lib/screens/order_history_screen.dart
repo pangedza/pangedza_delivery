@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../services/order_service.dart';
+import 'package:pangedza_delivery/services/order_service.dart';
 import '../models/cart_model.dart';
 import 'package:intl/intl.dart';
 import '../widgets/empty_placeholder.dart';
 import '../main.dart';
 import '../widgets/app_drawer.dart';
 import 'orders/active_order_screen.dart';
+
+final orderService = OrderService.instance;
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
