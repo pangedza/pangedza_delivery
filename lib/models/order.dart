@@ -1,4 +1,5 @@
 import 'cart_item.dart';
+import 'promo.dart';
 
 class Order {
   final DateTime date;
@@ -17,7 +18,9 @@ class Order {
   final String payment;
   final bool leaveAtDoor;
   final bool pickup;
-  final String status;
+  String status;
+  Promo? promo;
+  int discount;
 
   Order({
     required this.date,
@@ -37,7 +40,21 @@ class Order {
     required this.leaveAtDoor,
     required this.pickup,
     this.status = 'Новый',
+    this.promo,
+    this.discount = 0,
   });
+
+  /// Price with discount and promo applied.
+  int get discountedTotal {
+    var amount = total;
+    if (discount > 0) {
+      amount = amount * (100 - discount) ~/ 100;
+    }
+    if (promo != null) {
+      amount = amount * (100 - promo!.discount) ~/ 100;
+    }
+    return amount;
+  }
 
   Map<String, dynamic> toMap() => {
         'date': date.toIso8601String(),
@@ -64,5 +81,7 @@ class Order {
         'leaveAtDoor': leaveAtDoor,
         'pickup': pickup,
         'status': status,
+        'promo': promo?.code,
+        'discount': discount,
       };
 }

@@ -14,9 +14,22 @@ class OrderService extends ChangeNotifier {
   /// List of all orders sorted with the newest first.
   List<Order> get orders => List.unmodifiable(_orders);
 
+  /// Orders that are not closed yet.
+  List<Order> get activeOrders =>
+      _orders.where((o) => o.status != 'Закрыт').toList();
+
+  /// Completed orders.
+  List<Order> get completedOrders =>
+      _orders.where((o) => o.status == 'Закрыт').toList();
+
   /// Adds a new [order] and notifies listeners.
   void addOrder(Order order) {
     _orders.insert(0, order);
+    notifyListeners();
+  }
+
+  /// Notifies listeners about order changes.
+  void updateOrder() {
     notifyListeners();
   }
 
