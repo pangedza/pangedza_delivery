@@ -22,7 +22,6 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     Center(child: Text('Доставка')),
     Center(child: Text('Аналитика')),
     Center(child: Text('Настройки')),
-    SizedBox.shrink(), // placeholder for back action
   ];
 
   @override
@@ -32,17 +31,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
     return Scaffold(
       body: Row(
         children: [
-          NavigationRail(
-            selectedIndex: _selected,
-            onDestinationSelected: (i) {
-              if (i == 9) {
-                Navigator.pop(context);
-                return;
-              }
-              setState(() => _selected = i);
-            },
-            labelType: NavigationRailLabelType.all,
-            destinations: const [
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  Expanded(
+                    child: NavigationRail(
+                      selectedIndex: _selected,
+                      onDestinationSelected: (i) {
+                        setState(() => _selected = i);
+                      },
+                      labelType: NavigationRailLabelType.all,
+                      destinations: const [
               NavigationRailDestination(
                 icon: Icon(Icons.list_alt),
                 label: Text('Заказы'),
@@ -79,11 +79,18 @@ class _AdminPanelScreenState extends State<AdminPanelScreen> {
                 icon: Icon(Icons.settings),
                 label: Text('Настройки'),
               ),
-              NavigationRailDestination(
-                icon: Icon(Icons.arrow_back),
-                label: Text('Назад'),
-              ),
-            ],
+              ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.arrow_back),
+                    title: const Text('Назад'),
+                    onTap: () => Navigator.pop(context),
+                  ),
+                ],
+              );
+            },
           ),
           const VerticalDivider(width: 1),
           Expanded(child: _screens[_selected]),
