@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../models/cart_model.dart';
 import '../models/cart_item.dart';
 import '../models/order.dart';
-import '../models/order_history_model.dart';
 import '../models/address_model.dart';
 import '../models/profile_model.dart';
 import '../widgets/address_form_sheet.dart';
@@ -26,7 +25,6 @@ enum CheckoutMode { delivery, pickup }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
-  final history = OrderHistoryModel.instance;
   final addressBook = AddressBookModel.instance;
   final profile = ProfileModel.instance;
 
@@ -221,7 +219,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       leaveAtDoor: false,
       pickup: pickup,
     );
-    history.addOrder(order);
     orderService.addOrder(order);
     firestoreService.saveOrder(order.toMap());
 
