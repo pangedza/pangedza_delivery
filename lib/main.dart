@@ -70,8 +70,8 @@ class MyApp extends StatelessWidget {
         '/cart': (_) => const MainScreen(initialIndex: 2),
         '/history': (_) => const MainScreen(initialIndex: 3),
         '/reviews': (_) => const MainScreen(initialIndex: 4),
-        '/admin': (_) => const MainScreen(initialIndex: 5),
-        '/admin_panel': (_) => const MainScreen(initialIndex: 5),
+        '/admin': (_) => const AdminPanelScreen(),
+        '/admin_panel': (_) => const AdminPanelScreen(),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -109,9 +109,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _profileChanged() {
-    if (profile.role != 'admin' && _currentIndex == 5) {
-      _currentIndex = 1;
-    }
     setState(() {});
   }
 
@@ -122,7 +119,6 @@ class _MainScreenState extends State<MainScreen> {
       CartScreen(),
       OrderHistoryScreen(),
       ReviewsScreen(),
-      AdminPanelScreen(),
     ];
     return IndexedStack(index: _currentIndex, children: screens);
   }
@@ -133,7 +129,13 @@ class _MainScreenState extends State<MainScreen> {
       body: _buildBody(),
       bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) {
+          if (index == 5) {
+            Navigator.pushNamed(context, '/admin_panel');
+            return;
+          }
+          setState(() => _currentIndex = index);
+        },
       ),
     );
   }
