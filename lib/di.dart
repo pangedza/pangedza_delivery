@@ -9,5 +9,5 @@ import 'services/promo_service.dart';
 final AuthServiceInterface authService = MockAuthService();
 final FirestoreServiceInterface firestoreService = MockFirestoreService();
 final AdminService adminService = AdminService();
-final OrderService orderService = OrderService();
+final OrderService orderService = OrderService.instance;
 final PromoService promoService = PromoService();
