@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/review_model.dart';
-import '../models/review.dart';
+import '../models/legacy_review.dart';
 import '../widgets/app_drawer.dart';
 
-class ReviewsScreen extends StatefulWidget {
-  const ReviewsScreen({super.key});
+class LegacyReviewsScreen extends StatefulWidget {
+  const LegacyReviewsScreen({super.key});
 
   @override
-  State<ReviewsScreen> createState() => _ReviewsScreenState();
+  State<LegacyReviewsScreen> createState() => _LegacyReviewsScreenState();
 }
 
-class _ReviewsScreenState extends State<ReviewsScreen>
+class _LegacyReviewsScreenState extends State<LegacyReviewsScreen>
     with SingleTickerProviderStateMixin {
   final ReviewModel model = ReviewModel.instance;
   final TextEditingController _textController = TextEditingController();
@@ -36,7 +36,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           .showSnackBar(const SnackBar(content: Text('Выберите блюдо')));
       return;
     }
-    final review = Review(
+    final review = LegacyReview(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       userId: currentUserId,
       dishId: _selectedDish!,
@@ -145,7 +145,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     );
   }
 
-  Widget _buildReviewCard(Review review, {bool canEdit = false}) {
+  Widget _buildReviewCard(LegacyReview review, {bool canEdit = false}) {
     return Card(
       margin: const EdgeInsets.all(8),
       child: Padding(

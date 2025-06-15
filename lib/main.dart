@@ -7,7 +7,7 @@ import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/reviews_screen.dart';
+import 'screens/reviews/reviews_screen.dart';
 import 'screens/review_admin_screen.dart';
 import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
