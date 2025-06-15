@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'models/profile_model.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
@@ -18,7 +19,11 @@ import 'widgets/bottom_navigation.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   print('Checking .env exists: ${File('.env').existsSync()}');
-  await dotenv.load(fileName: '.env');
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (e) {
+    print('Ошибка загрузки .env: $e');
+  }
   runApp(const MyApp());
 }
 
