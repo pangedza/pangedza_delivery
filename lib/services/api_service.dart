@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://localhost:3000/api';
 
   static Future<List<dynamic>> fetchStopList() async {
     final response = await http.get(Uri.parse('$baseUrl/stoplist'));
@@ -32,3 +32,4 @@ class ApiService {
 =======
 >>>>>>> 9261addadbfce796ef6cb1536727ddf096153b90
 }
+
