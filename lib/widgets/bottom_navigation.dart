@@ -34,10 +34,6 @@ class BottomNavigation extends StatelessWidget {
         label: 'Отзывы',
       ),
     ];
-    items.add(const BottomNavigationBarItem(
-      icon: Icon(Icons.admin_panel_settings),
-      label: 'Админ',
-    ));
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       currentIndex: currentIndex,

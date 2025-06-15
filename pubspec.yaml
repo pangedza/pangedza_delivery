@@ -21,7 +21,6 @@ dependencies:
   # cloud_firestore: ^4.15.9
   # firebase_storage: ^11.6.9
   # firebase_messaging: ^14.7.16
-  flutter_local_notifications: ^9.0.0
   flutter_localizations:
     sdk: flutter
 
