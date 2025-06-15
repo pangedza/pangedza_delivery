@@ -76,17 +76,17 @@ class TelegramService {
             '• ${e.dish.name} ${e.variant.title} x${e.quantity} — ${e.variant.price} ₽')
         .join('\n');
 
-    final message = '''📦 *Новый заказ!* 
-🧍 Клиент: ${order.name}
-📞 Телефон: ${order.phone}
+    final message = '''📦 Новый заказ!
+👤 Клиент: ${order.name}
+☎️ Телефон: ${order.phone}
 🏠 Адрес: $addressText
 💳 Оплата: $paymentText
 🚚 Доставка: ${order.pickup ? 'Самовывоз' : 'Доставка'}
-📝 Комментарий: ${order.comment}
 🍽️ Заказ:
 $itemsText
 💰 Сумма: ${order.total} ₽
-⏰ Время: ${DateFormat('dd.MM.yyyy HH:mm').format(order.date)}''';
+📝 Комментарий: ${order.comment}
+⏰ Время: ${DateFormat('yyyy-MM-dd HH:mm').format(order.date)}''';
 
     debugPrint('Telegram order message: $message');
 

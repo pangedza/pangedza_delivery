@@ -17,6 +17,7 @@ class Order {
   final String payment;
   final bool leaveAtDoor;
   final bool pickup;
+  final String status;
 
   Order({
     required this.date,
@@ -35,6 +36,7 @@ class Order {
     required this.payment,
     required this.leaveAtDoor,
     required this.pickup,
+    this.status = 'Новый',
   });
 
   Map<String, dynamic> toMap() => {
@@ -61,5 +63,6 @@ class Order {
         'payment': payment,
         'leaveAtDoor': leaveAtDoor,
         'pickup': pickup,
+        'status': status,
       };
 }
