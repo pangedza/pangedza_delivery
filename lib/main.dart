@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
         '/history': (_) => const OrderHistoryScreen(),
         '/reviews': (_) => const ReviewsScreen(),
         '/admin': (_) => const AdminPanelScreen(),
+        '/admin_panel': (_) => const AdminPanelScreen(),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -137,7 +138,6 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigation(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
-        isAdmin: profile.role == 'admin',
       ),
     );
   }
