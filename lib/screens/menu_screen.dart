@@ -9,6 +9,7 @@ import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/noodle_builder_bottom_sheet.dart';
 import '../widgets/app_drawer.dart';
+import '../services/api_service.dart';
 
 /// Menu screen with category navigation and a 2x2 grid of dishes.
 class MenuScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _MenuScreenState extends State<MenuScreen> {
   String _searchQuery = '';
   final CartModel cart = CartModel.instance;
   Future<List<Category>>? _menuFuture;
+  List<String> stopList = [];
 
   static const double _categoryBarHeight = 56;
   static const double _searchBarHeight = 56;
@@ -42,6 +44,7 @@ class _MenuScreenState extends State<MenuScreen> {
     _searchController = TextEditingController();
     _searchController.addListener(_onSearchChanged);
     cart.addListener(_cartUpdate);
+    loadStopList();
   }
 
   @override
@@ -70,6 +73,18 @@ class _MenuScreenState extends State<MenuScreen> {
         _activeCategory = 0;
       });
     });
+  }
+
+  Future<void> loadStopList() async {
+    try {
+      final data = await ApiService.fetchStopList();
+      setState(() {
+        stopList =
+            data.map<String>((item) => item['name'] as String).toList();
+      });
+    } catch (e) {
+      // ignore errors in demo mode
+    }
   }
 
   void _openBuilder(BuildContext context) {
@@ -163,10 +178,12 @@ class _MenuScreenState extends State<MenuScreen> {
               final query = _searchQuery.trim().toLowerCase();
               final visible = <int>[];
               for (var i = 0; i < categories.length; i++) {
-                if (query.isEmpty ||
-                    categories[i]
-                        .dishes
-                        .any((d) => d.name.toLowerCase().contains(query))) {
+                final hasVisibleDish = categories[i].dishes.any((d) {
+                  if (stopList.contains(d.name)) return false;
+                  if (query.isEmpty) return true;
+                  return d.name.toLowerCase().contains(query);
+                });
+                if (hasVisibleDish) {
                   visible.add(i);
                 }
               }
@@ -225,14 +242,15 @@ class _MenuScreenState extends State<MenuScreen> {
                               const SizedBox(height: 8),
                               Builder(
                                 builder: (_) {
-                                  final filtered = query.isEmpty
-                                      ? categories[idx].dishes
-                                      : categories[idx]
-                                          .dishes
-                                          .where((d) => d.name
+                                  final filtered = categories[idx]
+                                      .dishes
+                                      .where((d) => !stopList.contains(d.name))
+                                      .where((d) => query.isEmpty
+                                          ? true
+                                          : d.name
                                               .toLowerCase()
                                               .contains(query))
-                                          .toList();
+                                      .toList();
                                   return GridView.builder(
                                     shrinkWrap: true,
                                     physics:
