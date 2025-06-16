@@ -5,7 +5,7 @@ void main() {
   testWidgets('Start page shows new action buttons', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    expect(find.text('Вход / Регистрация'), findsOneWidget);
-    expect(find.text('Быстрый заказ'), findsNothing);
+    expect(find.text('Регистрация'), findsOneWidget);
+    expect(find.text('Вход'), findsOneWidget);
   });
 }
