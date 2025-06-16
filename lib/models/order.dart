@@ -51,7 +51,9 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) => Order(
         id: json['id'] as String? ?? '',
         orderNumber: json['order_number'] as int? ?? 0,
-        date: DateTime.parse(json['date'] as String),
+        date: DateTime.parse(
+          (json['created_at'] ?? json['date']) as String,
+        ),
         items: (json['items'] as List<dynamic>? ?? [])
             .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
             .toList(),
@@ -89,7 +91,7 @@ class Order {
   Map<String, dynamic> toMap() => {
         'id': id,
         'order_number': orderNumber,
-        'date': date.toIso8601String(),
+        'created_at': date.toIso8601String(),
         'items': items
             .map((e) => {
                   'dish': e.dish.name,
