@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'phone_login_screen.dart';
-import '../main.dart';
 import '../models/profile_model.dart';
 
 /// A simple welcome screen displayed on app start.
@@ -29,41 +27,55 @@ class WelcomeScreen extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/register');
+                          },
+                          child: const Text('Регистрация'),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => PhoneLoginScreen()),
-                        );
-                      },
-                      child: const Text('Вход / Регистрация'),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                          child: const Text('Вход'),
                         ),
                       ),
-                      onPressed: () {
-                        final profile = ProfileModel.instance;
-                        profile.setUserId('guest_debug');
-                        Navigator.of(context).pushReplacementNamed('/main');
-                      },
-                      child: const Text('Отладка'),
-                    ),
-                  ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          onPressed: () {
+                            final profile = ProfileModel.instance;
+                            profile.setUserId('guest_debug');
+                            Navigator.of(context).pushReplacementNamed('/main');
+                          },
+                          child: const Text('Отладка'),
+                        ),
+                      ),
                     ],
                   ),
                 ),

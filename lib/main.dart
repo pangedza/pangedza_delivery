@@ -6,6 +6,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'constants/supabase_keys.dart';
 import 'models/profile_model.dart';
 import 'screens/welcome_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
@@ -66,6 +68,8 @@ class MyApp extends StatelessWidget {
       supportedLocales: const [Locale('ru', '')],
       initialRoute: '/',
       routes: {
+        '/register': (_) => RegisterScreen(),
+        '/login': (_) => LoginScreen(),
         '/': (_) => const WelcomeScreen(),
         '/main': (_) => const MainScreen(),
         '/profile': (_) => const MainScreen(initialIndex: 0),
