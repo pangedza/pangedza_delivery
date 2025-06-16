@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' as flutter_provider;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile_model.dart';
 
@@ -30,7 +30,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
 
     if (result.user != null) {
       final userId = result.user!.id;
-      final profile = Provider.of<ProfileModel>(context, listen: false);
+      final profile = flutter_provider.Provider.of<ProfileModel>(context, listen: false);
       profile.setUserId(userId);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
