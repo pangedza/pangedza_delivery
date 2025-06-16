@@ -19,11 +19,11 @@ import 'widgets/bottom_navigation.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print('Checking .env exists: ${File('.env').existsSync()}');
+  // print('Checking .env exists: ${File('.env').existsSync()}'); // [removed for production]
   try {
     await dotenv.load(fileName: '.env');
   } catch (e) {
-    print('Ошибка загрузки .env: $e');
+    // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
   runApp(const MyApp());
@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: const ColorScheme.light(
           primary: Color(0xFFE30613),
-          background: Colors.white,
+          surface: Colors.white, // updated from deprecated 'background'
         ),
         useMaterial3: true,
       ),

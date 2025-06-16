@@ -15,7 +15,7 @@ class MockFirestoreService implements FirestoreServiceInterface {
   @override
   Future<void> saveOrder(Map<String, dynamic> data) async {
     await Future.delayed(const Duration(milliseconds: 100));
-    print('Mock saveOrder: $data');
+    // print('Mock saveOrder: $data'); // [removed for production]
   }
 
   Future<void> saveUserProfile(String name) async {

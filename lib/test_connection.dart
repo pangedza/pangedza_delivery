@@ -1,10 +1,11 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> testSupabase() async {
-  final response = await Supabase.instance.client
+  await Supabase.instance.client
       .from('restaurants')
       .select()
-      .execute();
+      .then((_) {}) // updated from deprecated .execute()
+      ;
 
-  print(response.data);
+  // print(response.data); // [removed for production]
 }
