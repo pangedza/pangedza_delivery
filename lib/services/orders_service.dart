@@ -4,10 +4,15 @@ class OrdersService {
   final supabase = Supabase.instance.client;
 
   Future<List<Map<String, dynamic>>> getOrders() async {
-    final response = await supabase.from('orders').select().execute();
-    if (response.error != null) {
-      throw Exception('Ошибка при получении заказов: ${response.error!.message}');
+    final response = await supabase
+        .from('orders')
+        .select()
+        .order('date', ascending: false);
+
+    if (response == null) {
+      throw Exception('Не удалось получить заказы');
     }
-    return List<Map<String, dynamic>>.from(response.data);
+
+    return List<Map<String, dynamic>>.from(response);
   }
 }
