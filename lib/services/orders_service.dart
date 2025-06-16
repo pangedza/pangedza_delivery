@@ -85,4 +85,20 @@ class OrdersService {
       return false;
     }
   }
+
+  /// Cancels the given [order] and notifies Telegram.
+  Future<bool> cancelOrder(Order order) async {
+    try {
+      await _client
+          .from('orders')
+          .update({'status': 'cancelled'})
+          .eq('id', order.id);
+      await TelegramService.sendOrder(
+          '🚫 Заказ №${order.id} был отменён пользователем.');
+      return true;
+    } catch (e) {
+      debugPrint('Ошибка отмены заказа: $e');
+      return false;
+    }
+  }
 }
