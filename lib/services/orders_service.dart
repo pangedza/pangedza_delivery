@@ -19,7 +19,7 @@ class OrdersService {
 
   Future<bool> createOrder(CartModel cart, ProfileModel profile) async {
     final orderData = {
-      'user_id': profile.id,
+      'user_id': profile.isGuest ? null : profile.id,
       'total': cart.total,
       'items': cart.toJson(),
       'created_at': DateTime.now().toIso8601String(),
@@ -39,13 +39,15 @@ class OrdersService {
 
     final orderNumber = response['order_number'];
 
-    await http.post(
-      Uri.parse('https://your-server.com/telegram-webhook'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'text': '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}'
-      }),
-    );
+    if (!profile.isGuest) {
+      await http.post(
+        Uri.parse('https://your-server.com/telegram-webhook'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'text': '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}'
+        }),
+      );
+    }
 
     return true;
   }

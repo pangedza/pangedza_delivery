@@ -17,6 +17,7 @@ class ProfileModel extends ChangeNotifier {
   double? lng;
 
   String get id => _id ?? '00000000-0000-0000-0000-000000000000';
+  bool get isGuest => _id == 'guest_debug';
 
   Future<void> load() async {
     _id = authService.getCurrentUserId();
