@@ -125,6 +125,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       locale: const Locale('ru'),
     );
     if (date == null) return;
+    if (!context.mounted) return;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -135,6 +136,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
     if (time == null) return;
+    if (!context.mounted) return;
     setState(() {
       _dateTime = DateTime(
         date.year,
@@ -174,6 +176,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       ),
     );
+    if (!context.mounted) return;
     if (result != null) {
       setState(() => _payment = result);
     }
@@ -209,6 +212,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ),
       );
+      if (!context.mounted) return;
       if (addr != null) {
         setState(() => _selectedAddress = addr);
         break;
@@ -228,6 +232,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
           ),
         );
+        if (!context.mounted) return;
       }
     }
   }

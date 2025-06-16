@@ -84,6 +84,7 @@ class _AddressFormContentState extends State<AddressFormContent> {
         ),
       ),
     );
+    if (!context.mounted) return;
     if (result != null) {
       setState(() => _type = result);
     }
@@ -97,6 +98,7 @@ class _AddressFormContentState extends State<AddressFormContent> {
         builder: (_) => AddressMapScreen(address: addr, initial: _latLng),
       ),
     );
+    if (!context.mounted) return;
     if (result != null) {
       setState(() => _latLng = result);
     }

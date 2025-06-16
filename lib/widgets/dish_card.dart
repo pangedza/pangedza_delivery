@@ -135,7 +135,7 @@ class DishCard extends StatelessWidget {
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.withAlpha((0.7 * 255).toInt()) // deprecated .withOpacity(),
+                  color: Colors.grey.withAlpha((0.7 * 255).toInt()), // deprecated .withOpacity()
                   borderRadius: BorderRadius.circular(16),
                 ),
                 alignment: Alignment.center,
