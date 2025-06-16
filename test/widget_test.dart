@@ -6,6 +6,6 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     expect(find.text('Вход / Регистрация'), findsOneWidget);
-    expect(find.text('Быстрый заказ'), findsOneWidget);
+    expect(find.text('Быстрый заказ'), findsNothing);
   });
 }

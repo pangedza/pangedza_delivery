@@ -44,29 +44,6 @@ class WelcomeScreen extends StatelessWidget {
                       child: const Text('Вход / Регистрация'),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 50,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.white),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const MainScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text('Быстрый заказ'),
-                    ),
-                  ),
                 ],
               ),
             ),

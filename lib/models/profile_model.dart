@@ -5,8 +5,7 @@ class ProfileModel extends ChangeNotifier {
   ProfileModel._();
   static final ProfileModel instance = ProfileModel._();
 
-  // Default UUID for guest users
-  String id = '00000000-0000-0000-0000-000000000000';
+  String? _id;
   String phone = '+7(900)000-00-00';
   String name = 'Гость';
   /// Role of the current user. Defaults to `user`.
@@ -17,8 +16,15 @@ class ProfileModel extends ChangeNotifier {
   double? lat;
   double? lng;
 
+  String get id => _id ?? '00000000-0000-0000-0000-000000000000';
+
   Future<void> load() async {
-    id = authService.getCurrentUserId();
+    _id = authService.getCurrentUserId();
+    notifyListeners();
+  }
+
+  void setUserId(String id) {
+    _id = id;
     notifyListeners();
   }
 

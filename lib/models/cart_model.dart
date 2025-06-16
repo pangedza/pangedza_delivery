@@ -43,4 +43,13 @@ class CartModel extends ChangeNotifier {
     items.clear();
     notifyListeners();
   }
+
+  List<Map<String, dynamic>> toJson() => items
+      .map((e) => {
+            'dish': e.dish.name,
+            'variant': e.variant.title,
+            'price': e.variant.price,
+            'quantity': e.quantity,
+          })
+      .toList();
 }

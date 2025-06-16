@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../models/profile_model.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   @override
@@ -27,10 +29,13 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
     );
 
     if (result.user != null) {
+      final userId = result.user!.id;
+      final profile = Provider.of<ProfileModel>(context, listen: false);
+      profile.setUserId(userId);
       Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Неверный код")),
+        const SnackBar(content: Text("Неверный код")),
       );
     }
   }
