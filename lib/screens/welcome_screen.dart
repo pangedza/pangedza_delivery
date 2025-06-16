@@ -30,6 +30,8 @@ class WelcomeScreen extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.redAccent,
+                            foregroundColor: Colors.black,
+                            textStyle: TextStyle(fontSize: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -47,6 +49,8 @@ class WelcomeScreen extends StatelessWidget {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.redAccent,
+                            foregroundColor: Colors.black,
+                            textStyle: TextStyle(fontSize: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),

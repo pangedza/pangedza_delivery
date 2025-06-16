@@ -510,7 +510,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   debugPrint("🔴 submitOrder запускается");
                   await submitOrder();
                 },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.black,
+                ),
                 child: const Text('ОТПРАВИТЬ ЗАКАЗ'),
               ),
             ),

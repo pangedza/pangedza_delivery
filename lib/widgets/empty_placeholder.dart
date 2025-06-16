@@ -41,7 +41,8 @@ class EmptyPlaceholder extends StatelessWidget {
                   onPressed: onPressed,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    textStyle: TextStyle(fontSize: 16),
                   ),
                   child: const Text(
                     'ПЕРЕЙТИ В МЕНЮ',
