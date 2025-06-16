@@ -2,6 +2,7 @@ import 'dish_variant.dart';
 import 'modifier.dart';
 
 class Dish {
+  final String id;
   final String name;
   final String weight;
   final int price;
@@ -10,6 +11,7 @@ class Dish {
   final List<Modifier> modifiers;
 
   const Dish({
+    required this.id,
     required this.name,
     required this.weight,
     required this.price,
@@ -23,6 +25,7 @@ class Dish {
             ?.map((e) => Modifier.fromJson(e as Map<String, dynamic>))
             .toList() ?? [];
     return Dish(
+      id: json['id']?.toString() ?? '',
       name: json['name'] as String,
       weight: json['weight']?.toString() ?? '',
       price: (json['price'] as num).toInt(),

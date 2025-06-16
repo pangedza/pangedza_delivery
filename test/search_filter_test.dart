@@ -7,11 +7,11 @@ void main() {
   test('filterCategories returns only categories with matched dishes', () {
     final categories = [
       Category(name: 'A', dishes: const [
-        Dish(name: 'Soup', weight: '', price: 100, imageUrl: '', modifiers: []),
-        Dish(name: 'Salad', weight: '', price: 200, imageUrl: '', modifiers: []),
+        Dish(id: '1', name: 'Soup', weight: '', price: 100, imageUrl: '', modifiers: []),
+        Dish(id: '2', name: 'Salad', weight: '', price: 200, imageUrl: '', modifiers: []),
       ]),
       Category(name: 'B', dishes: const [
-        Dish(name: 'Pie', weight: '', price: 150, imageUrl: '', modifiers: []),
+        Dish(id: '3', name: 'Pie', weight: '', price: 150, imageUrl: '', modifiers: []),
       ]),
     ];
 

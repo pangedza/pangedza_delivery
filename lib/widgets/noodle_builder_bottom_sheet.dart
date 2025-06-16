@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/cart_model.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
+import 'package:uuid/uuid.dart';
 
 /// Bottom sheet widget allowing users to build their own noodles.
 class NoodleBuilderBottomSheet extends StatefulWidget {
@@ -77,6 +78,7 @@ class _NoodleBuilderBottomSheetState extends State<NoodleBuilderBottomSheet> {
                 child: ElevatedButton(
                   onPressed: () {
                     final dish = Dish(
+                      id: const Uuid().v4(),
                       name: '$_selectedNoodle с $_selectedFilling',
                       weight: '',
                       price: _price,

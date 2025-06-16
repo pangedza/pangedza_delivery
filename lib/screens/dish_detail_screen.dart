@@ -3,6 +3,7 @@ import '../models/dish.dart';
 import '../models/dish_variant.dart';
 import '../models/modifier.dart';
 import '../models/cart_model.dart';
+import '../services/dish_service.dart';
 
 class DishDetailScreen extends StatefulWidget {
   final Dish dish;
@@ -14,10 +15,28 @@ class DishDetailScreen extends StatefulWidget {
 
 class _DishDetailScreenState extends State<DishDetailScreen> {
   final Set<Modifier> _selectedMods = {};
+  List<Modifier> _mods = [];
   
   @override
   void initState() {
     super.initState();
+    _mods = widget.dish.modifiers;
+    if (_mods.isEmpty) {
+      _loadModifiers();
+    }
+  }
+
+  Future<void> _loadModifiers() async {
+    try {
+      final mods = await DishService().fetchModifiers(widget.dish.id);
+      if (mounted) {
+        setState(() {
+          _mods = mods;
+        });
+      }
+    } catch (_) {
+      // ignore errors
+    }
   }
 
   void _add() {
@@ -29,10 +48,10 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
   int get _priceWithMods =>
       widget.dish.price + _selectedMods.fold(0, (s, m) => s + m.price);
 
-  List<Widget> _buildModifierWidgets(List<Modifier> mods) {
-    if (mods.isEmpty) return [];
+  List<Widget> _buildModifierWidgets() {
+    if (_mods.isEmpty) return [];
     final Map<String, List<Modifier>> groups = {};
-    for (final m in mods) {
+    for (final m in _mods) {
       groups.putIfAbsent(m.groupName ?? '', () => []).add(m);
     }
     final widgets = <Widget>[];
@@ -102,7 +121,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
               Text(dish.description!),
               const SizedBox(height: 16),
             ],
-            ..._buildModifierWidgets(dish.modifiers),
+            ..._buildModifierWidgets(),
             const Spacer(),
             SizedBox(
               width: double.infinity,

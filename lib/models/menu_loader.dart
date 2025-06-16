@@ -12,7 +12,7 @@ Future<List<Category>> loadMenu(BuildContext context) async {
     final List data = await client
         .from('dishes')
         .select(
-            'name, weight, price, description, image_url, categories(name, sort_order), dish_modifiers(modifiers(name, price, group_name))');
+            'id, name, weight, price, description, image_url, categories(name, sort_order), dish_modifiers(modifiers(name, price, group_name))');
 
     final Map<String, List<Dish>> grouped = {};
     final Map<String, int> orders = {};
@@ -27,6 +27,7 @@ Future<List<Category>> loadMenu(BuildContext context) async {
           .toList();
 
       final dish = Dish(
+        id: item['id']?.toString() ?? '',
         name: item['name'] as String,
         weight: item['weight']?.toString() ?? '',
         price: (item['price'] as num).toInt(),

@@ -31,7 +31,7 @@ class CartItem {
 
       final dish = dishRaw is Map<String, dynamic>
           ? Dish.fromJson(dishRaw)
-          : Dish(name: dishRaw?.toString() ?? '', weight: '', price: price, imageUrl: '', modifiers: const []);
+          : Dish(id: '', name: dishRaw?.toString() ?? '', weight: '', price: price, imageUrl: '', modifiers: const []);
 
       final variant = variantRaw is Map<String, dynamic>
           ? DishVariant.fromJson(variantRaw)
@@ -54,7 +54,7 @@ class CartItem {
         qty = int.tryParse(json['quantity'].toString()) ?? 1;
       }
       return CartItem(
-        dish: Dish(name: '', weight: '', price: 0, imageUrl: '', modifiers: const []),
+        dish: Dish(id: '', name: '', weight: '', price: 0, imageUrl: '', modifiers: const []),
         variant: const DishVariant(title: '', price: 0),
         modifiers: const [],
         quantity: qty,
