@@ -21,11 +21,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    profile.load();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => profile.load());
   }
 
   @override
   Widget build(BuildContext context) {
+    if (profile.id == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+            (route) => false,
+          );
+        }
+      });
+      return const Scaffold();
+    }
     String formatDate(DateTime? date) {
       if (date == null) return '';
       return DateFormat('dd/MM/yyyy', 'ru').format(date);
@@ -110,12 +123,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: AppTheme.redButton,
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-                      (route) => false,
-                    );
+                  onPressed: () async {
+                    await profile.signOut();
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                        (route) => false,
+                      );
+                    }
                   },
                   child: const Text('Выйти'),
                 ),

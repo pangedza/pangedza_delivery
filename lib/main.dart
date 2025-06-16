@@ -30,6 +30,7 @@ Future<void> main() async {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  await ProfileModel.instance.load();
   runApp(
     MultiProvider(
       providers: [
@@ -75,7 +76,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ru', '')],
-      initialRoute: '/',
+      initialRoute:
+          ProfileModel.instance.id != null ? '/main' : '/',
       routes: {
         '/register': (_) => RegisterScreen(),
         '/login': (_) => LoginScreen(),
@@ -113,7 +115,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     profile.addListener(_profileChanged);
-    profile.load();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => profile.load());
   }
 
   @override

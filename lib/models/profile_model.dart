@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../di.dart';
+import '../services/users_service.dart';
+import '../utils/shared_prefs.dart';
 
 class ProfileModel extends ChangeNotifier {
   ProfileModel._();
@@ -22,12 +24,21 @@ class ProfileModel extends ChangeNotifier {
   // удалено временно отладочное поведение
 
   Future<void> load() async {
-    _id = authService.getCurrentUserId();
+    final storedId = await SharedPrefs.instance.getUserId() ?? '';
+    if (storedId.isNotEmpty) {
+      _id = storedId;
+      final profile = await UsersService().getProfile(storedId);
+      if (profile != null) {
+        _name = profile['name'] ?? '';
+        _phone = profile['phone'] ?? '';
+      }
+    }
     notifyListeners();
   }
 
   void setUserId(String id) {
     _id = id;
+    SharedPrefs.instance.setUserId(id);
     notifyListeners();
   }
 
@@ -35,6 +46,7 @@ class ProfileModel extends ChangeNotifier {
     _id = data['id'] ?? '';
     _name = data['name'] ?? '';
     _phone = data['phone'] ?? '';
+    if (_id.isNotEmpty) SharedPrefs.instance.setUserId(_id);
     notifyListeners();
   }
 
@@ -57,6 +69,14 @@ class ProfileModel extends ChangeNotifier {
     address = newAddress;
     lat = latitude;
     lng = longitude;
+    notifyListeners();
+  }
+
+  Future<void> signOut() async {
+    _id = '';
+    _name = '';
+    _phone = '';
+    await SharedPrefs.instance.clearUserId();
     notifyListeners();
   }
 }
