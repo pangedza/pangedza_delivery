@@ -8,7 +8,7 @@ This project is a starting point for a Flutter application.
 
 ## Environment configuration
 
-Copy `.env.example` to `.env` and fill in your Firebase and Telegram keys before running the app.
+Copy `.env.example` to `.env` and fill in your Supabase and Telegram keys before running the app.
 
 A few resources to get you started if this is your first Flutter project:
 

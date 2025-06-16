@@ -10,6 +10,7 @@ import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
 import '../services/telegram_service.dart';
 import '../services/order_service.dart';
+import '../services/orders_service.dart';
 import '../services/admin_panel_service.dart';
 import '../di.dart';
 
@@ -28,6 +29,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
   final addressBook = AddressBookModel.instance;
   final profile = ProfileModel.instance;
+
+  Future<void> submitOrder() async {
+    final address = _selectedAddress;
+
+    final userId = profile.id.isNotEmpty ? profile.id : 'anonymous-user-id';
+    final name = profile.name.isNotEmpty ? profile.name : 'Гость';
+    final phone = profile.phone.isNotEmpty ? profile.phone : '+7(900)000-00-00';
+
+    final orderData = {
+      'user_id': userId,
+      'name': name,
+      'phone': phone,
+      'city': 'Новороссийск',
+      'district': '',
+      'street': address?.street ?? '',
+      'house': address?.house ?? '',
+      'flat': address?.flat ?? '',
+      'total': cart.total,
+      'comment': commentCtrl.text,
+      'date': DateTime.now().toIso8601String(),
+    };
+
+    await OrdersService().createOrder(orderData);
+    cart.clear();
+    if (mounted) {
+      Navigator.pushNamed(context, '/orders');
+    }
+  }
 
   late final TextEditingController nameCtrl;
   late final TextEditingController phoneCtrl;
@@ -455,7 +484,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _canSubmit ? _confirm : null,
+                onPressed: _canSubmit
+                    ? () async {
+                        await submitOrder();
+                      }
+                    : null,
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: const Text('ОТПРАВИТЬ ЗАКАЗ'),
               ),

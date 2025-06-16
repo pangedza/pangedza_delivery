@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/orders_service.dart';
+import '../models/profile_model.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({Key? key}) : super(key: key);
@@ -21,7 +22,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   Future<void> _loadOrders() async {
     try {
-      final orders = await _service.getOrders();
+      final userId = ProfileModel.instance.id;
+      final orders = await _service.getOrders(userId);
       setState(() {
         _orders = orders;
         _loading = false;
