@@ -25,6 +25,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   List<Order> _orders = [];
   late TabController _tabController;
   bool _loading = true;
+  final Set<String> _ignoredOrderIds = <String>{};
 
   @override
   void initState() {
@@ -69,11 +70,39 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     }
   }
 
+  Future<void> _confirmDelete(Order order) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить заказ?'),
+        content: const Text('Заказ будет скрыт из истории на этом устройстве.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Удалить'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      setState(() {
+        _ignoredOrderIds.add(order.id);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final active = _orders.where((o) => o.status == 'active').toList();
+    final filtered =
+        _orders.where((o) => !_ignoredOrderIds.contains(o.id)).toList();
+    final active = filtered.where((o) => o.status == 'active').toList();
     final historyOrders =
-        _orders.where((o) => o.status != 'active').toList();
+        filtered.where((o) => o.status != 'active').toList();
     if (_loading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -121,8 +150,18 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Заказ №${order.orderNumber}',
-                                style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Заказ №${order.orderNumber}',
+                                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                                IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  tooltip: 'Удалить',
+                                  onPressed: () => _confirmDelete(order),
+                                ),
+                              ],
+                            ),
                             Text(dateStr),
                             const SizedBox(height: 4),
                             for (final item in order.items)
