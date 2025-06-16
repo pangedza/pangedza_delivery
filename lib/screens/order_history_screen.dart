@@ -92,7 +92,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: 'Активный заказ'),
+            Tab(text: 'Активные заказы'),
             Tab(text: 'История заказов'),
           ],
         ),
@@ -102,7 +102,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         children: [
           active.isEmpty
               ? const Center(child: Text('Нет активных заказов'))
-              : ActiveOrderScreen(order: active.first, onCancelled: _loadOrders),
+              : ActiveOrderScreen(orders: active, onCancelled: _loadOrders),
           historyOrders.isEmpty
               ? const Center(child: Text('У вас пока нет заказов'))
               : ListView.builder(
@@ -139,12 +139,10 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                                 '${order.city}, ${order.district}, ${order.street}, д. ${order.house}',
                               ),
                             const SizedBox(height: 4),
+                            Text('📦 ${order.deliveryType == 'pickup' ? 'Самовывоз' : 'Доставка'}'),
+                            Text('📌 Статус: ${order.statusDisplay}'),
+                            const SizedBox(height: 4),
                             Text('Итого: $priceStr ₽'),
-                            if (order.status == 'cancelled')
-                              Text(
-                                'Статус: ${order.statusDisplay}',
-                                style: const TextStyle(color: Colors.red),
-                              ),
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(

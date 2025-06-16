@@ -48,7 +48,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       setState(() => isSubmitting = true);
       debugPrint('🟢 submitOrder for user ${profile.id}');
 
-      final success = await OrdersService().createOrder(cart, profile);
+      final deliveryType =
+          _mode == CheckoutMode.pickup ? 'pickup' : 'delivery';
+      final success =
+          await OrdersService().createOrder(cart, profile, deliveryType);
       if (success) {
         Provider.of<CartModel>(context, listen: false).clear();
         if (context.mounted) {
@@ -270,6 +273,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       payment: _payment!.name,
       leaveAtDoor: false,
       pickup: pickup,
+      deliveryType: pickup ? 'pickup' : 'delivery',
     );
     orderService.addOrder(order);
     firestoreService.saveOrder(order.toMap());
