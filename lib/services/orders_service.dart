@@ -20,6 +20,8 @@ class OrdersService {
   Future<bool> createOrder(CartModel cart, ProfileModel profile) async {
     final orderData = {
       'user_id': profile.id,
+      'user_name': profile.name,
+      'user_phone': profile.phone,
       'total': cart.total,
       'items': cart.toJson(),
       'created_at': DateTime.now().toIso8601String(),

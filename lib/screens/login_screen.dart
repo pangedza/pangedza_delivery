@@ -19,7 +19,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (userId != null && mounted) {
-      context.read<ProfileModel>().setUserId(userId);
+      final profileModel = context.read<ProfileModel>();
+      final userProfile = await UsersService().getProfile(userId);
+      if (userProfile != null) {
+        profileModel.setUser(userProfile);
+      }
       Navigator.of(context).pushReplacementNamed('/main');
     } else {
       ScaffoldMessenger.of(context)
