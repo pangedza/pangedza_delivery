@@ -20,6 +20,7 @@ import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
 import 'screens/orders_screen.dart';
 import 'widgets/bottom_navigation.dart';
+import 'models/cart_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +36,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ProfileModel.instance),
+        ChangeNotifierProvider(create: (_) => CartModel.instance),
       ],
       child: const MyApp(),
     ),
