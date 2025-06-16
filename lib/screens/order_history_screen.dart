@@ -5,7 +5,6 @@ import '../models/profile_model.dart';
 import '../models/cart_model.dart';
 import '../models/order.dart';
 import 'package:intl/intl.dart';
-import '../widgets/empty_placeholder.dart';
 import '../main.dart';
 import '../widgets/app_drawer.dart';
 import 'orders/active_order_screen.dart';
@@ -40,8 +39,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   }
 
   Future<void> _loadOrders() async {
-    final userId = ProfileModel.instance.id;
+    final userId = ProfileModel.instance.id.isNotEmpty
+        ? ProfileModel.instance.id
+        : '00000000-0000-0000-0000-000000000000';
     final fetchedOrders = await service.getOrders(userId);
+    print('Заказы загружаются для user_id: $userId');
+    print('Получено заказов: ${fetchedOrders.length}');
     setState(() {
       _orders = fetchedOrders.map((json) => Order.fromJson(json)).toList();
       _loading = false;
@@ -90,17 +93,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
               ? const Center(child: Text('Нет активных заказов'))
               : ActiveOrderScreen(order: active.first),
           historyOrders.isEmpty
-              ? EmptyPlaceholder(
-                  message: 'Вы еще не сделали у нас ни одного заказа',
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const MainScreen(),
-                      ),
-                    );
-                  },
-                )
+              ? const Center(child: Text('У вас пока нет заказов'))
               : ListView.builder(
                   itemCount: historyOrders.length,
                   itemBuilder: (_, index) {
