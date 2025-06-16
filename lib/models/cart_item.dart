@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dish.dart';
 import 'dish_variant.dart';
 
@@ -12,11 +13,37 @@ class CartItem {
     this.quantity = 1,
   });
 
-  factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
-        dish: Dish.fromJson(json['dish'] as Map<String, dynamic>),
-        variant: DishVariant.fromJson(json['variant'] as Map<String, dynamic>),
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    try {
+      final dishRaw = json['dish'];
+      final variantRaw = json['variant'];
+      final price = json['price'] as int? ??
+          (variantRaw is Map ? variantRaw['price'] as int? : null) ??
+          (dishRaw is Map ? dishRaw['price'] as int? : null) ??
+          0;
+
+      final dish = dishRaw is Map<String, dynamic>
+          ? Dish.fromJson(dishRaw)
+          : Dish(name: dishRaw?.toString() ?? '', weight: '', price: price, modifiers: const []);
+
+      final variant = variantRaw is Map<String, dynamic>
+          ? DishVariant.fromJson(variantRaw)
+          : DishVariant(title: variantRaw?.toString() ?? '', price: price);
+
+      return CartItem(
+        dish: dish,
+        variant: variant,
         quantity: json['quantity'] as int? ?? 1,
       );
+    } catch (e) {
+      debugPrint('CartItem.fromJson error: $e');
+      return CartItem(
+        dish: Dish(name: '', weight: '', price: 0, modifiers: const []),
+        variant: const DishVariant(title: '', price: 0),
+        quantity: json['quantity'] as int? ?? 1,
+      );
+    }
+  }
 
   int get total => variant.price * quantity;
 
