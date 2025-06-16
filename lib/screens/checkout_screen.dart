@@ -50,8 +50,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       final deliveryType =
           _mode == CheckoutMode.pickup ? 'pickup' : 'delivery';
-      final success =
-          await OrdersService().createOrder(cart, profile, deliveryType);
+      final success = await OrdersService().createOrder(
+        cart,
+        profile,
+        deliveryType,
+        address: _selectedAddress,
+        payment: _payment?.name ?? '',
+      );
       if (success) {
         Provider.of<CartModel>(context, listen: false).clear();
         if (context.mounted) {
