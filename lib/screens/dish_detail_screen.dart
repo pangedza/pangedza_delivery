@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
+import '../models/modifier.dart';
 import '../models/cart_model.dart';
 
 class DishDetailScreen extends StatefulWidget {
@@ -12,17 +13,54 @@ class DishDetailScreen extends StatefulWidget {
 }
 
 class _DishDetailScreenState extends State<DishDetailScreen> {
-  late DishVariant _selected;
-
+  final Set<Modifier> _selectedMods = {};
+  
   @override
   void initState() {
     super.initState();
-    _selected = widget.dish.modifiers.first;
   }
 
   void _add() {
-    CartModel.instance.addItem(widget.dish, _selected);
+    final variant = DishVariant(title: '', price: widget.dish.price);
+    CartModel.instance.addItem(widget.dish, variant, _selectedMods.toList());
     Navigator.of(context).pop();
+  }
+
+  int get _priceWithMods =>
+      widget.dish.price + _selectedMods.fold(0, (s, m) => s + m.price);
+
+  List<Widget> _buildModifierWidgets(List<Modifier> mods) {
+    if (mods.isEmpty) return [];
+    final Map<String, List<Modifier>> groups = {};
+    for (final m in mods) {
+      groups.putIfAbsent(m.groupName ?? '', () => []).add(m);
+    }
+    final widgets = <Widget>[];
+    groups.forEach((name, list) {
+      if (name.isNotEmpty) {
+        widgets.add(Padding(
+          padding: const EdgeInsets.only(bottom: 4),
+          child: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ));
+      }
+      for (final m in list) {
+        final checked = _selectedMods.contains(m);
+        widgets.add(CheckboxListTile(
+          title: Text('${m.name}${m.price > 0 ? ' +${m.price} ₽' : ''}'),
+          value: checked,
+          onChanged: (_) {
+            setState(() {
+              if (checked) {
+                _selectedMods.remove(m);
+              } else {
+                _selectedMods.add(m);
+              }
+            });
+          },
+        ));
+      }
+    });
+    return widgets;
   }
 
   @override
@@ -64,20 +102,13 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
               Text(dish.description!),
               const SizedBox(height: 16),
             ],
-            ...dish.modifiers.map(
-              (v) => RadioListTile<DishVariant>(
-                title: Text('${v.title} - ${v.price} ₽'),
-                value: v,
-                groupValue: _selected,
-                onChanged: (val) => setState(() => _selected = val!),
-              ),
-            ),
+            ..._buildModifierWidgets(dish.modifiers),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _add,
-                child: Text('Добавить за ${_selected.price} ₽'),
+                child: Text('Добавить за ${_priceWithMods} ₽'),
               ),
             ),
           ],

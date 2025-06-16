@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
+import '../models/modifier.dart';
 import '../models/cart_model.dart';
 
 class DishVariantSheet extends StatefulWidget {
@@ -12,7 +13,7 @@ class DishVariantSheet extends StatefulWidget {
 }
 
 class _DishVariantSheetState extends State<DishVariantSheet> {
-  late DishVariant _selected;
+  late Modifier _selected;
 
   @override
   void initState() {
@@ -21,7 +22,8 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   }
 
   void _add() {
-    CartModel.instance.addItem(widget.dish, _selected);
+    final variant = DishVariant(title: '', price: widget.dish.price + _selected.price);
+    CartModel.instance.addItem(widget.dish, variant, [_selected]);
     Navigator.of(context).pop();
   }
 
@@ -72,15 +74,15 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
               const SizedBox(height: 16),
               if (dish.modifiers.length > 1)
                 ...dish.modifiers.map(
-                  (v) => RadioListTile<DishVariant>(
-                    title: Text('${v.title} - ${v.price} ₽'),
+                  (v) => RadioListTile<Modifier>(
+                    title: Text('${v.name} - ${v.price} ₽'),
                     value: v,
                     groupValue: _selected,
                     onChanged: (val) => setState(() => _selected = val!),
                   ),
                 )
               else
-                Text('${_selected.title} - ${_selected.price} ₽'),
+                Text('${_selected.name} - ${_selected.price} ₽'),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,

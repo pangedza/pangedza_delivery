@@ -260,6 +260,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             (e) => CartItem(
               dish: e.dish,
               variant: e.variant,
+              modifiers: e.modifiers,
               quantity: e.quantity,
             ),
           )

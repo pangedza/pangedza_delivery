@@ -1,15 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'dish.dart';
 import 'dish_variant.dart';
+import 'modifier.dart';
 
 class CartItem {
   final Dish dish;
   final DishVariant variant;
+  final List<Modifier> modifiers;
   int quantity;
 
   CartItem({
     required this.dish,
     required this.variant,
+    this.modifiers = const [],
     this.quantity = 1,
   });
 
@@ -20,6 +23,7 @@ class CartItem {
       }
       final dishRaw = json['dish'];
       final variantRaw = json['variant'];
+      final modsRaw = json['modifiers'] as List? ?? [];
       final price = json['price'] as int? ??
           (variantRaw is Map ? variantRaw['price'] as int? : null) ??
           (dishRaw is Map ? dishRaw['price'] as int? : null) ??
@@ -33,9 +37,14 @@ class CartItem {
           ? DishVariant.fromJson(variantRaw)
           : DishVariant(title: variantRaw?.toString() ?? '', price: price);
 
+      final mods = modsRaw
+          .map((e) => Modifier.fromJson(e as Map<String, dynamic>))
+          .toList();
+
       return CartItem(
         dish: dish,
         variant: variant,
+        modifiers: mods,
         quantity: json['quantity'] as int? ?? 1,
       );
     } catch (e) {
@@ -47,17 +56,20 @@ class CartItem {
       return CartItem(
         dish: Dish(name: '', weight: '', price: 0, imageUrl: '', modifiers: const []),
         variant: const DishVariant(title: '', price: 0),
+        modifiers: const [],
         quantity: qty,
       );
     }
   }
 
-  int get total => variant.price * quantity;
+  int get modifiersPrice => modifiers.fold(0, (sum, m) => sum + m.price);
+  int get total => (variant.price + modifiersPrice) * quantity;
 
   Map<String, dynamic> toMap() => {
         'dish': dish.name,
         'variant': variant.title,
-        'price': variant.price,
+        'modifiers': modifiers.map((e) => e.toMap()).toList(),
+        'price': variant.price + modifiersPrice,
         'quantity': quantity,
       };
 }

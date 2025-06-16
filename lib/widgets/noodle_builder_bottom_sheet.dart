@@ -84,7 +84,7 @@ class _NoodleBuilderBottomSheetState extends State<NoodleBuilderBottomSheet> {
                       modifiers: const [],
                     );
                     CartModel.instance
-                        .addItem(dish, DishVariant(title: '', price: _price));
+                        .addItem(dish, DishVariant(title: '', price: _price), const []);
                     Navigator.of(context).pop();
                   },
                   child: const Text('Добавить в корзину'),
