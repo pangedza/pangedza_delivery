@@ -33,18 +33,18 @@ class OrdersService {
       'status': 'active',
     };
 
-    final insertedOrder = await _client
+    final response = await _client
         .from('orders')
         .insert(orderData)
         .select()
         .single();
 
-    if (insertedOrder == null) {
-      print('Supabase error: could not insert order');
+    if (response == null || response['id'] == null) {
+      print("Ошибка создания заказа: ${response.toString()}");
       return false;
     }
 
-    final orderNumber = insertedOrder['order_number'];
+    final orderNumber = response['order_number'];
 
     await http.post(
       Uri.parse('https://your-server.com/telegram-webhook'),
