@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/orders_service.dart';
 import '../models/profile_model.dart';
 import '../models/cart_model.dart';
+import 'package:provider/provider.dart';
 import '../models/order.dart';
 import 'package:intl/intl.dart';
 import '../main.dart';
@@ -30,9 +31,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadOrders();
-    final userId = ProfileModel.instance.id.isNotEmpty
-        ? ProfileModel.instance.id
-        : '00000000-0000-0000-0000-000000000000';
+    final userId = context.read<ProfileModel>().id;
     OrdersService().getOrders(userId).then((orders) {
       // print("🔵 Получено заказов: ${orders.length}"); // [removed for production]
     }).catchError((e) {
@@ -47,9 +46,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   }
 
   Future<void> _loadOrders() async {
-    final userId = ProfileModel.instance.id.isNotEmpty
-        ? ProfileModel.instance.id
-        : '00000000-0000-0000-0000-000000000000';
+    final userId = context.read<ProfileModel>().id;
     List<Map<String, dynamic>> fetchedOrders = [];
     try {
       fetchedOrders = await OrdersService().getOrders(userId);

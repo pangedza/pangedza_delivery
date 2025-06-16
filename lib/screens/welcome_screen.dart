@@ -57,25 +57,6 @@ class WelcomeScreen extends StatelessWidget {
                           child: const Text('Вход'),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 50,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          onPressed: () {
-                            final profile = ProfileModel.instance;
-                            profile.setUserId('guest_debug');
-                            Navigator.of(context).pushReplacementNamed('/main');
-                          },
-                          child: const Text('Отладка'),
-                        ),
-                      ),
                     ],
                   ),
                 ),

@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
 
     if (userId != null && mounted) {
-      Provider.of<ProfileModel>(context, listen: false).setUserId(userId);
+      context.read<ProfileModel>().setUserId(userId);
       Navigator.of(context).pushReplacementNamed('/main');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:provider/provider.dart';
 import 'constants/supabase_keys.dart';
 import 'models/profile_model.dart';
 import 'screens/welcome_screen.dart';
@@ -28,7 +29,14 @@ Future<void> main() async {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ProfileModel.instance),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 /// Root widget of the application.
