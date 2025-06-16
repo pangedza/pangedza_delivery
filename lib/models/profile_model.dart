@@ -16,7 +16,7 @@ class ProfileModel extends ChangeNotifier {
   double? lat;
   double? lng;
 
-  String get id => _id.isNotEmpty ? _id : '00000000-0000-0000-0000-000000000000';
+  String? get id => _id.isNotEmpty ? _id : null;
   String get name => _name;
   String get phone => _phone;
   // удалено временно отладочное поведение

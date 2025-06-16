@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   'ID пользователя',
                   style: TextStyle(color: Colors.red),
                 ),
-                subtitle: Text(profile.id),
+                subtitle: Text(profile.id ?? ''),
               ),
               const Divider(),
               ListTile(

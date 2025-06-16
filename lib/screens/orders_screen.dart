@@ -23,6 +23,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Future<void> _loadOrders() async {
     try {
       final userId = ProfileModel.instance.id;
+      if (userId == null) {
+        setState(() => _loading = false);
+        return;
+      }
       final orders = await _service.getOrders(userId);
       if (!mounted) return;
       setState(() {

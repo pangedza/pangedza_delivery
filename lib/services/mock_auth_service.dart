@@ -9,7 +9,7 @@ class MockAuthService implements AuthServiceInterface {
   }
 
   @override
-  String getCurrentUserId() => '00000000-0000-0000-0000-000000000000';
+  String getCurrentUserId() => '';
 
   @override
   Future<void> saveUserProfile(Map<String, dynamic> profile) async {
