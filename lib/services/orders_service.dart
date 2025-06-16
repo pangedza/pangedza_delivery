@@ -21,16 +21,9 @@ class OrdersService {
     final orderData = {
       'user_id': profile.id,
       'total': cart.total,
-      'items': cart.items
-          .map((e) => {
-                'dish': e.dish.name,
-                'variant': e.variant.title,
-                'price': e.variant.price,
-                'quantity': e.quantity,
-              })
-          .toList(),
+      'items': cart.toJson(),
       'created_at': DateTime.now().toIso8601String(),
-      'status': 'active',
+      'status': 'active'
     };
 
     final response = await _client

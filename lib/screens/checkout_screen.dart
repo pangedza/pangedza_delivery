@@ -33,18 +33,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool isSubmitting = false;
 
   Future<void> submitOrder() async {
+    final profile = Provider.of<ProfileModel>(context, listen: false);
+    if (profile.id == null ||
+        profile.id == "00000000-0000-0000-0000-000000000000") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text(
+                "Пожалуйста, войдите в аккаунт перед оформлением заказа")),
+      );
+      return;
+    }
+
     try {
       setState(() => isSubmitting = true);
 
       final success = await OrdersService().createOrder(cart, profile);
       if (success) {
-        // Очистить корзину
         Provider.of<CartModel>(context, listen: false).clear();
-
-        // Перейти на главный экран
         if (context.mounted) {
           Navigator.of(context).popUntil((route) => route.isFirst);
-          // Можно показать Snackbar или Dialog при необходимости
         }
       } else {
         showError("Не удалось создать заказ");
@@ -52,9 +59,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     } catch (e) {
       showError("Ошибка при создании заказа");
     } finally {
-      if (mounted) {
-        setState(() => isSubmitting = false);
-      }
+      if (mounted) setState(() => isSubmitting = false);
     }
   }
 
