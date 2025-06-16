@@ -54,6 +54,9 @@ class TelegramService {
   static String buildTelegramMessage(Order order) {
     final addressText = buildFullAddress(order);
 
+    final safeAddress =
+        addressText.isNotEmpty ? addressText : 'не указано';
+
     String paymentText;
     switch (order.payment) {
       case 'cash':
@@ -69,6 +72,8 @@ class TelegramService {
         paymentText = order.payment;
     }
 
+    final safePayment = paymentText.isNotEmpty ? paymentText : 'не указано';
+
     final itemsText = order.items
         .map((e) =>
             '• ${e.dish.name} ${e.variant.title} ×${e.quantity} — ${e.variant.price} ₽')
@@ -80,16 +85,10 @@ class TelegramService {
       ..writeln('👤 Клиент: ${order.name}')
       ..writeln('📞 Телефон: ${order.phone}');
 
-    if (order.pickup) {
-      buffer
-        ..writeln('💰 Оплата: $paymentText')
-        ..writeln('🚶 Доставка: Самовывоз');
-    } else {
-      buffer
-        ..writeln('🏠 Адрес: $addressText')
-        ..writeln('💰 Оплата: $paymentText')
-        ..writeln('🚚 Доставка: Курьер');
-    }
+    buffer
+      ..writeln('📍 Адрес: $safeAddress')
+      ..writeln('💰 Оплата: $safePayment')
+      ..writeln(order.pickup ? '🚶 Доставка: Самовывоз' : '🚚 Доставка: Курьер');
 
     buffer
       ..writeln('🧾 Заказ:')

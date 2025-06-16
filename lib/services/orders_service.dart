@@ -6,6 +6,7 @@ import '../models/cart_model.dart';
 import '../models/cart_item.dart';
 import '../models/order.dart';
 import '../models/profile_model.dart';
+import '../models/address_model.dart';
 import 'telegram_service.dart';
 
 class OrdersService {
@@ -21,7 +22,12 @@ class OrdersService {
   }
 
   Future<bool> createOrder(
-      CartModel cart, ProfileModel profile, String deliveryType) async {
+      CartModel cart,
+      ProfileModel profile,
+      String deliveryType, {
+      AddressModel? address,
+      String payment = '',
+    }) async {
     final userId = profile.id;
     if (userId == null) {
       debugPrint('User ID is null – unable to create order');
@@ -55,6 +61,8 @@ class OrdersService {
 
       final orderNumber = response['order_number'] ?? response['id'];
 
+      final pickup = deliveryType == 'pickup';
+
       final order = Order(
         id: orderNumber.toString(),
         orderNumber: orderNumber is int ? orderNumber : int.tryParse(orderNumber.toString()) ?? 0,
@@ -65,17 +73,17 @@ class OrdersService {
         total: cart.total,
         name: profile.name,
         phone: profile.phone,
-        city: '',
+        city: 'Новороссийск',
         district: '',
-        street: '',
-        house: '',
-        flat: '',
-        floor: '',
-        intercom: '',
+        street: pickup ? 'Коммунистическая' : (address?.street ?? ''),
+        house: pickup ? '51' : (address?.house ?? ''),
+        flat: pickup ? '' : (address?.flat ?? ''),
+        floor: pickup ? '' : (address?.floor ?? ''),
+        intercom: pickup ? '' : (address?.code ?? ''),
         comment: '',
-        payment: '',
+        payment: payment,
         leaveAtDoor: false,
-        pickup: false,
+        pickup: pickup,
       );
 
       await TelegramService.sendOrderToTelegram(order);
