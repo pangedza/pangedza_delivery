@@ -87,6 +87,8 @@ class _CartScreenState extends State<CartScreen> {
                                       Text(item.dish.name),
                                       if (item.variant.title.isNotEmpty)
                                         Text(item.variant.title),
+                                      if (item.modifiers.isNotEmpty)
+                                        Text(item.modifiers.map((m) => m.name).join(', ')),
                                     ],
                                   ),
                                 ),

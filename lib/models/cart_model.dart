@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'cart_item.dart';
 import 'dish.dart';
 import 'dish_variant.dart';
+import 'modifier.dart';
 
 class CartModel extends ChangeNotifier {
   CartModel._();
@@ -14,15 +15,24 @@ class CartModel extends ChangeNotifier {
   int get itemCount => items.fold(0, (sum, item) => sum + item.quantity);
   int get totalPrice => total;
 
-  void addItem(Dish dish, DishVariant variant) {
+  void addItem(Dish dish, DishVariant variant, [List<Modifier> mods = const []]) {
     try {
       final existing = items.firstWhere((i) =>
-          i.dish.name == dish.name && i.variant.title == variant.title);
+          i.dish.name == dish.name &&
+          i.variant.title == variant.title &&
+          _modsEqual(i.modifiers, mods));
       existing.quantity++;
     } catch (_) {
-      items.add(CartItem(dish: dish, variant: variant));
+      items.add(CartItem(dish: dish, variant: variant, modifiers: mods));
     }
     notifyListeners();
+  }
+
+  bool _modsEqual(List<Modifier> a, List<Modifier> b) {
+    if (a.length != b.length) return false;
+    final aNames = a.map((e) => e.name).toSet();
+    final bNames = b.map((e) => e.name).toSet();
+    return setEquals(aNames, bNames);
   }
 
   void increment(CartItem item) {
@@ -48,7 +58,8 @@ class CartModel extends ChangeNotifier {
       .map((e) => {
             'dish': e.dish.name,
             'variant': e.variant.title,
-            'price': e.variant.price,
+            'modifiers': e.modifiers.map((m) => m.toMap()).toList(),
+            'price': e.variant.price + e.modifiersPrice,
             'quantity': e.quantity,
           })
       .toList();

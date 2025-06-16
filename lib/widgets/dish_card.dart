@@ -20,8 +20,7 @@ class DishCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasMods = dish.modifiers.isNotEmpty;
-    final firstVariant =
-        hasMods ? dish.modifiers.first : DishVariant(title: dish.weight, price: dish.price);
+    final firstVariant = DishVariant(title: dish.weight, price: dish.price);
 
     final cart = CartModel.instance;
     final StopListService stopService = stopListService;
@@ -32,7 +31,7 @@ class DishCard extends StatelessWidget {
         .fold<int>(0, (sum, i) => sum + i.quantity);
 
     void add() {
-      cart.addItem(dish, firstVariant);
+      cart.addItem(dish, firstVariant, const []);
       stopService.consume(dish.name);
     }
 

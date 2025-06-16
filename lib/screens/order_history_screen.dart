@@ -65,7 +65,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
   void _repeat(order) {
     for (final item in order.items) {
       for (var i = 0; i < item.quantity; i++) {
-        cart.addItem(item.dish, item.variant);
+        cart.addItem(item.dish, item.variant, item.modifiers);
       }
     }
   }
@@ -166,7 +166,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                             const SizedBox(height: 4),
                             for (final item in order.items)
                               Text(
-                                '${item.dish.name} ${item.variant.title} x${item.quantity}',
+                                '${item.dish.name} ${item.variant.title} ${item.modifiers.isNotEmpty ? '(' + item.modifiers.map((m) => m.name).join(', ') + ')' : ''} x${item.quantity}',
                               ),
                             const SizedBox(height: 4),
                             if (order.pickup)

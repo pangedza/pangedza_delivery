@@ -1,4 +1,5 @@
 import 'dish_variant.dart';
+import 'modifier.dart';
 
 class Dish {
   final String name;
@@ -6,7 +7,7 @@ class Dish {
   final int price;
   final String? description;
   final String imageUrl;
-  final List<DishVariant> modifiers;
+  final List<Modifier> modifiers;
 
   const Dish({
     required this.name,
@@ -19,7 +20,7 @@ class Dish {
 
   factory Dish.fromJson(Map<String, dynamic> json) {
     final mods = (json['modifiers'] as List?)
-            ?.map((e) => DishVariant.fromJson(e as Map<String, dynamic>))
+            ?.map((e) => Modifier.fromJson(e as Map<String, dynamic>))
             .toList() ?? [];
     return Dish(
       name: json['name'] as String,

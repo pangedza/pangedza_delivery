@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'category.dart';
 import 'dish.dart';
-import 'dish_variant.dart';
+import 'modifier.dart';
 
 Future<List<Category>> loadMenu(BuildContext context) async {
   final client = Supabase.instance.client;
@@ -19,10 +19,7 @@ Future<List<Category>> loadMenu(BuildContext context) async {
       final cat = (item['categories']?['name'] as String?) ?? '';
       final modsRaw = item['dish_modifiers'] as List? ?? [];
       final mods = modsRaw
-          .map((e) => DishVariant(
-                title: e['modifiers']['name'] as String,
-                price: (e['modifiers']['price'] as num?)?.toInt() ?? 0,
-              ))
+          .map((e) => Modifier.fromJson(e['modifiers'] as Map<String, dynamic>))
           .toList();
 
       final dish = Dish(
