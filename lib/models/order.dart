@@ -115,6 +115,17 @@ class Order {
     return amount;
   }
 
+  String get statusDisplay {
+    switch (status) {
+      case 'cancelled':
+        return 'Отменён';
+      case 'active':
+        return 'Активный';
+      default:
+        return status;
+    }
+  }
+
   Map<String, dynamic> toMap() => {
         'id': id,
         'order_number': orderNumber,
