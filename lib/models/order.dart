@@ -116,14 +116,7 @@ class Order {
         'id': id,
         'order_number': orderNumber,
         'created_at': date.toIso8601String(),
-        'items': items
-            .map((e) => {
-                  'dish': e.dish.name,
-                  'variant': e.variant.title,
-                  'price': e.variant.price,
-                  'quantity': e.quantity,
-                })
-            .toList(),
+        'items': items.map((e) => e.toMap()).toList(),
         'total': total,
         'name': name,
         'phone': phone,
