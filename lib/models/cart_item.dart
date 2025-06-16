@@ -19,4 +19,11 @@ class CartItem {
       );
 
   int get total => variant.price * quantity;
+
+  Map<String, dynamic> toMap() => {
+        'dish': dish.name,
+        'variant': variant.title,
+        'price': variant.price,
+        'quantity': quantity,
+      };
 }
