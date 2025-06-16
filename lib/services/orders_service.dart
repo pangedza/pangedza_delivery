@@ -30,7 +30,7 @@ class OrdersService {
       'user_name': profile.name,
       'user_phone': profile.phone,
       'total': cart.total,
-      'items': cart.toJson(),
+      'items': cart.items.map((e) => e.toMap()).toList(),
       'created_at': DateTime.now().toIso8601String(),
       'status': 'active'
     };
