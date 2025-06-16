@@ -11,7 +11,6 @@ import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/reviews/reviews_screen.dart';
-import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
@@ -26,10 +25,7 @@ Future<void> main() async {
   } catch (e) {
     print('Ошибка загрузки .env: $e');
   }
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
   runApp(const MyApp());
 }
 
