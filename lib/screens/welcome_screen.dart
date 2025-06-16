@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'phone_login_screen.dart';
 import '../main.dart';
+import '../models/profile_model.dart';
 
 /// A simple welcome screen displayed on app start.
 class WelcomeScreen extends StatelessWidget {
@@ -22,12 +23,12 @@ class WelcomeScreen extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 60),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 50,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
@@ -44,10 +45,29 @@ class WelcomeScreen extends StatelessWidget {
                       child: const Text('Вход / Регистрация'),
                     ),
                   ),
-                ],
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      onPressed: () {
+                        final profile = ProfileModel.instance;
+                        profile.setUserId('guest_debug');
+                        Navigator.of(context).pushReplacementNamed('/main');
+                      },
+                      child: const Text('Отладка'),
+                    ),
+                  ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
         ],
       ),
     );
