@@ -71,8 +71,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final active = _orders.where((o) => o.status != 'Закрыт').toList();
-    final historyOrders = _orders.where((o) => o.status == 'Закрыт').toList();
+    final active = _orders.where((o) => o.status == 'active').toList();
+    final historyOrders =
+        _orders.where((o) => o.status != 'active').toList();
     if (_loading) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -139,6 +140,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                               ),
                             const SizedBox(height: 4),
                             Text('Итого: $priceStr ₽'),
+                            if (order.status == 'cancelled')
+                              Text(
+                                'Статус: ${order.statusDisplay}',
+                                style: const TextStyle(color: Colors.red),
+                              ),
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
