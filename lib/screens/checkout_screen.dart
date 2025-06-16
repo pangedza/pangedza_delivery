@@ -52,7 +52,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       if (success) {
         Provider.of<CartModel>(context, listen: false).clear();
         if (context.mounted) {
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Return user to the main screen while keeping them logged in.
+          Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);
         }
       } else {
         debugPrint('Не удалось создать заказ');
@@ -284,7 +285,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/main', (route) => false);
             },
             child: const Text('Ок'),
           ),
