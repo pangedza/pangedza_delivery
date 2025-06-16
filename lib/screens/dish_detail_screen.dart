@@ -117,10 +117,25 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                     ),
             ),
             const SizedBox(height: 16),
+            Text(
+              dish.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            if (dish.weight.isNotEmpty)
+              Text(
+                dish.weight,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
             if (dish.description != null) ...[
+              const SizedBox(height: 8),
               Text(dish.description!),
-              const SizedBox(height: 16),
             ],
+            const SizedBox(height: 8),
+            Text(
+              '${dish.price} ₽',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
             ..._buildModifierWidgets(),
             const Spacer(),
             SizedBox(

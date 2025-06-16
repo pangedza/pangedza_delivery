@@ -9,7 +9,11 @@ List<Category> filterCategories(List<Category> categories, String query) {
     final dishes =
         c.dishes.where((d) => d.name.toLowerCase().contains(q)).toList();
     if (dishes.isNotEmpty) {
-      result.add(Category(name: c.name, dishes: dishes, sortOrder: c.sortOrder));
+      result.add(Category(
+          id: c.id,
+          name: c.name,
+          dishes: dishes,
+          sortOrder: c.sortOrder));
     }
   }
   return result;
