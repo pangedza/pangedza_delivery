@@ -14,7 +14,8 @@ class OrdersService {
 
   Future<void> createOrder(Map<String, dynamic> orderData) async {
     final response = await _client.from('orders').insert(orderData);
-    if (response == null) {
+    print('DEBUG: Ответ Supabase: $response');
+    if (response == null || (response is List && response.isEmpty)) {
       throw Exception('Не удалось создать заказ');
     }
   }
