@@ -80,6 +80,7 @@ class _NoodleBuilderBottomSheetState extends State<NoodleBuilderBottomSheet> {
                       name: '$_selectedNoodle с $_selectedFilling',
                       weight: '',
                       price: _price,
+                      imageUrl: '',
                       modifiers: const [],
                     );
                     CartModel.instance

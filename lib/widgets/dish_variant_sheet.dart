@@ -36,12 +36,29 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 120,
-                width: double.infinity,
-                color: Colors.grey.shade300,
-                alignment: Alignment.center,
-                child: const Icon(Icons.fastfood, size: 64),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: dish.imageUrl.isNotEmpty
+                    ? Image.network(
+                        dish.imageUrl,
+                        height: 120,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          height: 120,
+                          width: double.infinity,
+                          color: Colors.grey.shade300,
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.fastfood, size: 64),
+                        ),
+                      )
+                    : Container(
+                        height: 120,
+                        width: double.infinity,
+                        color: Colors.grey.shade300,
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.fastfood, size: 64),
+                      ),
               ),
               const SizedBox(height: 8),
               Text(
