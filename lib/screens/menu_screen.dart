@@ -78,6 +78,7 @@ class _MenuScreenState extends State<MenuScreen> {
   Future<void> loadStopList() async {
     try {
       final data = await ApiService.fetchStopList();
+      if (!mounted) return;
       setState(() {
         stopList =
             data.map<String>((item) => item['name'] as String).toList();
