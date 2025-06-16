@@ -18,7 +18,8 @@ class _MyAppDrawerState extends State<MyAppDrawer> {
   void initState() {
     super.initState();
     profile.addListener(_onProfileChange);
-    profile.load();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => profile.load());
   }
 
   @override
