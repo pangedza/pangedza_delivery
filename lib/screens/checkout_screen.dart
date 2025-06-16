@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/cart_model.dart';
 import '../models/cart_item.dart';
@@ -29,38 +30,37 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
   final addressBook = AddressBookModel.instance;
   final profile = ProfileModel.instance;
+  bool isSubmitting = false;
 
   Future<void> submitOrder() async {
-    final address = _selectedAddress;
+    try {
+      setState(() => isSubmitting = true);
 
-    final userId = profile.id.isNotEmpty ? profile.id : 'anonymous-user-id';
-    final name = profile.name.isNotEmpty ? profile.name : 'Гость';
-    final phone = profile.phone.isNotEmpty ? profile.phone : '+7(900)000-00-00';
+      final success = await OrdersService().createOrder(cart, profile);
+      if (success) {
+        // Очистить корзину
+        Provider.of<CartModel>(context, listen: false).clear();
 
-    final orderData = {
-      'user_id': userId,
-      'name': name,
-      'phone': phone,
-      'city': 'Новороссийск',
-      'district': '',
-      'street': address?.street ?? '',
-      'house': address?.house ?? '',
-      'flat': address?.flat ?? '',
-      'total': cart.total,
-      'comment': commentCtrl.text,
-      'date': DateTime.now().toIso8601String(),
-    };
-
-    final success = await OrdersService().createOrder(orderData);
-    if (success) {
-      cart.clear();
-      print('🧹 Корзина очищена после оформления заказа');
-      if (mounted) {
-        Navigator.pushNamed(context, '/orders');
+        // Перейти на главный экран
+        if (context.mounted) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Можно показать Snackbar или Dialog при необходимости
+        }
+      } else {
+        showError("Не удалось создать заказ");
       }
-    } else {
-      print('❌ Ошибка при создании заказа');
+    } catch (e) {
+      showError("Ошибка при создании заказа");
+    } finally {
+      if (mounted) {
+        setState(() => isSubmitting = false);
+      }
     }
+  }
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   late final TextEditingController nameCtrl;
