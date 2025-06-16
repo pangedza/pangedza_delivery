@@ -48,7 +48,7 @@ class ActiveOrderScreen extends StatelessWidget {
                   .update({'status': 'cancelled'})
                   .eq('id', order.id)
                   .execute();
-              if (result.error == null) {
+              if (result.status == 200) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Заказ отменён')),
