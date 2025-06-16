@@ -18,7 +18,8 @@ class OrdersService {
     return List<Map<String, dynamic>>.from(response);
   }
 
-  Future<bool> createOrder(CartModel cart, ProfileModel profile) async {
+  Future<bool> createOrder(
+      CartModel cart, ProfileModel profile, String deliveryType) async {
     final userId = profile.id;
     if (userId == null) {
       debugPrint('User ID is null – unable to create order');
@@ -32,7 +33,8 @@ class OrdersService {
       'total': cart.total,
       'items': cart.items.map((e) => e.toMap()).toList(),
       'created_at': DateTime.now().toIso8601String(),
-      'status': 'active'
+      'status': 'active',
+      'delivery_type': deliveryType,
     };
 
     debugPrint('Creating order payload: ${jsonEncode(orderData)}');

@@ -14,6 +14,14 @@ ALTER TABLE IF EXISTS public.orders
 ALTER TABLE IF EXISTS public.orders
   ADD COLUMN IF NOT EXISTS created_at timestamp with time zone NOT NULL DEFAULT now();
 
+-- Delivery type (delivery or pickup)
+ALTER TABLE IF EXISTS public.orders
+  ADD COLUMN IF NOT EXISTS delivery_type text NOT NULL DEFAULT 'delivery' CHECK (delivery_type IN ('delivery', 'pickup'));
+
+-- Order status (active, cancelled, completed)
+ALTER TABLE IF EXISTS public.orders
+  ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'cancelled', 'completed'));
+
 -- Adjust column types if they differ
 ALTER TABLE public.orders
   ALTER COLUMN user_id TYPE uuid USING user_id::uuid,

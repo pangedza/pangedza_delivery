@@ -22,6 +22,7 @@ class Order {
   final String payment;
   final bool leaveAtDoor;
   final bool pickup;
+  final String deliveryType;
   String status;
   Promo? promo;
   int discount;
@@ -45,6 +46,7 @@ class Order {
     required this.payment,
     required this.leaveAtDoor,
     required this.pickup,
+    this.deliveryType = 'delivery',
     this.status = 'Новый',
     this.promo,
     this.discount = 0,
@@ -96,7 +98,9 @@ class Order {
       comment: json['comment'] as String? ?? '',
       payment: json['payment'] as String? ?? '',
       leaveAtDoor: json['leaveAtDoor'] as bool? ?? false,
-      pickup: json['pickup'] as bool? ?? false,
+      pickup: json['pickup'] as bool? ?? (json['delivery_type'] == 'pickup'),
+      deliveryType: json['delivery_type']?.toString() ??
+          ((json['pickup'] as bool? ?? false) ? 'pickup' : 'delivery'),
       status: json['status'] as String? ?? 'Новый',
       promo: null,
       discount: json['discount'] as int? ?? 0,
@@ -145,6 +149,7 @@ class Order {
         'payment': payment,
         'leaveAtDoor': leaveAtDoor,
         'pickup': pickup,
+        'delivery_type': deliveryType,
         'status': status,
         'promo': promo?.code,
         'discount': discount,
