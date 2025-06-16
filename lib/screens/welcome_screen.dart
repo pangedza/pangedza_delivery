@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'phone_auth_screen.dart';
+import 'phone_login_screen.dart';
 import '../main.dart';
 
 /// A simple welcome screen displayed on app start.
@@ -38,9 +38,7 @@ class WelcomeScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const PhoneAuthScreen(),
-                          ),
+                          MaterialPageRoute(builder: (context) => PhoneLoginScreen()),
                         );
                       },
                       child: const Text('Вход / Регистрация'),
