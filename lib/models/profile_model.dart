@@ -5,9 +5,9 @@ class ProfileModel extends ChangeNotifier {
   ProfileModel._();
   static final ProfileModel instance = ProfileModel._();
 
-  String? _id;
-  String phone = '+7(900)000-00-00';
-  String name = 'Гость';
+  String _id = '';
+  String _name = '';
+  String _phone = '';
   /// Role of the current user. Defaults to `user`.
   String role = 'user';
   DateTime? birthDate;
@@ -16,7 +16,9 @@ class ProfileModel extends ChangeNotifier {
   double? lat;
   double? lng;
 
-  String get id => _id ?? '00000000-0000-0000-0000-000000000000';
+  String get id => _id.isNotEmpty ? _id : '00000000-0000-0000-0000-000000000000';
+  String get name => _name;
+  String get phone => _phone;
   // удалено временно отладочное поведение
 
   Future<void> load() async {
@@ -29,8 +31,15 @@ class ProfileModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setUser(Map<String, dynamic> user) {
+    _id = user['id'] as String? ?? '';
+    _name = user['name'] as String? ?? '';
+    _phone = user['phone'] as String? ?? '';
+    notifyListeners();
+  }
+
   void updateName(String newName) {
-    name = newName;
+    _name = newName;
     notifyListeners();
   }
 

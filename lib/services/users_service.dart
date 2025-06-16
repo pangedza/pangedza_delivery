@@ -20,5 +20,14 @@ class UsersService {
     final user = await supabase.from('users').select().eq('phone', phone).eq('pin_code', pin).maybeSingle();
     return user?['id'];
   }
+
+  Future<Map<String, dynamic>?> getProfile(String userId) async {
+    final response = await Supabase.instance.client
+        .from('users')
+        .select()
+        .eq('id', userId)
+        .maybeSingle();
+    return response;
+  }
 }
 

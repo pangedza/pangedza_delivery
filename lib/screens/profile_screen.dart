@@ -69,13 +69,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 leading: const Icon(Icons.phone),
                 title: const Text('Телефон'),
-                subtitle: Text(profile.phone),
+                subtitle: Text(context.watch<ProfileModel>().phone),
               ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.text_fields),
                 title: const Text('Имя'),
-                subtitle: Text(profile.name),
+                subtitle: Text(context.watch<ProfileModel>().name),
               ),
               const Divider(),
               ListTile(
