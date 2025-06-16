@@ -76,13 +76,18 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
+                foregroundColor: Colors.black,
+                textStyle: TextStyle(fontSize: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
               onPressed: codeSent ? verifyCode : sendCode,
-              child: Text(codeSent ? "Подтвердить код" : "Отправить код", style: TextStyle(fontSize: 18)),
+              child: Text(
+                codeSent ? "Подтвердить код" : "Отправить код",
+                style: TextStyle(fontSize: 18),
+              ),
             ),
           ],
         ),

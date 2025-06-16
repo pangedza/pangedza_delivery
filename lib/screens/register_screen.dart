@@ -32,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFFF9F9F9),
       appBar: AppBar(title: Text("Регистрация")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -47,7 +48,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 controller: _pinController,
                 decoration: InputDecoration(labelText: "4-значный PIN")),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _register, child: Text("Зарегистрироваться"))
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.black,
+                textStyle: TextStyle(fontSize: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: _register,
+              child: Text("Зарегистрироваться"),
+            )
           ],
         ),
       ),
