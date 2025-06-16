@@ -35,6 +35,8 @@ class OrdersService {
       'status': 'active'
     };
 
+    debugPrint('Creating order payload: ${jsonEncode(orderData)}');
+
     try {
       final response = await _client
           .from('orders')
