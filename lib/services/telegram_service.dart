@@ -39,15 +39,20 @@ class TelegramService {
     }
   }
 
+  /// Builds a full address string for Telegram from non-empty [order] fields.
+  static String buildFullAddress(Order order) {
+    final parts = <String>[];
+    if (order.city.isNotEmpty) parts.add('г. ${order.city}');
+    if (order.street.isNotEmpty) parts.add('ул. ${order.street}');
+    if (order.house.isNotEmpty) parts.add('д. ${order.house}');
+    if (order.flat.isNotEmpty) parts.add('кв. ${order.flat}');
+    if (order.intercom.isNotEmpty) parts.add('подъезд ${order.intercom}');
+    if (order.floor.isNotEmpty) parts.add('этаж ${order.floor}');
+    return parts.join(', ');
+  }
+
   static String buildTelegramMessage(Order order) {
-    final addressText = [
-      'г. ${order.city}',
-      'ул. ${order.street}',
-      'д. ${order.house}',
-      if (order.flat.isNotEmpty) 'кв. ${order.flat}',
-      if (order.floor.isNotEmpty) 'этаж ${order.floor}',
-      if (order.intercom.isNotEmpty) 'домофон ${order.intercom}',
-    ].join(', ');
+    final addressText = buildFullAddress(order);
 
     String paymentText;
     switch (order.payment) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/order.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../services/orders_service.dart';
 
 class ActiveOrderScreen extends StatelessWidget {
   final List<Order> orders;
@@ -9,24 +9,13 @@ class ActiveOrderScreen extends StatelessWidget {
   const ActiveOrderScreen({super.key, required this.orders, required this.onCancelled});
 
   Future<void> _cancelOrder(BuildContext context, Order order) async {
-    try {
-      await Supabase.instance.client
-          .from('orders')
-          .update({'status': 'cancelled'})
-          .eq('id', order.id);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Заказ отменён')),
-        );
-      }
-      onCancelled();
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Не удалось отменить заказ')),
-        );
-      }
+    final success = await OrdersService().cancelOrder(order);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(success ? 'Заказ отменён' : 'Не удалось отменить заказ'),
+      ));
     }
+    if (success) onCancelled();
   }
 
   @override
