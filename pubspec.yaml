@@ -18,7 +18,7 @@ dependencies:
   url_launcher: ^6.2.4
   flutter_dotenv: ^5.1.0
   uuid: ^4.5.1
-  supabase_flutter: ^1.10.11
+  supabase_flutter: ^1.10.17
   flutter_localizations:
     sdk: flutter
 
