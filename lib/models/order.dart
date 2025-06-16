@@ -46,7 +46,7 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
         date: DateTime.parse(json['date'] as String),
-        items: (json['items'] as List<dynamic>)
+        items: (json['items'] as List<dynamic>? ?? [])
             .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
             .toList(),
         total: json['total'] as int,

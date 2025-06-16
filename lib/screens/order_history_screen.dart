@@ -50,7 +50,12 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     final userId = ProfileModel.instance.id.isNotEmpty
         ? ProfileModel.instance.id
         : '00000000-0000-0000-0000-000000000000';
-    final fetchedOrders = await service.getOrders(userId);
+    List<Map<String, dynamic>> fetchedOrders = [];
+    try {
+      fetchedOrders = await OrdersService().getOrders(userId);
+    } catch (e) {
+      print('🔴 Ошибка загрузки заказов: $e');
+    }
     print('Заказы загружаются для user_id: $userId');
     print('Получено заказов: ${fetchedOrders.length}');
     setState(() {
