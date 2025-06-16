@@ -46,6 +46,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     try {
       setState(() => isSubmitting = true);
+      debugPrint('🟢 submitOrder for user ${profile.id}');
 
       final success = await OrdersService().createOrder(cart, profile);
       if (success) {
@@ -54,9 +55,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
       } else {
+        debugPrint('Не удалось создать заказ');
         showError("Не удалось создать заказ");
       }
     } catch (e) {
+      debugPrint('Ошибка при создании заказа: $e');
       showError("Ошибка при создании заказа");
     } finally {
       if (mounted) setState(() => isSubmitting = false);
