@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../models/order.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ActiveOrderScreen extends StatelessWidget {
   final Order order;
-  const ActiveOrderScreen({super.key, required this.order});
+  final VoidCallback onCancelled;
+  const ActiveOrderScreen({super.key, required this.order, required this.onCancelled});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,9 @@ class ActiveOrderScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        Text('Заказ №${order.orderNumber}',
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         Text(address),
         const SizedBox(height: 8),
         Text(items),
@@ -34,6 +39,27 @@ class ActiveOrderScreen extends StatelessWidget {
         Text('Статус: ${order.status}'),
         const SizedBox(height: 8),
         Text('Сумма: ${order.discountedTotal}\u20BD'),
+        if (order.status == 'active') ...[
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () async {
+              final result = await Supabase.instance.client
+                  .from('orders')
+                  .update({'status': 'cancelled'})
+                  .eq('id', order.id)
+                  .execute();
+              if (result.error == null) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Заказ отменён')),
+                  );
+                }
+                onCancelled();
+              }
+            },
+            child: const Text('Отменить заказ'),
+          ),
+        ],
       ],
     );
   }

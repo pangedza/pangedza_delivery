@@ -104,7 +104,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         children: [
           active.isEmpty
               ? const Center(child: Text('Нет активных заказов'))
-              : ActiveOrderScreen(order: active.first),
+              : ActiveOrderScreen(order: active.first, onCancelled: _loadOrders),
           historyOrders.isEmpty
               ? const Center(child: Text('У вас пока нет заказов'))
               : ListView.builder(
@@ -123,6 +123,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text('Заказ №${order.orderNumber}',
+                                style: const TextStyle(fontWeight: FontWeight.bold)),
                             Text(dateStr),
                             const SizedBox(height: 4),
                             for (final item in order.items)
