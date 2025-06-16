@@ -390,6 +390,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isGuest = profile.id.isEmpty;
+    final userId = isGuest ? '00000000-0000-0000-0000-000000000000' : profile.id;
+    final name = profile.name.isNotEmpty ? profile.name : 'Гость';
+    final phone = profile.phone.isNotEmpty ? profile.phone : '+7(900)000-00-00';
     return Scaffold(
       drawer: const MyAppDrawer(),
       appBar: AppBar(
@@ -484,11 +488,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _canSubmit
-                    ? () async {
-                        await submitOrder();
-                      }
-                    : null,
+                onPressed: () async {
+                  await submitOrder();
+                },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: const Text('ОТПРАВИТЬ ЗАКАЗ'),
               ),
