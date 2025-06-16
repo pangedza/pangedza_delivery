@@ -15,6 +15,7 @@ import 'screens/game_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
+import 'screens/orders_screen.dart';
 import 'widgets/bottom_navigation.dart';
 
 Future<void> main() async {
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
+        '/orders': (_) => const OrdersScreen(),
       },
     );
   }
