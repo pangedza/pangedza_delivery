@@ -11,9 +11,10 @@ class DishCard extends StatelessWidget {
   const DishCard({super.key, required this.dish});
 
   void _openDetail(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => DishDetailScreen(dish: dish)),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => DishDetailScreen(dish: dish),
     );
   }
 

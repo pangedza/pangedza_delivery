@@ -257,11 +257,10 @@ class _MenuScreenState extends State<MenuScreen> {
                                         onTap: () async {
                                           final hasMods = await DishService().hasModifiers(dish.id);
                                           if (hasMods) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      DishDetailScreen(dish: dish)),
+                                            await showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              builder: (_) => DishDetailScreen(dish: dish),
                                             );
                                           } else {
                                             CartService.instance.addDish(dish);
