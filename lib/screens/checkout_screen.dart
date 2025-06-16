@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
 
 import '../models/cart_model.dart';
 import '../models/cart_item.dart';
@@ -295,18 +296,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       children: [
         TextField(
           controller: nameCtrl,
-          decoration: const InputDecoration(
-            labelText: 'Имя *',
-            prefixIcon: Icon(Icons.text_fields, color: Colors.red),
+          decoration: AppTheme.input('Имя *', '').copyWith(
+            prefixIcon: const Icon(Icons.text_fields, color: Colors.red),
           ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: phoneCtrl,
           keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(
-            labelText: 'Телефон *',
-            prefixIcon: Icon(Icons.phone, color: Colors.red),
+          decoration: AppTheme.input('Телефон *', '').copyWith(
+            prefixIcon: const Icon(Icons.phone, color: Colors.red),
           ),
         ),
       ],
@@ -319,17 +318,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         TextField(
           controller: personsCtrl,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Количество персон *',
-            prefixIcon: Icon(Icons.people, color: Colors.red),
+          decoration: AppTheme.input('Количество персон *', '').copyWith(
+            prefixIcon: const Icon(Icons.people, color: Colors.red),
           ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: commentCtrl,
-          decoration: const InputDecoration(
-            labelText: 'Комментарий',
-            prefixIcon: Icon(Icons.chat_bubble_outline),
+          decoration: AppTheme.input('Комментарий', '').copyWith(
+            prefixIcon: const Icon(Icons.chat_bubble_outline),
           ),
         ),
       ],
@@ -344,8 +341,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: AbsorbPointer(
             child: TextField(
               controller: timeCtrl,
-              decoration: InputDecoration(
-                labelText: timeLabel,
+              decoration: AppTheme.input(timeLabel, '').copyWith(
                 prefixIcon: const Icon(Icons.schedule),
               ),
             ),
@@ -510,10 +506,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   debugPrint("🔴 submitOrder запускается");
                   await submitOrder();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.black,
-                ),
+                style: AppTheme.redButton,
                 child: const Text('ОТПРАВИТЬ ЗАКАЗ'),
               ),
             ),

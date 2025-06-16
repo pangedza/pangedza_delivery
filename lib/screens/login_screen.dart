@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../services/users_service.dart';
 import '../models/profile_model.dart';
+import '../theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     return Scaffold(
-      backgroundColor: Color(0xFFF9F9F9),
+      backgroundColor: AppTheme.lightGrey,
       appBar: AppBar(title: Text("Вход")),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -52,33 +53,18 @@ class _LoginScreenState extends State<LoginScreen> {
               controller: _phoneController,
               inputFormatters: [_phoneMask],
               keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                labelText: "Ваш номер телефона",
-                hintText: "+7 (900) 000-00-00",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
+              decoration: AppTheme.input("Ваш номер телефона", "+7 (900) 000-00-00"),
             ),
             SizedBox(height: 16),
             TextField(
               controller: _pinController,
               keyboardType: TextInputType.number,
               obscureText: true,
-              decoration: InputDecoration(
-                labelText: "Введите PIN",
-                hintText: "4 цифры",
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              ),
+              decoration: AppTheme.input("Введите PIN", "4 цифры"),
             ),
             SizedBox(height: 24),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.black,
-                textStyle: TextStyle(fontSize: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+              style: AppTheme.redButton,
               onPressed: _login,
               child: Text("Войти"),
             )

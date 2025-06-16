@@ -5,6 +5,7 @@ import '../models/profile_model.dart';
 import 'profile_edit_screen.dart';
 import 'addresses_screen.dart';
 import 'welcome_screen.dart';
+import '../theme/app_theme.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -107,14 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size.fromHeight(48),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
+                  style: AppTheme.redButton,
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
