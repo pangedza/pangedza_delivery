@@ -80,9 +80,12 @@ class Order {
     final createdAt =
         DateTime.tryParse(createdAtStr ?? '') ?? DateTime.now();
 
+    final idRaw = json['id'];
+    final numericId = idRaw is int ? idRaw : int.tryParse(idRaw?.toString() ?? '') ?? 0;
+
     return Order(
-      id: json['id']?.toString() ?? '',
-      orderNumber: json['order_number'] as int? ?? 0,
+      id: idRaw?.toString() ?? '',
+      orderNumber: json['order_number'] as int? ?? numericId,
       date: createdAt,
       items: parsedItems,
       total: json['total'] as int? ?? 0,

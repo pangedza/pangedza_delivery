@@ -79,9 +79,12 @@ class TelegramService {
             '• ${e.dish.name} ${e.variant.title} ×${e.quantity} — ${e.variant.price} ₽')
         .join('\n');
 
+    final orderIdForMessage =
+        order.orderNumber != 0 ? order.orderNumber.toString() : order.id;
+
     final buffer = StringBuffer()
       ..writeln('📦 Новый заказ!')
-      ..writeln('📄 Номер заказа: ${order.id}')
+      ..writeln('📄 Номер заказа: $orderIdForMessage')
       ..writeln('👤 Клиент: ${order.name}')
       ..writeln('📞 Телефон: ${order.phone}');
 

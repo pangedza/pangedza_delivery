@@ -59,13 +59,20 @@ class OrdersService {
         return false;
       }
 
-      final orderNumber = response['order_number'] ?? response['id'];
-
+      final idRaw = response['id'];
+      final orderNumberRaw = response['order_number'];
       final pickup = deliveryType == 'pickup';
 
+      final numericId = idRaw is int
+          ? idRaw
+          : int.tryParse(idRaw?.toString() ?? '') ?? 0;
+
+      final orderNumber =
+          (orderNumberRaw is int ? orderNumberRaw : null) ?? numericId;
+
       final order = Order(
-        id: orderNumber.toString(),
-        orderNumber: orderNumber is int ? orderNumber : int.tryParse(orderNumber.toString()) ?? 0,
+        id: idRaw.toString(),
+        orderNumber: orderNumber,
         date: DateTime.tryParse(response['created_at']?.toString() ?? '') ?? DateTime.now(),
         items: cart.items
             .map((e) => CartItem(dish: e.dish, variant: e.variant, quantity: e.quantity))
@@ -101,8 +108,10 @@ class OrdersService {
           .from('orders')
           .update({'status': 'cancelled'})
           .eq('id', order.id);
+      final orderIdForMessage =
+          order.orderNumber != 0 ? order.orderNumber.toString() : order.id;
       await TelegramService.sendOrder(
-          '🚫 Заказ №${order.id} был отменён пользователем.');
+          '🚫 Заказ №$orderIdForMessage был отменён пользователем.');
       return true;
     } catch (e) {
       debugPrint('Ошибка отмены заказа: $e');
