@@ -5,7 +5,8 @@ class ProfileModel extends ChangeNotifier {
   ProfileModel._();
   static final ProfileModel instance = ProfileModel._();
 
-  String id = 'user123';
+  // Default UUID for guest users
+  String id = '00000000-0000-0000-0000-000000000000';
   String phone = '+7(900)000-00-00';
   String name = 'Гость';
   /// Role of the current user. Defaults to `user`.
