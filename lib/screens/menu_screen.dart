@@ -9,6 +9,9 @@ import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/app_drawer.dart';
 import '../services/api_service.dart';
+import '../screens/dish_detail_screen.dart';
+import '../services/cart_service.dart';
+import '../services/dish_service.dart';
 
 /// Menu screen with category navigation and a 2x2 grid of dishes.
 class MenuScreen extends StatefulWidget {
@@ -248,8 +251,26 @@ class _MenuScreenState extends State<MenuScreen> {
                                           childAspectRatio: 0.8,
                                         ),
                                     itemCount: filtered.length,
-                                    itemBuilder: (_, index) =>
-                                        DishCard(dish: filtered[index]),
+                                    itemBuilder: (_, index) {
+                                      final dish = filtered[index];
+                                      return GestureDetector(
+                                        onTap: () async {
+                                          final hasMods = dish.modifiers.isNotEmpty ||
+                                              await DishService().hasModifiers(dish.name);
+                                          if (hasMods) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      DishDetailScreen(dish: dish)),
+                                            );
+                                          } else {
+                                            CartService.instance.addDish(dish);
+                                          }
+                                        },
+                                        child: DishCard(dish: dish),
+                                      );
+                                    },
                                   );
                                 },
                               ),
