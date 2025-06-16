@@ -489,6 +489,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () async {
+                  debugPrint("🔴 submitOrder запускается");
                   await submitOrder();
                 },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

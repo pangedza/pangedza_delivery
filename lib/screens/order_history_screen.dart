@@ -30,6 +30,14 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadOrders();
+    final userId = ProfileModel.instance.id.isNotEmpty
+        ? ProfileModel.instance.id
+        : '00000000-0000-0000-0000-000000000000';
+    OrdersService().getOrders(userId).then((orders) {
+      print("🔵 Получено заказов: ${orders.length}");
+    }).catchError((e) {
+      print("🔴 Ошибка загрузки заказов: $e");
+    });
   }
 
   @override
