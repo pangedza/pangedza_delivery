@@ -31,10 +31,10 @@ class ProfileModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setUser(Map<String, dynamic> user) {
-    _id = user['id'] as String? ?? '';
-    _name = user['name'] as String? ?? '';
-    _phone = user['phone'] as String? ?? '';
+  void setUser(Map<String, dynamic> data) {
+    _id = data['id'] ?? '';
+    _name = data['name'] ?? '';
+    _phone = data['phone'] ?? '';
     notifyListeners();
   }
 

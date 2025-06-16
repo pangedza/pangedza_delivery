@@ -21,10 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (userId != null && mounted) {
-      final profileModel = context.read<ProfileModel>();
-      final userProfile = await UsersService().getProfile(userId);
-      if (userProfile != null) {
-        profileModel.setUser(userProfile);
+      final profile = await UsersService().getProfile(userId);
+      if (profile != null) {
+        context.read<ProfileModel>().setUser(profile);
       }
       Navigator.of(context).pushReplacementNamed('/main');
     } else {
