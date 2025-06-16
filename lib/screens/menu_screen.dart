@@ -255,8 +255,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       final dish = filtered[index];
                                       return GestureDetector(
                                         onTap: () async {
-                                          final hasMods = dish.modifiers.isNotEmpty ||
-                                              await DishService().hasModifiers(dish.name);
+                                          final hasMods = await DishService().hasModifiers(dish.id);
                                           if (hasMods) {
                                             Navigator.push(
                                               context,
