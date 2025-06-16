@@ -1,6 +1,7 @@
 [
   {
     "category": "Комбо ",
+    "sort_order": 0,
     "name": "Жареный рай",
     "weight": "750 г",
     "price": 1299,
@@ -9,6 +10,7 @@
   },
   {
     "category": "Комбо ",
+    "sort_order": 0,
     "name": "Острые ощущения",
     "weight": "1050 г",
     "price": 1499,
@@ -17,6 +19,7 @@
   },
   {
     "category": "Комбо ",
+    "sort_order": 0,
     "name": "Средние ощущения",
     "weight": "1050 г",
     "price": 1499,
@@ -25,6 +28,7 @@
   },
   {
     "category": "Комбо ",
+    "sort_order": 0,
     "name": "Мягкие ощущения",
     "weight": "1050 г",
     "price": 1499,
@@ -33,10 +37,47 @@
   },
   {
     "category": "Комбо ",
+    "sort_order": 0,
     "name": "Ощущения на выбор",
     "weight": "1050 г",
     "price": 1499,
     "description": "Возможность собрать свой комбо самостоятельно.",
+    "modifiers": []
+  },
+  {
+    "category": "WOK",
+    "sort_order": 1,
+    "name": "Курица",
+    "weight": "",
+    "price": 0,
+    "description": "",
+    "modifiers": []
+  },
+  {
+    "category": "WOK",
+    "sort_order": 1,
+    "name": "Креветка",
+    "weight": "",
+    "price": 0,
+    "description": "",
+    "modifiers": []
+  },
+  {
+    "category": "WOK",
+    "sort_order": 1,
+    "name": "Свинина",
+    "weight": "",
+    "price": 0,
+    "description": "",
+    "modifiers": []
+  },
+  {
+    "category": "WOK",
+    "sort_order": 1,
+    "name": "Овощи",
+    "weight": "",
+    "price": 0,
+    "description": "",
     "modifiers": []
   },
   {

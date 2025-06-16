@@ -1,10 +1,10 @@
--- Seed category and dishes for "Build your own noodles"
-INSERT INTO categories (name)
-VALUES ('Собери лапшу сам')
+-- Seed category and dishes for "Build your own noodles" now named "WOK"
+INSERT INTO categories (name, sort_order)
+VALUES ('WOK', 1)
 ON CONFLICT (name) DO NOTHING;
 
 WITH cat AS (
-  SELECT id FROM categories WHERE name='Собери лапшу сам'
+  SELECT id FROM categories WHERE name='WOK'
 ), dishes_data AS (
   SELECT 'Курица' AS name, 0 AS price, 'https://via.placeholder.com/512x300.png?text=Курица' AS image_url UNION ALL
   SELECT 'Креветка', 0, 'https://via.placeholder.com/512x300.png?text=Креветка' UNION ALL
