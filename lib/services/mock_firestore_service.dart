@@ -1,10 +1,9 @@
-import '../data/local_menu.dart';
 import 'interfaces/firestore_service_interface.dart';
 
 class MockFirestoreService implements FirestoreServiceInterface {
   Future<List<Map<String, dynamic>>> getMenu() async {
     await Future.delayed(const Duration(milliseconds: 300));
-    return localMenu;
+    return [];
   }
 
   Future<List<Map<String, dynamic>>> getOrders() async {

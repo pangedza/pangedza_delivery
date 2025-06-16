@@ -1,19 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
-import '../models/menu_loader.dart';
 import '../models/cart_model.dart';
 import '../models/category.dart';
+import '../models/dish.dart';
 import '../screens/cart_screen.dart';
-import '../widgets/dish_card.dart';
-import '../widgets/app_drawer.dart';
-import '../services/api_service.dart';
 import '../screens/dish_detail_screen.dart';
+import '../services/api_service.dart';
 import '../services/cart_service.dart';
 import '../services/dish_service.dart';
+import '../widgets/dish_card.dart';
+import '../widgets/app_drawer.dart';
 
-/// Menu screen with category navigation and a 2x2 grid of dishes.
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -22,42 +20,28 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
-  final ScrollController _listController = ScrollController();
-  final ScrollController _categoryController = ScrollController();
-  late final TextEditingController _searchController;
-  Timer? _debounce;
-  String _searchQuery = '';
   final CartModel cart = CartModel.instance;
-  Future<List<Category>>? _menuFuture;
-  List<String> stopList = [];
+  final TextEditingController _searchController = TextEditingController();
+  final ScrollController _categoryController = ScrollController();
 
-  static const double _categoryBarHeight = 56;
-  static const double _searchBarHeight = 56;
-  static const double _headerHeight =
-      _categoryBarHeight + _searchBarHeight + kToolbarHeight;
-
+  List<Category> _categories = [];
+  final Map<String, List<Dish>> _dishesByCategory = {};
   int _activeCategory = 0;
-  List<GlobalKey> _categoryKeys = [];
-  List<GlobalKey> _buttonKeys = [];
+  bool _loadingCategories = true;
+  bool _loadingDishes = false;
+  Timer? _debounce;
+  List<String> stopList = [];
 
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController();
     _searchController.addListener(_onSearchChanged);
     cart.addListener(_cartUpdate);
-    loadStopList();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _menuFuture ??= loadMenu(context);
+    _loadInitial();
   }
 
   @override
   void dispose() {
-    _listController.dispose();
     _categoryController.dispose();
     _debounce?.cancel();
     _searchController.dispose();
@@ -69,11 +53,29 @@ class _MenuScreenState extends State<MenuScreen> {
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      setState(() {
-        _searchQuery = _searchController.text;
-        _activeCategory = 0;
-      });
+    _debounce = Timer(const Duration(milliseconds: 300), () => setState(() {}));
+  }
+
+  Future<void> _loadInitial() async {
+    await loadStopList();
+    final cats = await DishService().fetchCategories();
+    if (!mounted) return;
+    setState(() {
+      _categories = cats;
+      _loadingCategories = false;
+    });
+    if (cats.isNotEmpty) {
+      await _loadDishes(cats.first.id);
+    }
+  }
+
+  Future<void> _loadDishes(String categoryId) async {
+    setState(() => _loadingDishes = true);
+    final dishes = await DishService().fetchDishes(categoryId);
+    if (!mounted) return;
+    setState(() {
+      _dishesByCategory[categoryId] = dishes;
+      _loadingDishes = false;
     });
   }
 
@@ -82,72 +84,15 @@ class _MenuScreenState extends State<MenuScreen> {
       final data = await ApiService.fetchStopList();
       if (!mounted) return;
       setState(() {
-        stopList =
-            data.map<String>((item) => item['name'] as String).toList();
+        stopList = data.map<String>((item) => item['name'] as String).toList();
       });
-    } catch (e) {
-      // ignore errors in demo mode
-    }
-  }
-
-
-  void _scrollToCategory(int index) {
-    final ctx = _categoryKeys[index].currentContext;
-    if (ctx == null || !_listController.hasClients) return;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final renderObject = ctx.findRenderObject();
-      if (renderObject != null) {
-        final viewport = RenderAbstractViewport.of(renderObject);
-        final offset =
-            viewport.getOffsetToReveal(renderObject, 0).offset - _headerHeight;
-        _listController.animateTo(
-          offset.clamp(
-            _listController.position.minScrollExtent,
-            _listController.position.maxScrollExtent,
-          ),
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-      _centerCategoryButton(index);
-    });
-  }
-
-  void _centerCategoryButton(int index) {
-    final ctx = _buttonKeys[index].currentContext;
-    if (ctx != null) {
-      Scrollable.ensureVisible(
-        ctx,
-        duration: const Duration(milliseconds: 300),
-        alignment: 0.5,
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void _onScroll() {
-    int newIndex = _activeCategory;
-    double minDiff = double.infinity;
-    for (var i = 0; i < _categoryKeys.length; i++) {
-      final ctx = _categoryKeys[i].currentContext;
-      if (ctx != null) {
-        final box = ctx.findRenderObject() as RenderBox;
-        final pos = box.localToGlobal(Offset.zero).dy - _headerHeight;
-        final diff = pos.abs();
-        if (diff < minDiff) {
-          minDiff = diff;
-          newIndex = i;
-        }
-      }
-    }
-    if (newIndex != _activeCategory) {
-      setState(() => _activeCategory = newIndex);
-      _centerCategoryButton(newIndex);
-    }
+    } catch (_) {}
   }
 
   @override
   Widget build(BuildContext context) {
+    final query = _searchController.text.trim().toLowerCase();
+
     return Scaffold(
       drawer: const MyAppDrawer(),
       appBar: AppBar(
@@ -159,246 +104,151 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
         title: const Text('Меню'),
       ),
-      body: Stack(
-        children: [
-          FutureBuilder(
-            future: _menuFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('Меню пусто'));
-              }
-              final categories = snapshot.data!;
-              final query = _searchQuery.trim().toLowerCase();
-              final visible = <int>[];
-              for (var i = 0; i < categories.length; i++) {
-                final hasVisibleDish = categories[i].dishes.any((d) {
-                  if (stopList.contains(d.name)) return false;
-                  if (query.isEmpty) return true;
-                  return d.name.toLowerCase().contains(query);
-                });
-                if (hasVisibleDish) {
-                  visible.add(i);
-                }
-              }
-              if (_categoryKeys.length != categories.length) {
-                _categoryKeys = List.generate(
-                  categories.length,
-                  (_) => GlobalKey(),
-                );
-                _buttonKeys = List.generate(
-                  categories.length,
-                  (_) => GlobalKey(),
-                );
-              }
-              _listController.removeListener(_onScroll);
-              if (query.isEmpty) {
-                _listController.addListener(_onScroll);
-              }
-              final listWidget = query.isNotEmpty && visible.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'Блюдо не найдено',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )
-                  : ListView(
-                      controller: _listController,
-                      padding: EdgeInsets.fromLTRB(
-                        16,
-                        _headerHeight + 16,
-                        16,
-                        16,
-                      ),
-                      children: [
-                      for (var idx in visible)
-                        Container(
-                          key: _categoryKeys[idx],
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                categories[idx].name,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Builder(
-                                builder: (_) {
-                                  final filtered = categories[idx]
-                                      .dishes
-                                      .where((d) => !stopList.contains(d.name))
-                                      .where((d) => query.isEmpty
-                                          ? true
-                                          : d.name
-                                              .toLowerCase()
-                                              .contains(query))
-                                      .toList();
-                                  return GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          mainAxisSpacing: 8,
-                                          crossAxisSpacing: 8,
-                                          childAspectRatio: 0.8,
-                                        ),
-                                    itemCount: filtered.length,
-                                    itemBuilder: (_, index) {
-                                      final dish = filtered[index];
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          final hasMods = await DishService().hasModifiers(dish.id);
-                                          if (hasMods) {
-                                            await showModalBottomSheet(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              builder: (_) => DishDetailScreen(dish: dish),
-                                            );
-                                          } else {
-                                            CartService.instance.addDish(dish);
-                                          }
-                                        },
-                                        child: DishCard(dish: dish),
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+      body: _loadingCategories
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF6F6F6),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: 'Найти',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () => _searchController.clear(),
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
                         ),
-                      ],
-                    );
-
-              return Stack(
-                children: [
-                  listWidget,
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF6F6F6),
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: TextField(
-                                controller: _searchController,
-                                decoration: InputDecoration(
-                                  hintText: 'Найти',
-                                  prefixIcon: const Icon(Icons.search),
-                                  suffixIcon: _searchController.text.isNotEmpty
-                                      ? IconButton(
-                                          icon: const Icon(Icons.clear),
-                                          onPressed: () {
-                                            _searchController.clear();
-                                          },
-                                        )
-                                      : null,
-                                  border: InputBorder.none,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 14,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: _categoryBarHeight,
-                            child: SingleChildScrollView(
-                              controller: _categoryController,
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: [
-                                  for (var i = 0; i < visible.length; i++)
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      child: TextButton(
-                                        key: _buttonKeys[visible[i]],
-                                        onPressed: () {
-                                          setState(() => _activeCategory = i);
-                                          _scrollToCategory(visible[i]);
-                                        },
-                                        style: TextButton.styleFrom(
-                                          backgroundColor: _activeCategory == i
-                                              ? Theme.of(context).primaryColor
-                                              : Colors.grey.shade200,
-                                          foregroundColor: _activeCategory == i
-                                              ? Colors.white
-                                              : Colors.black,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Text(categories[visible[i]].name),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
-                ],
-              );
-            },
-          ),
-          if (cart.items.isNotEmpty)
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).padding.bottom,
                 ),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const CartScreen()),
-                    );
-                  },
-                  child: Container(
-                    height: 60,
-                    color: Colors.redAccent,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'В КОРЗИНЕ ${cart.itemCount} ТОВАР(ОВ) НА ${cart.totalPrice} ₽',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                SizedBox(
+                  height: 56,
+                  child: ListView.builder(
+                    controller: _categoryController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _categories.length,
+                    itemBuilder: (_, index) {
+                      final c = _categories[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: TextButton(
+                          onPressed: () async {
+                            setState(() => _activeCategory = index);
+                            if (!_dishesByCategory.containsKey(c.id)) {
+                              await _loadDishes(c.id);
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: _activeCategory == index
+                                ? Theme.of(context).primaryColor
+                                : Colors.grey.shade200,
+                            foregroundColor: _activeCategory == index
+                                ? Colors.white
+                                : Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          child: Text(c.name),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: _loadingDishes
+                      ? const Center(child: CircularProgressIndicator())
+                      : _buildDishGrid(query),
+                ),
+              ],
+            ),
+      bottomNavigationBar: cart.items.isNotEmpty
+          ? Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const CartScreen()),
+                  );
+                },
+                child: Container(
+                  height: 60,
+                  color: Colors.redAccent,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'В КОРЗИНЕ ${cart.itemCount} ТОВАР(ОВ) НА ${cart.totalPrice} ₽',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ),
-        ],
+            )
+          : null,
+    );
+  }
+
+  Widget _buildDishGrid(String query) {
+    if (_categories.isEmpty) return const SizedBox.shrink();
+    final current = _categories[_activeCategory];
+    final dishes = _dishesByCategory[current.id] ?? [];
+    final filtered = dishes
+        .where((d) => !stopList.contains(d.name))
+        .where((d) => query.isEmpty
+            ? true
+            : d.name.toLowerCase().contains(query))
+        .toList();
+
+    if (filtered.isEmpty) {
+      return const Center(child: Text('Блюдо не найдено'));
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(16),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        childAspectRatio: 0.8,
       ),
+      itemCount: filtered.length,
+      itemBuilder: (_, index) {
+        final dish = filtered[index];
+        return GestureDetector(
+          onTap: () async {
+            final hasMods = await DishService().hasModifiers(dish.id);
+            if (hasMods) {
+              await showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (_) => DishDetailScreen(dish: dish),
+              );
+            } else {
+              CartService.instance.addDish(dish);
+            }
+          },
+          child: DishCard(dish: dish),
+        );
+      },
     );
   }
 }

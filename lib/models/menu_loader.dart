@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -8,11 +7,10 @@ import 'modifier.dart';
 
 Future<List<Category>> loadMenu(BuildContext context) async {
   final client = Supabase.instance.client;
-  try {
-    final List data = await client
-        .from('dishes')
-        .select(
-            'id, name, weight, price, description, image_url, categories(name, sort_order), dish_modifiers(modifiers(name, price, group_name))');
+  final List data = await client
+      .from('dishes')
+      .select(
+          'id, name, weight, price, description, image_url, categories(name, sort_order), dish_modifiers(modifiers(name, price, group_name))');
 
     final Map<String, List<Dish>> grouped = {};
     final Map<String, int> orders = {};
@@ -38,29 +36,9 @@ Future<List<Category>> loadMenu(BuildContext context) async {
       grouped.putIfAbsent(cat, () => []).add(dish);
     }
 
-    var categories = grouped.entries
-        .map((e) => Category.fromEntry(e, orders[e.key] ?? 0))
-        .toList();
-    categories.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
-    return categories;
-  } catch (_) {
-    final jsonStr = await DefaultAssetBundle.of(context)
-        .loadString('assets/data/pangedza_menu_final_modifiers.json');
-    final List<dynamic> data = jsonDecode(jsonStr) as List<dynamic>;
-    final Map<String, List<Dish>> grouped = {};
-    final Map<String, int> orders = {};
-    for (final item in data) {
-      final map = item as Map<String, dynamic>;
-      final cat = map['category'] as String? ?? '';
-      final order = map['sort_order'] as int? ?? orders[cat] ?? 0;
-      orders[cat] = order;
-      final dish = Dish.fromJson(map);
-      grouped.putIfAbsent(cat, () => []).add(dish);
-    }
-    var categories = grouped.entries
-        .map((e) => Category.fromEntry(e, orders[e.key] ?? 0))
-        .toList();
-    categories.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
-    return categories;
-  }
+  var categories = grouped.entries
+      .map((e) => Category.fromEntry(e, orders[e.key] ?? 0))
+      .toList();
+  categories.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+  return categories;
 }

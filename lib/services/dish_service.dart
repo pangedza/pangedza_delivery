@@ -1,9 +1,35 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../models/category.dart';
+import '../models/dish.dart';
 import '../models/modifier.dart';
 
 /// Service for working with dishes.
 class DishService {
   final _client = Supabase.instance.client;
+
+  /// Fetches all categories ordered by `sort_order`.
+  Future<List<Category>> fetchCategories() async {
+    final data = await _client
+        .from('categories')
+        .select('*')
+        .order('sort_order');
+    if (data is List) {
+      return data.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return [];
+  }
+
+  /// Fetches dishes for the given [categoryId].
+  Future<List<Dish>> fetchDishes(String categoryId) async {
+    final data = await _client
+        .from('dishes')
+        .select('*')
+        .eq('category_id', categoryId);
+    if (data is List) {
+      return data.map((e) => Dish.fromJson(e as Map<String, dynamic>)).toList();
+    }
+    return [];
+  }
 
   /// Checks if dish with [dishId] has any modifiers linked via `dish_modifiers` table.
   Future<bool> hasModifiers(String dishId) async {
