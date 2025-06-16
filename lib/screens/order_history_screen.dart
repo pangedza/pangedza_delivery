@@ -31,12 +31,6 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     _loadOrders();
-    final userId = context.read<ProfileModel>().id;
-    OrdersService().getOrders(userId).then((orders) {
-      // print("🔵 Получено заказов: ${orders.length}"); // [removed for production]
-    }).catchError((e) {
-      // print("🔴 Ошибка загрузки заказов: $e"); // [removed for production]
-    });
   }
 
   @override
@@ -47,6 +41,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
 
   Future<void> _loadOrders() async {
     final userId = context.read<ProfileModel>().id;
+    if (userId == null) {
+      setState(() => _loading = false);
+      return;
+    }
+
     List<Map<String, dynamic>> fetchedOrders = [];
     try {
       fetchedOrders = await OrdersService().getOrders(userId);

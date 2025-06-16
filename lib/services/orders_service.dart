@@ -18,8 +18,13 @@ class OrdersService {
   }
 
   Future<bool> createOrder(CartModel cart, ProfileModel profile) async {
+    final userId = profile.id;
+    if (userId == null) {
+      throw Exception('Пользователь не авторизован');
+    }
+
     final orderData = {
-      'user_id': profile.id,
+      'user_id': userId,
       'user_name': profile.name,
       'user_phone': profile.phone,
       'total': cart.total,
