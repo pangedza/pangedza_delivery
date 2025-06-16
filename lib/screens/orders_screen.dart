@@ -24,12 +24,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
     try {
       final userId = ProfileModel.instance.id;
       final orders = await _service.getOrders(userId);
+      if (!mounted) return;
       setState(() {
         _orders = orders;
         _loading = false;
       });
     } catch (e) {
-      print('Ошибка загрузки заказов: $e');
+      // print('Ошибка загрузки заказов: $e'); // [removed for production]
     }
   }
 

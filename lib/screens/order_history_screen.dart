@@ -34,9 +34,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
         ? ProfileModel.instance.id
         : '00000000-0000-0000-0000-000000000000';
     OrdersService().getOrders(userId).then((orders) {
-      print("🔵 Получено заказов: ${orders.length}");
+      // print("🔵 Получено заказов: ${orders.length}"); // [removed for production]
     }).catchError((e) {
-      print("🔴 Ошибка загрузки заказов: $e");
+      // print("🔴 Ошибка загрузки заказов: $e"); // [removed for production]
     });
   }
 
@@ -54,10 +54,11 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     try {
       fetchedOrders = await OrdersService().getOrders(userId);
     } catch (e) {
-      print('🔴 Ошибка загрузки заказов: $e');
+      // print('🔴 Ошибка загрузки заказов: $e'); // [removed for production]
     }
-    print('Заказы загружаются для user_id: $userId');
-    print('Получено заказов: ${fetchedOrders.length}');
+    // print('Заказы загружаются для user_id: $userId'); // [removed for production]
+    // print('Получено заказов: ${fetchedOrders.length}'); // [removed for production]
+    if (!mounted) return;
     setState(() {
       _orders = fetchedOrders.map((json) => Order.fromJson(json)).toList();
       _loading = false;

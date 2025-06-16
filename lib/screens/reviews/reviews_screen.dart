@@ -51,6 +51,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       context: context,
       builder: (_) => const ReportReviewDialog(),
     );
+    if (!context.mounted) return;
     if (res == true) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Жалоба отправлена')));

@@ -82,7 +82,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   void initState() {
     super.initState();
-    print('DEBUG: profile.id = ${profile.id}');
+    // print('DEBUG: profile.id = ${profile.id}'); // [removed for production]
     nameCtrl = TextEditingController(text: profile.name);
     phoneCtrl = TextEditingController(text: profile.phone);
     nameCtrl.addListener(_update);

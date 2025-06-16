@@ -33,7 +33,7 @@ class OrdersService {
         .single();
 
     if (response == null || response['id'] == null) {
-      print("Ошибка создания заказа: ${response.toString()}");
+      // print("Ошибка создания заказа: ${response.toString()}"); // [removed for production]
       return false;
     }
 

@@ -4,6 +4,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile_model.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
+  const PhoneLoginScreen({super.key});
+
   @override
   _PhoneLoginScreenState createState() => _PhoneLoginScreenState();
 }
@@ -16,7 +18,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   Future<void> sendCode() async {
     final phone = _phoneController.text.trim();
     await Supabase.instance.client.auth.signInWithOtp(phone: phone);
-    if (mounted) setState(() => codeSent = true);
+    if (!context.mounted) return;
+    setState(() => codeSent = true);
   }
 
   Future<void> verifyCode() async {
@@ -28,6 +31,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
       type: OtpType.sms,
     );
 
+    if (!context.mounted) return;
     if (result.user != null) {
       final userId = result.user!.id;
       final profile = flutter_provider.Provider.of<ProfileModel>(context, listen: false);
