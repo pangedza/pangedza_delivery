@@ -39,14 +39,7 @@ class TelegramService {
     }
   }
 
-  /// Sends an [Order] details to the configured Telegram chat.
-  static Future<void> sendOrderToTelegram(Order order) async {
-    if (!kEnableTelegramOrderForwarding) return;
-    if (_token.isEmpty || _chatId.isEmpty) {
-      debugPrint('Telegram token or chat id is not set');
-      return;
-    }
-
+  static String buildTelegramMessage(Order order) {
     final addressText = [
       'г. ${order.city}',
       'ул. ${order.street}',
@@ -73,23 +66,49 @@ class TelegramService {
 
     final itemsText = order.items
         .map((e) =>
-            '• ${e.dish.name} ${e.variant.title} x${e.quantity} — ${e.variant.price} ₽')
+            '• ${e.dish.name} ${e.variant.title} ×${e.quantity} — ${e.variant.price} ₽')
         .join('\n');
 
-    final message = '''📦 Новый заказ!
-👤 Клиент: ${order.name}
-☎️ Телефон: ${order.phone}
-🏠 Адрес: $addressText
-💳 Оплата: $paymentText
-🚚 Доставка: ${order.pickup ? 'Самовывоз' : 'Доставка'}
-🍽️ Заказ:
-$itemsText
-💰 Сумма: ${order.total} ₽
-📝 Комментарий: ${order.comment}
-⏰ Время: ${DateFormat('yyyy-MM-dd HH:mm').format(order.date)}''';
+    final buffer = StringBuffer()
+      ..writeln('📦 Новый заказ!')
+      ..writeln('📄 Номер заказа: ${order.id}')
+      ..writeln('👤 Клиент: ${order.name}')
+      ..writeln('📞 Телефон: ${order.phone}');
 
+    if (order.pickup) {
+      buffer
+        ..writeln('💰 Оплата: $paymentText')
+        ..writeln('🚶 Доставка: Самовывоз');
+    } else {
+      buffer
+        ..writeln('🏠 Адрес: $addressText')
+        ..writeln('💰 Оплата: $paymentText')
+        ..writeln('🚚 Доставка: Курьер');
+    }
+
+    buffer
+      ..writeln('🧾 Заказ:')
+      ..writeln(itemsText)
+      ..writeln('💵 Сумма: ${order.total} ₽');
+
+    if (order.comment.isNotEmpty) {
+      buffer.writeln('📝 Комментарий: ${order.comment}');
+    }
+
+    buffer.writeln('⏰ Время: ${DateFormat('yyyy-MM-dd HH:mm').format(order.date)}');
+    return buffer.toString();
+  }
+
+  /// Sends an [Order] details to the configured Telegram chat.
+  static Future<void> sendOrderToTelegram(Order order) async {
+    if (!kEnableTelegramOrderForwarding) return;
+    if (_token.isEmpty || _chatId.isEmpty) {
+      debugPrint('Telegram token or chat id is not set');
+      return;
+    }
+
+    final message = buildTelegramMessage(order);
     debugPrint('Telegram order message: $message');
-
     await sendOrder(message);
   }
 }

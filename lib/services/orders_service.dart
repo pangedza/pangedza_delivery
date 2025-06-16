@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/cart_model.dart';
+import '../models/cart_item.dart';
+import '../models/order.dart';
 import '../models/profile_model.dart';
 import 'telegram_service.dart';
 
@@ -52,9 +54,31 @@ class OrdersService {
       }
 
       final orderNumber = response['order_number'] ?? response['id'];
-      await TelegramService.sendOrder(
-        '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}',
+
+      final order = Order(
+        id: orderNumber.toString(),
+        orderNumber: orderNumber is int ? orderNumber : int.tryParse(orderNumber.toString()) ?? 0,
+        date: DateTime.tryParse(response['created_at']?.toString() ?? '') ?? DateTime.now(),
+        items: cart.items
+            .map((e) => CartItem(dish: e.dish, variant: e.variant, quantity: e.quantity))
+            .toList(),
+        total: cart.total,
+        name: profile.name,
+        phone: profile.phone,
+        city: '',
+        district: '',
+        street: '',
+        house: '',
+        flat: '',
+        floor: '',
+        intercom: '',
+        comment: '',
+        payment: '',
+        leaveAtDoor: false,
+        pickup: false,
       );
+
+      await TelegramService.sendOrderToTelegram(order);
       return true;
     } catch (e) {
       debugPrint('Ошибка создания заказа: $e');
