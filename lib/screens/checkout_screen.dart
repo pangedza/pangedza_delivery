@@ -51,10 +51,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       'date': DateTime.now().toIso8601String(),
     };
 
-    await OrdersService().createOrder(orderData);
-    cart.clear();
-    if (mounted) {
-      Navigator.pushNamed(context, '/orders');
+    final success = await OrdersService().createOrder(orderData);
+    if (success) {
+      cart.clear();
+      print('🧹 Корзина очищена после оформления заказа');
+      if (mounted) {
+        Navigator.pushNamed(context, '/orders');
+      }
+    } else {
+      print('❌ Ошибка при создании заказа');
     }
   }
 

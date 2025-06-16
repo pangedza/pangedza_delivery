@@ -12,11 +12,14 @@ class OrdersService {
     return List<Map<String, dynamic>>.from(response);
   }
 
-  Future<void> createOrder(Map<String, dynamic> orderData) async {
-    final response = await _client.from('orders').insert(orderData);
-    print('DEBUG: Ответ Supabase: $response');
+  Future<bool> createOrder(Map<String, dynamic> orderData) async {
+    final response =
+        await _client.from('orders').insert(orderData);
     if (response == null || (response is List && response.isEmpty)) {
-      throw Exception('Не удалось создать заказ');
+      print('Ошибка: ответ пустой');
+      return false;
     }
+    print('Заказ успешно создан: $response');
+    return true;
   }
 }
