@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../models/cart_model.dart';
 import '../models/profile_model.dart';
+import 'telegram_service.dart';
 
 class OrdersService {
   final _client = Supabase.instance.client;
@@ -20,7 +21,8 @@ class OrdersService {
   Future<bool> createOrder(CartModel cart, ProfileModel profile) async {
     final userId = profile.id;
     if (userId == null) {
-      throw Exception('Пользователь не авторизован');
+      debugPrint('User ID is null – unable to create order');
+      return false;
     }
 
     final orderData = {
@@ -33,25 +35,26 @@ class OrdersService {
       'status': 'active'
     };
 
-    final response = await _client
-        .from('orders')
-        .insert(orderData)
-        .select()
-        .single();
+    try {
+      final response = await _client
+          .from('orders')
+          .insert(orderData)
+          .select()
+          .single();
 
-    if (response == null || response['id'] == null) {
-      // print("Ошибка создания заказа: ${response.toString()}"); // [removed for production]
+      if (response == null || response['id'] == null) {
+        debugPrint('Ошибка создания заказа: пустой ответ от сервера');
+        return false;
+      }
+
+      final orderNumber = response['order_number'] ?? response['id'];
+      await TelegramService.sendOrder(
+        '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}',
+      );
+      return true;
+    } catch (e) {
+      debugPrint('Ошибка создания заказа: $e');
       return false;
     }
-
-    final orderNumber = response['order_number'];
-    await http.post(
-      Uri.parse('https://your-server.com/telegram-webhook'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'text': '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}'
-      }),
-    );
-    return true;
   }
 }
