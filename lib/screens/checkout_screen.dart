@@ -29,6 +29,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final cart = CartModel.instance;
   final addressBook = AddressBookModel.instance;
   final profile = ProfileModel.instance;
+  print('🧪 DEBUG: profile.id = ${profile.id}');
 
   Future<void> submitOrder() async {
     final address = _selectedAddress;
