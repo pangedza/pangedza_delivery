@@ -230,6 +230,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void _confirm() {
     final bool pickup = _mode == CheckoutMode.pickup;
     final order = Order(
+      id: 'local',
+      orderNumber: 0,
       date: DateTime.now(),
       items: cart.items
           .map(

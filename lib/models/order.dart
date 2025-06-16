@@ -2,6 +2,8 @@ import 'cart_item.dart';
 import 'promo.dart';
 
 class Order {
+  final String id;
+  final int orderNumber;
   final DateTime date;
   final List<CartItem> items;
   final int total;
@@ -23,6 +25,8 @@ class Order {
   int discount;
 
   Order({
+    required this.id,
+    required this.orderNumber,
     required this.date,
     required this.items,
     required this.total,
@@ -45,6 +49,8 @@ class Order {
   });
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
+        id: json['id'] as String? ?? '',
+        orderNumber: json['order_number'] as int? ?? 0,
         date: DateTime.parse(json['date'] as String),
         items: (json['items'] as List<dynamic>? ?? [])
             .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
@@ -81,6 +87,8 @@ class Order {
   }
 
   Map<String, dynamic> toMap() => {
+        'id': id,
+        'order_number': orderNumber,
         'date': date.toIso8601String(),
         'items': items
             .map((e) => {

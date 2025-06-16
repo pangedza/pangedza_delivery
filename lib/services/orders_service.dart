@@ -30,22 +30,27 @@ class OrdersService {
               })
           .toList(),
       'created_at': DateTime.now().toIso8601String(),
+      'status': 'active',
     };
 
-    final response =
-        await _client.from('orders').insert(orderData).execute();
+    final insertedOrder = await _client
+        .from('orders')
+        .insert(orderData)
+        .select()
+        .single();
 
-    if (response.error != null) {
-      print('Supabase error: ${response.error!.message}');
+    if (insertedOrder == null) {
+      print('Supabase error: could not insert order');
       return false;
     }
 
-    // Отправка в Telegram (пример: через webhook)
+    final orderNumber = insertedOrder['order_number'];
+
     await http.post(
       Uri.parse('https://your-server.com/telegram-webhook'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'text': 'Новый заказ: ${jsonEncode(orderData)}'
+        'text': '🆕 Новый заказ №$orderNumber\n${jsonEncode(orderData)}'
       }),
     );
 
