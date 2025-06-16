@@ -3,6 +3,12 @@ ALTER TABLE IF EXISTS public.orders
   ADD COLUMN IF NOT EXISTS user_id uuid REFERENCES users(id) NOT NULL;
 
 ALTER TABLE IF EXISTS public.orders
+  ADD COLUMN IF NOT EXISTS user_name text;
+
+ALTER TABLE IF EXISTS public.orders
+  ADD COLUMN IF NOT EXISTS user_phone text;
+
+ALTER TABLE IF EXISTS public.orders
   ADD COLUMN IF NOT EXISTS items jsonb NOT NULL;
 
 ALTER TABLE IF EXISTS public.orders
