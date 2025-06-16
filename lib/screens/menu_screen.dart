@@ -7,7 +7,6 @@ import '../models/cart_model.dart';
 import '../models/category.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/dish_card.dart';
-import '../widgets/noodle_builder_bottom_sheet.dart';
 import '../widgets/app_drawer.dart';
 import '../services/api_service.dart';
 
@@ -88,13 +87,6 @@ class _MenuScreenState extends State<MenuScreen> {
     }
   }
 
-  void _openBuilder(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => const NoodleBuilderBottomSheet(),
-    );
-  }
 
   void _scrollToCategory(int index) {
     final ctx = _categoryKeys[index].currentContext;
@@ -218,14 +210,6 @@ class _MenuScreenState extends State<MenuScreen> {
                         16,
                       ),
                       children: [
-                        Card(
-                          child: ListTile(
-                            title: const Text('Собери лапшу сам'),
-                            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                            onTap: () => _openBuilder(context),
-                          ),
-                        ),
-                      const SizedBox(height: 16),
                       for (var idx in visible)
                         Container(
                           key: _categoryKeys[idx],

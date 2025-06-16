@@ -4,17 +4,16 @@ import '../models/dish_variant.dart';
 import '../models/cart_model.dart';
 import '../services/stop_list_service.dart';
 import '../di.dart';
-import 'dish_variant_sheet.dart';
+import '../screens/dish_detail_screen.dart';
 
 class DishCard extends StatelessWidget {
   final Dish dish;
   const DishCard({super.key, required this.dish});
 
-  void _openSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => DishVariantSheet(dish: dish),
+  void _openDetail(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => DishDetailScreen(dish: dish)),
     );
   }
 
@@ -50,13 +49,26 @@ class DishCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  alignment: Alignment.center,
-                  child: const Icon(Icons.image, size: 48, color: Colors.grey),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: dish.imageUrl.isNotEmpty
+                      ? Image.network(
+                          dish.imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          errorBuilder: (_, __, ___) => Container(
+                            color: Colors.grey[200],
+                            alignment: Alignment.center,
+                            child:
+                                const Icon(Icons.image, size: 48, color: Colors.grey),
+                          ),
+                        )
+                      : Container(
+                          color: Colors.grey[200],
+                          alignment: Alignment.center,
+                          child:
+                              const Icon(Icons.image, size: 48, color: Colors.grey),
+                        ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -95,7 +107,7 @@ class DishCard extends StatelessWidget {
                         onTap: stopped
                             ? null
                             : hasMods
-                                ? () => _openSheet(context)
+                                ? () => _openDetail(context)
                                 : add,
                         child: CircleAvatar(
                           radius: 18,

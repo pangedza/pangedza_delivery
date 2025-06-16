@@ -5,12 +5,14 @@ class Dish {
   final String weight;
   final int price;
   final String? description;
+  final String imageUrl;
   final List<DishVariant> modifiers;
 
   const Dish({
     required this.name,
     required this.weight,
     required this.price,
+    required this.imageUrl,
     required this.modifiers,
     this.description,
   });
@@ -22,8 +24,9 @@ class Dish {
     return Dish(
       name: json['name'] as String,
       weight: json['weight']?.toString() ?? '',
-      price: json['price'] as int,
+      price: (json['price'] as num).toInt(),
       description: json['description'] as String?,
+      imageUrl: json['image_url'] as String? ?? '',
       modifiers: mods,
     );
   }
