@@ -73,16 +73,19 @@ class Order {
       debugPrint('Order.fromJson: failed to parse items: $e');
     }
 
+    final createdAtRaw = json['created_at'] ?? json['date'];
+    final createdAtStr = createdAtRaw?.toString();
+    final createdAt =
+        DateTime.tryParse(createdAtStr ?? '') ?? DateTime.now();
+
     return Order(
-      id: json['id'] as String? ?? '',
+      id: json['id']?.toString() ?? '',
       orderNumber: json['order_number'] as int? ?? 0,
-      date: DateTime.parse(
-        (json['created_at'] ?? json['date']) as String,
-      ),
+      date: createdAt,
       items: parsedItems,
-      total: json['total'] as int,
-      name: json['name'] as String,
-      phone: json['phone'] as String,
+      total: json['total'] as int? ?? 0,
+      name: json['name']?.toString() ?? '',
+      phone: json['phone']?.toString() ?? '',
       city: json['city'] as String? ?? '',
       district: json['district'] as String? ?? '',
       street: json['street'] as String? ?? '',

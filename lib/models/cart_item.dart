@@ -13,8 +13,11 @@ class CartItem {
     this.quantity = 1,
   });
 
-  factory CartItem.fromJson(Map<String, dynamic> json) {
+  factory CartItem.fromJson(dynamic json) {
     try {
+      if (json is! Map<String, dynamic>) {
+        throw ArgumentError('CartItem.fromJson expects a Map');
+      }
       final dishRaw = json['dish'];
       final variantRaw = json['variant'];
       final price = json['price'] as int? ??
@@ -37,10 +40,14 @@ class CartItem {
       );
     } catch (e) {
       debugPrint('CartItem.fromJson error: $e');
+      int qty = 1;
+      if (json is Map && json['quantity'] != null) {
+        qty = int.tryParse(json['quantity'].toString()) ?? 1;
+      }
       return CartItem(
         dish: Dish(name: '', weight: '', price: 0, modifiers: const []),
         variant: const DishVariant(title: '', price: 0),
-        quantity: json['quantity'] as int? ?? 1,
+        quantity: qty,
       );
     }
   }
