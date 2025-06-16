@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:pangedza_delivery/services/order_service.dart';
+import '../services/orders_service.dart';
+import '../models/profile_model.dart';
 import '../models/cart_model.dart';
+import '../models/order.dart';
 import 'package:intl/intl.dart';
 import '../widgets/empty_placeholder.dart';
 import '../main.dart';
 import '../widgets/app_drawer.dart';
 import 'orders/active_order_screen.dart';
 
-final orderService = OrderService.instance;
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -19,25 +20,33 @@ class OrderHistoryScreen extends StatefulWidget {
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen>
     with SingleTickerProviderStateMixin {
-  final OrderService service = orderService;
+  final OrdersService service = OrdersService();
   final cart = CartModel.instance;
+  List<Order> _orders = [];
   late TabController _tabController;
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    service.addListener(_update);
+    _loadOrders();
   }
 
   @override
   void dispose() {
-    service.removeListener(_update);
     _tabController.dispose();
     super.dispose();
   }
 
-  void _update() => setState(() {});
+  Future<void> _loadOrders() async {
+    final userId = ProfileModel.instance.id;
+    final fetchedOrders = await service.getOrders(userId);
+    setState(() {
+      _orders = fetchedOrders.map((json) => Order.fromJson(json)).toList();
+      _loading = false;
+    });
+  }
 
   void _repeat(order) {
     for (final item in order.items) {
@@ -49,8 +58,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    final active = service.activeOrders;
-    final historyOrders = service.completedOrders;
+    final active = _orders.where((o) => o.status != 'Закрыт').toList();
+    final historyOrders = _orders.where((o) => o.status == 'Закрыт').toList();
+    if (_loading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       drawer: const MyAppDrawer(),
       appBar: AppBar(

@@ -44,6 +44,30 @@ class Order {
     this.discount = 0,
   });
 
+  factory Order.fromJson(Map<String, dynamic> json) => Order(
+        date: DateTime.parse(json['date'] as String),
+        items: (json['items'] as List<dynamic>)
+            .map((e) => CartItem.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        total: json['total'] as int,
+        name: json['name'] as String,
+        phone: json['phone'] as String,
+        city: json['city'] as String? ?? '',
+        district: json['district'] as String? ?? '',
+        street: json['street'] as String? ?? '',
+        house: json['house'] as String? ?? '',
+        flat: json['flat'] as String? ?? '',
+        floor: json['floor'] as String? ?? '',
+        intercom: json['intercom'] as String? ?? '',
+        comment: json['comment'] as String? ?? '',
+        payment: json['payment'] as String? ?? '',
+        leaveAtDoor: json['leaveAtDoor'] as bool? ?? false,
+        pickup: json['pickup'] as bool? ?? false,
+        status: json['status'] as String? ?? 'Новый',
+        promo: null,
+        discount: json['discount'] as int? ?? 0,
+      );
+
   /// Price with discount and promo applied.
   int get discountedTotal {
     var amount = total;
