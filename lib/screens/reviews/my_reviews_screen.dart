@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/review.dart';
 import '../../widgets/reviews/review_card.dart';
 import '../../services/reviews_service.dart';
-import '../../models/profile_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyReviewsScreen extends StatefulWidget {
   const MyReviewsScreen({super.key});
@@ -22,7 +22,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
   }
 
   Future<void> _load() async {
-    final id = ProfileModel.instance.id;
+    final id = Supabase.instance.client.auth.currentUser?.id;
     if (id != null) {
       final res = await ReviewsService().getUserReviews(id);
       if (mounted) {

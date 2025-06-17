@@ -5,7 +5,7 @@ import '../../widgets/reviews/review_card.dart';
 import '../../widgets/reviews/review_form_modal.dart';
 import '../../widgets/reviews/report_review_dialog.dart';
 import '../../services/reviews_service.dart';
-import '../../models/profile_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'my_reviews_screen.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -44,7 +44,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   }
 
   Future<void> _addReview(Review review) async {
-    final userId = ProfileModel.instance.id;
+    final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId != null) {
       await ReviewsService().addReview(review, userId);
     }
