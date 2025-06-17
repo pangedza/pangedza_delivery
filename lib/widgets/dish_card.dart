@@ -48,13 +48,15 @@ class DishCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-              Expanded(
+              AspectRatio(
+                aspectRatio: 1,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
                     dish.imageUrl.isNotEmpty
                         ? dish.imageUrl
-                        : 'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
+                        :
+                            'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     errorBuilder: (_, __, ___) => Container(
