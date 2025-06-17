@@ -82,7 +82,9 @@ class DishCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${dish.price} ₽',
+                        dish.weight.isNotEmpty
+                            ? '${dish.price} ₽ · ${dish.weight}'
+                            : '${dish.price} ₽',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -92,13 +94,6 @@ class DishCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      if (dish.weight.isNotEmpty)
-                        Text(
-                          dish.weight,
-                          style: TextStyle(color: Colors.grey[600]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
                       const SizedBox(height: 4),
                       const Spacer(),
                       Padding(
