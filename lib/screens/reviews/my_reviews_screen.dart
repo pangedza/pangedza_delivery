@@ -39,7 +39,7 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
+      return Scaffold(
         appBar: AppBar(title: Text('Ваши отзывы')),
         body: Center(child: CircularProgressIndicator()),
       );
