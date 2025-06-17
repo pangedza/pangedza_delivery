@@ -26,7 +26,6 @@ class DishCard extends StatelessWidget {
     final cart = CartModel.instance;
     final StopListService stopService = stopListService;
     final bool stopped = stopService.isStopped(dish.name);
-    final int? left = stopService.leftover(dish.name);
     final count = cart.items
         .where((i) => i.dish.name == dish.name)
         .fold<int>(0, (sum, i) => sum + i.quantity);
@@ -70,41 +69,18 @@ class DishCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 dish.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              if (dish.weight.isNotEmpty)
-                Text(
-                  dish.weight,
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                ),
-              if (dish.description != null && dish.description!.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    dish.description!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12, color: Colors.black87),
-                  ),
-                ),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '${firstVariant.price} ₽',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (left != null && !stopped)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4),
-                      child: Text(
-                        'Осталось: $left',
-                        style: const TextStyle(fontSize: 12),
-                      ),
+                  if (dish.weight.isNotEmpty)
+                    Text(
+                      dish.weight,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   Stack(
                     clipBehavior: Clip.none,
