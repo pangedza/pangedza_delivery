@@ -39,10 +39,12 @@ class DishCard extends StatelessWidget {
     final mediaQuery = MediaQuery.of(context);
     return SafeArea(
       bottom: true,
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(maxHeight: mediaQuery.size.height * 0.5),
-        child: Stack(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: mediaQuery.viewInsets.bottom),
+        child: ConstrainedBox(
+          constraints:
+              BoxConstraints(maxHeight: mediaQuery.size.height * 0.5),
+          child: Stack(
           children: [
             Card(
               shape: RoundedRectangleBorder(
@@ -76,6 +78,8 @@ class DishCard extends StatelessWidget {
                 Text(
                   '${dish.price} ₽',
                   style: const TextStyle(fontWeight: FontWeight.bold),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   dish.name,
@@ -97,20 +101,21 @@ class DishCard extends StatelessWidget {
                       child: count == 0
                           ? ElevatedButton(
                               style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(36),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
                                 backgroundColor: Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 8),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                            onPressed: stopped
-                                ? null
-                                : hasMods
-                                    ? () => _openDetail(context)
-                                    : add,
-                            child: const Text('+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c'),
-                          )
+                              onPressed: stopped
+                                  ? null
+                                  : hasMods
+                                      ? () => _openDetail(context)
+                                      : add,
+                              child: const Text('+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c'),
+                            )
                         : Container(
                             padding: const EdgeInsets.symmetric(vertical: 4),
                             decoration: BoxDecoration(
