@@ -42,155 +42,174 @@ class DishCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: mediaQuery.viewInsets.bottom),
         child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxHeight: mediaQuery.size.height * 0.5),
+          constraints: BoxConstraints(maxHeight: mediaQuery.size.height * 0.5),
           child: Stack(
-          children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+            children: [
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: Image.network(
+                            dish.imageUrl.isNotEmpty
+                                ? dish.imageUrl
+                                : 'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (_, __, ___) => Container(
+                              color: Colors.grey[200],
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.image,
+                                size: 48,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${dish.price} ₽',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        dish.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (dish.weight.isNotEmpty)
+                        Text(
+                          dish.weight,
+                          style: TextStyle(color: Colors.grey[600]),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      const SizedBox(height: 4),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: count == 0
+                              ? ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    minimumSize: const Size.fromHeight(36),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).primaryColor,
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: stopped
+                                      ? null
+                                      : hasMods
+                                      ? () => _openDetail(context)
+                                      : add,
+                                  child: const Text(
+                                    '+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c',
+                                  ),
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColor,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      IconButton(
+                                        iconSize: 20,
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(
+                                          Icons.remove,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          CartItem? item;
+                                          for (final i in cart.items) {
+                                            if (i.dish.name == dish.name) {
+                                              item = i;
+                                              break;
+                                            }
+                                          }
+                                          if (item != null)
+                                            cart.decrement(item);
+                                        },
+                                      ),
+                                      Text(
+                                        '$count',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        iconSize: 20,
+                                        padding: EdgeInsets.zero,
+                                        icon: const Icon(
+                                          Icons.add,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: stopped
+                                            ? null
+                                            : hasMods
+                                            ? () => _openDetail(context)
+                                            : add,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: AspectRatio(
-                    aspectRatio: 4 / 3,
-                    child: Image.network(
-                      dish.imageUrl.isNotEmpty
-                          ? dish.imageUrl
-                          : 'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (_, __, ___) => Container(
-                        color: Colors.grey[200],
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.image, size: 48, color: Colors.grey),
+              if (stopped)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withAlpha((0.7 * 255).toInt()),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    alignment: Alignment.center,
+                    child: Transform.rotate(
+                      angle: -0.5,
+                      child: const Text(
+                        'Закончилось',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '${dish.price} ₽',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  dish.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                if (dish.weight.isNotEmpty)
-                  Text(
-                    dish.weight,
-                    style: TextStyle(color: Colors.grey[600]),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: count == 0
-                          ? ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(36),
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                backgroundColor: Theme.of(context).primaryColor,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: stopped
-                                  ? null
-                                  : hasMods
-                                      ? () => _openDetail(context)
-                                      : add,
-                              child: const Text('+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c'),
-                            )
-                        : Container(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                  iconSize: 20,
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.remove, color: Colors.white),
-                                  onPressed: () {
-                                    CartItem? item;
-                                    for (final i in cart.items) {
-                                      if (i.dish.name == dish.name) {
-                                        item = i;
-                                        break;
-                                      }
-                                    }
-                                    if (item != null) cart.decrement(item);
-                                  },
-                                ),
-                                Text(
-                                  '$count',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                IconButton(
-                                  iconSize: 20,
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(Icons.add, color: Colors.white),
-                                  onPressed: stopped
-                                      ? null
-                                      : hasMods
-                                          ? () => _openDetail(context)
-                                          : add,
-                                ),
-                              ],
-                            ),
-                          ),
-                  ),
-                ),
-              ],
-            ),
+            ],
           ),
         ),
-        if (stopped)
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withAlpha((0.7 * 255).toInt()),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              alignment: Alignment.center,
-              child: Transform.rotate(
-                angle: -0.5,
-                child: const Text(
-                  'Закончилось',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
-    ),
-  );
-  );
+    );
   }
 }
