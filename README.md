@@ -23,6 +23,15 @@ SQL patches for the database can be found in the [`database`](database) director
 Run `create_menu_tables.sql` first to create the `categories` and `dishes` tables,
 then import data from the provided Excel file if needed.
 
+### Automatic menu import
+
+The project includes a helper `MenuLoader` that uploads the full menu to
+Supabase. When the app starts in debug mode and the `categories` table is empty,
+`MenuLoader.loadIfNeeded()` reads `assets/data/pangedza_menu_full_template (3).xlsx`
+and populates both `categories` and `dishes`, linking each dish to its category.
+Make sure the Excel file path is listed under `flutter.assets` in
+`pubspec.yaml` (already configured in the repository).
+
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
