@@ -47,8 +47,8 @@ class DishCard extends StatelessWidget {
           constraints: BoxConstraints(maxHeight: mediaQuery.size.height * 15.7),
 =======
           constraints: BoxConstraints(
-            maxHeight: mediaQuery.size.height * 0.7,
-            minHeight: math.max(220.0, mediaQuery.size.height * 0.3),
+            maxHeight: mediaQuery.size.height * 0.9,
+            minHeight: math.max(240.0, mediaQuery.size.height * 0.4),
           ),
 >>>>>>> 46319fb8d98457d34b7867b517ce9ff39840de24
           child: Stack(
@@ -130,7 +130,7 @@ class DishCard extends StatelessWidget {
                                       ? () => _openDetail(context)
                                       : add,
                                   child: const Text(
-                                    '+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c',
+                                    'Добавить',
                                   ),
                                 )
                               : Container(
@@ -142,8 +142,7 @@ class DishCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       IconButton(
                                         iconSize: 20,
