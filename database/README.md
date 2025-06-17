@@ -11,3 +11,4 @@ Run the scripts on your Supabase instance or incorporate them into your migratio
 - `seed_modifiers.sql` – seeds example modifiers and links them to dishes
 - `seed_image_placeholders.sql` – fills `dishes.image_url` with placeholder URLs if empty
 - `patch_orders_table.sql` – updates `orders` with required fields
+- `seed_snacks_category.sql` – adds the "Закуски" category with a sample dish
