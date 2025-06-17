@@ -27,7 +27,7 @@ class TelegramService {
           'Content-Type': 'application/json',
           // Explicitly set a simple User-Agent to avoid issues with Windows
           // HttpClient rejecting non-ASCII values.
-          'User-Agent': 'flutter-app',
+          'User-Agent': 'flutter-client',
         },
         body: jsonEncode({
           'chat_id': _chatId,
