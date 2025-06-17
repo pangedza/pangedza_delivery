@@ -110,7 +110,7 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            if (Platform.isAndroid || Platform.isIOS)
+            if (Platform.isAndroid)
               Expanded(
                 child: _latLng == null
                     ? const Center(
