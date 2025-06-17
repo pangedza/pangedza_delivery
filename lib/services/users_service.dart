@@ -4,12 +4,13 @@ class UsersService {
   final supabase = Supabase.instance.client;
 
   Future<String?> registerUser({required String name, required String phone, required String pin}) async {
-    final existing = await supabase.from('users').select().eq('phone', phone).maybeSingle();
+    final normalizedPhone = phone.replaceAll(RegExp(r'[^+0-9]'), '');
+    final existing = await supabase.from('users').select().eq('phone', normalizedPhone).maybeSingle();
     if (existing != null) return null;
 
     final response = await supabase.from('users').insert({
       'name': name,
-      'phone': phone,
+      'phone': normalizedPhone,
       'pin_code': pin,
     }).select().single();
 
@@ -17,7 +18,13 @@ class UsersService {
   }
 
   Future<String?> loginUser({required String phone, required String pin}) async {
-    final user = await supabase.from('users').select().eq('phone', phone).eq('pin_code', pin).maybeSingle();
+    final normalizedPhone = phone.replaceAll(RegExp(r'[^+0-9]'), '');
+    final user = await supabase
+        .from('users')
+        .select()
+        .eq('phone', normalizedPhone)
+        .eq('pin_code', pin)
+        .maybeSingle();
     return user?['id'];
   }
 

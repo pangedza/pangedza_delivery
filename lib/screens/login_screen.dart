@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/users_service.dart';
 import '../models/profile_model.dart';
 import '../theme/app_theme.dart';
+import '../utils/shared_prefs.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,23 +18,34 @@ class LoginScreenState extends State<LoginScreen> {
   final _phoneController = TextEditingController();
   final _pinController = TextEditingController();
 
-  Future<void> _login() async {
-    final userId = await UsersService().loginUser(
-      phone: _phoneController.text.trim(),
-      pin: _pinController.text.trim(),
-    );
+  Future<void> loginWithPhoneAndPin() async {
+    final rawPhone = _phoneController.text.trim();
+    final phone = rawPhone.replaceAll(RegExp(r'[^+0-9]'), '');
+    final pin = _pinController.text.trim();
 
-    if (userId != null && mounted) {
-      final profile = await UsersService().getProfile(userId);
-      if (!mounted) return;
-      if (profile != null) {
-        context.read<ProfileModel>().setUser(profile);
-      }
-      Navigator.of(context).pushReplacementNamed('/main');
-    } else {
+    final response = await Supabase.instance.client
+        .from('users')
+        .select()
+        .eq('phone', phone)
+        .eq('pin_code', pin)
+        .maybeSingle();
+
+    if (!mounted) return;
+
+    if (response == null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Неверный номер или PIN")));
+          .showSnackBar(const SnackBar(content: Text("Неверный номер или PIN")));
+      return;
     }
+
+    final userId = response['id'] as String;
+    await SharedPrefs.instance.setUserId(userId);
+    final profile = await UsersService().getProfile(userId);
+    if (!mounted) return;
+    if (profile != null) {
+      context.read<ProfileModel>().setUser(profile);
+    }
+    Navigator.of(context).pushReplacementNamed('/main');
   }
 
   @override
@@ -67,7 +80,7 @@ class LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 24),
             ElevatedButton(
               style: AppTheme.redButton,
-              onPressed: _login,
+              onPressed: loginWithPhoneAndPin,
               child: Text("Войти"),
             )
           ],
