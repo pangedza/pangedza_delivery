@@ -37,7 +37,7 @@ Future<void> main() async {
     headers: {
       // Provide a clean User-Agent so the Win32 HttpClient does not throw a
       // FormatException when encountering localized OS version strings.
-      'User-Agent': 'flutter-app',
+      'User-Agent': 'flutter-client',
     },
   );
   await MenuLoader.loadIfNeeded();
