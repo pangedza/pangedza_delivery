@@ -91,10 +91,15 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
             ),
             Row(
               children: [
-                Icon(
-                  review.isPositive ? Icons.thumb_up : Icons.thumb_down,
-                  color: review.isPositive ? Colors.green : Colors.red,
-                  size: 18,
+                Row(
+                  children: List.generate(
+                    review.rating,
+                    (i) => const Icon(
+                      Icons.star,
+                      color: Colors.orange,
+                      size: 16,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Text(
