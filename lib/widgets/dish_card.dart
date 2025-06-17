@@ -75,6 +75,16 @@ class DishCard extends StatelessWidget {
                   dish.weight,
                   style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
+              if (dish.description != null && dish.description!.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    dish.description!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 12, color: Colors.black87),
+                  ),
+                ),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
