@@ -5,7 +5,7 @@ import '../models/cart_model.dart';
 import '../models/category.dart';
 import '../models/dish.dart';
 import '../screens/cart_screen.dart';
-import '../screens/dish_detail_screen.dart';
+import '../widgets/dish_add_modal.dart';
 import '../services/api_service.dart';
 import '../services/dish_service.dart';
 import '../widgets/dish_card.dart';
@@ -58,13 +58,14 @@ class _MenuScreenState extends State<MenuScreen> {
   Future<void> _loadInitial() async {
     await loadStopList();
     final cats = await DishService().fetchCategories();
+    final filtered = cats.where((c) => c.name.toLowerCase() != 'комбо').toList();
     if (!mounted) return;
     setState(() {
-      _categories = cats;
+      _categories = filtered;
       _loadingCategories = false;
     });
-    if (cats.isNotEmpty) {
-      await _loadDishes(cats.first.id);
+    if (filtered.isNotEmpty) {
+      await _loadDishes(filtered.first.id);
     }
   }
 
@@ -234,11 +235,10 @@ class _MenuScreenState extends State<MenuScreen> {
         final dish = filtered[index];
         return GestureDetector(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => DishDetailScreen(dish: dish),
-              ),
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (_) => DishAddModal(dish: dish),
             );
           },
           child: DishCard(dish: dish),
