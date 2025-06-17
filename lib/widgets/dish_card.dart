@@ -56,7 +56,6 @@ class DishCard extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
@@ -101,6 +100,7 @@ class DishCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       const SizedBox(height: 4),
+                      const Spacer(),
                       Padding(
                         padding: const EdgeInsets.only(top: 4),
                         child: SizedBox(
