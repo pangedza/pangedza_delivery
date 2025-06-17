@@ -126,7 +126,7 @@ class DishCard extends StatelessWidget {
                                       ? () => _openDetail(context)
                                       : add,
                                   child: const Text(
-                                    '+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c',
+                                    'Добавить',
                                   ),
                                 )
                               : Container(
@@ -138,8 +138,7 @@ class DishCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       IconButton(
                                         iconSize: 20,
