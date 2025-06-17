@@ -29,7 +29,9 @@ class AdminPanelService {
         Uri.parse(_url),
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': Platform.operatingSystem,
+          // Use a simplified User-Agent on Windows to prevent header parsing
+          // errors caused by non-ASCII characters.
+          'User-Agent': 'flutter-app',
         },
         body: jsonEncode(payload),
       );

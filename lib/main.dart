@@ -35,7 +35,9 @@ Future<void> main() async {
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
     headers: {
-      'User-Agent': Platform.operatingSystem,
+      // Provide a clean User-Agent so the Win32 HttpClient does not throw a
+      // FormatException when encountering localized OS version strings.
+      'User-Agent': 'flutter-app',
     },
   );
   await MenuLoader.loadIfNeeded();
