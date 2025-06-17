@@ -12,13 +12,13 @@ class ReviewFormModal extends StatefulWidget {
 
 class _ReviewFormModalState extends State<ReviewFormModal> {
   late final TextEditingController _controller;
-  late bool _positive;
+  int _rating = 5;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.review?.text ?? '');
-    _positive = widget.review?.isPositive ?? true;
+    _rating = widget.review?.rating ?? 5;
   }
 
   @override
@@ -35,7 +35,7 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
           DateTime.now().millisecondsSinceEpoch.toString(),
       userName: widget.review?.userName ?? 'Вы',
       text: text,
-      isPositive: _positive,
+      rating: _rating,
       createdAt: widget.review?.createdAt ?? DateTime.now(),
     );
     widget.onSubmit(review);
@@ -58,18 +58,17 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
                     icon: const Icon(Icons.camera_alt, color: Colors.black54),
                   ),
                   const SizedBox(width: 16),
-                  ChoiceChip(
-                    label: const Text('Позитивный'),
-                    selected: _positive,
-                    selectedColor: Colors.green.shade200,
-                    onSelected: (_) => setState(() => _positive = true),
-                  ),
-                  const SizedBox(width: 8),
-                  ChoiceChip(
-                    label: const Text('Негативный'),
-                    selected: !_positive,
-                    selectedColor: Colors.red.shade200,
-                    onSelected: (_) => setState(() => _positive = false),
+                  Row(
+                    children: List.generate(5, (index) {
+                      final filled = index < _rating;
+                      return IconButton(
+                        icon: Icon(
+                          filled ? Icons.star : Icons.star_border,
+                          color: Colors.orange,
+                        ),
+                        onPressed: () => setState(() => _rating = index + 1),
+                      );
+                    }),
                   ),
                 ],
               ),

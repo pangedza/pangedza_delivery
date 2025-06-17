@@ -47,12 +47,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId != null) {
       await ReviewsService().addReview(review, userId);
+      await _load();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Спасибо! Отзыв добавлен')),
+        );
+      }
     }
-    if (!mounted) return;
-    setState(() {
-      _reviews.insert(0, review);
-    });
-    Navigator.pop(context);
+    if (mounted) Navigator.pop(context);
   }
 
   void _report(Review review) async {
