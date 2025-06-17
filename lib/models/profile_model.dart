@@ -33,8 +33,8 @@ class ProfileModel extends ChangeNotifier {
         _name = profile['name'] ?? '';
         _phone = profile['phone'] ?? '';
         final bd = profile['birthdate'];
-        birthDate =
-            bd != null ? DateTime.tryParse(bd.toString()) : null;
+        birthDate = bd != null ? DateTime.tryParse(bd.toString()) : null;
+        gender = profile['gender'] ?? 'не выбрано';
       }
       await AddressBookModel.instance.load(storedId);
     }
@@ -53,6 +53,7 @@ class ProfileModel extends ChangeNotifier {
     _phone = data['phone'] ?? '';
     final bd = data['birthdate'];
     birthDate = bd != null ? DateTime.tryParse(bd.toString()) : null;
+    gender = data['gender'] ?? 'не выбрано';
     if (_id.isNotEmpty) SharedPrefs.instance.setUserId(_id);
     if (_id.isNotEmpty) AddressBookModel.instance.load(_id);
     notifyListeners();
@@ -85,6 +86,7 @@ class ProfileModel extends ChangeNotifier {
     _name = '';
     _phone = '';
     birthDate = null;
+    gender = 'не выбрано';
     AddressBookModel.instance.addresses.clear();
     await SharedPrefs.instance.clearUserId();
     notifyListeners();
