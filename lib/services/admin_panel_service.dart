@@ -31,7 +31,7 @@ class AdminPanelService {
           'Content-Type': 'application/json',
           // Use a simplified User-Agent on Windows to prevent header parsing
           // errors caused by non-ASCII characters.
-          'User-Agent': 'flutter-client',
+          'User-Agent': 'flutter-${Platform.operatingSystem}',
         },
         body: jsonEncode(payload),
       );
