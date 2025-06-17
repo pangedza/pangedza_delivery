@@ -36,19 +36,24 @@ class DishCard extends StatelessWidget {
       stopService.consume(dish.name);
     }
 
-    return Stack(
-      children: [
-        Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            constraints: const BoxConstraints(minHeight: 220),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+    final mediaQuery = MediaQuery.of(context);
+    return SafeArea(
+      bottom: true,
+      child: ConstrainedBox(
+        constraints:
+            BoxConstraints(maxHeight: mediaQuery.size.height * 0.5),
+        child: Stack(
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: AspectRatio(
@@ -81,22 +86,24 @@ class DishCard extends StatelessWidget {
                   Text(
                     dish.weight,
                     style: TextStyle(color: Colors.grey[600]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: count == 0
-                        ? ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context).primaryColor,
-                              foregroundColor: Colors.white,
-                              minimumSize: const Size.fromHeight(36),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: count == 0
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
-                            ),
                             onPressed: stopped
                                 ? null
                                 : hasMods
@@ -105,7 +112,7 @@ class DishCard extends StatelessWidget {
                             child: const Text('+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c'),
                           )
                         : Container(
-                            height: 36,
+                            padding: const EdgeInsets.symmetric(vertical: 4),
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
                               borderRadius: BorderRadius.circular(12),
@@ -175,7 +182,9 @@ class DishCard extends StatelessWidget {
               ),
             ),
           ),
-      ],
-    );
+        ],
+      ),
+    ),
+  );
   }
 }
