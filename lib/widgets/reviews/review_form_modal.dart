@@ -3,15 +3,23 @@ import '../../models/review.dart';
 
 class ReviewFormModal extends StatefulWidget {
   final void Function(Review) onSubmit;
-  const ReviewFormModal({super.key, required this.onSubmit});
+  final Review? review;
+  const ReviewFormModal({super.key, required this.onSubmit, this.review});
 
   @override
   State<ReviewFormModal> createState() => _ReviewFormModalState();
 }
 
 class _ReviewFormModalState extends State<ReviewFormModal> {
-  final _controller = TextEditingController();
-  bool _positive = true;
+  late final TextEditingController _controller;
+  late bool _positive;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.review?.text ?? '');
+    _positive = widget.review?.isPositive ?? true;
+  }
 
   @override
   void dispose() {
@@ -23,11 +31,12 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
     final review = Review(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userName: 'Вы',
+      id: widget.review?.id ??
+          DateTime.now().millisecondsSinceEpoch.toString(),
+      userName: widget.review?.userName ?? 'Вы',
       text: text,
       isPositive: _positive,
-      createdAt: DateTime.now(),
+      createdAt: widget.review?.createdAt ?? DateTime.now(),
     );
     widget.onSubmit(review);
   }
@@ -79,7 +88,7 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: _submit,
-                  child: const Text('Отправить'),
+                  child: Text(widget.review == null ? 'Отправить' : 'Сохранить'),
                 ),
               ),
             ],
