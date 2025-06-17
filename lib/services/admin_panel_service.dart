@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
@@ -26,7 +27,10 @@ class AdminPanelService {
     try {
       final response = await http.post(
         Uri.parse(_url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': Platform.operatingSystem,
+        },
         body: jsonEncode(payload),
       );
       debugPrint('Admin panel response: ${response.statusCode}');

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:io' show Platform;
 import 'package:pangedza_delivery/theme/app_theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -30,7 +31,13 @@ Future<void> main() async {
   } catch (e) {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
-  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseAnonKey,
+    headers: {
+      'User-Agent': Platform.operatingSystem,
+    },
+  );
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
   runApp(
