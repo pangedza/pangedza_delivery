@@ -79,7 +79,7 @@ class _AddressMapScreenState extends State<AddressMapScreen> {
               ],
             ),
           ),
-          if (Platform.isAndroid || Platform.isIOS)
+          if (Platform.isAndroid)
             Expanded(
               child: _latLng == null
                   ? const Center(child: Text('Введите адрес и нажмите поиск'))
