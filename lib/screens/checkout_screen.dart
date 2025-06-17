@@ -4,16 +4,11 @@ import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 
 import '../models/cart_model.dart';
-import '../models/cart_item.dart';
-import '../models/order.dart';
 import '../models/address_model.dart';
 import '../models/profile_model.dart';
 import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
-import '../services/telegram_service.dart';
 import '../services/orders_service.dart';
-import '../services/admin_panel_service.dart';
-import '../di.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -37,8 +32,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (profile.id == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content:
-                Text("Пожалуйста, войдите в аккаунт перед оформлением заказа")),
+          content: Text(
+            "Пожалуйста, войдите в аккаунт перед оформлением заказа",
+          ),
+        ),
       );
       return;
     }
@@ -47,8 +44,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       setState(() => isSubmitting = true);
       debugPrint('🟢 submitOrder for user ${profile.id}');
 
-      final deliveryType =
-          _mode == CheckoutMode.pickup ? 'pickup' : 'delivery';
+      final deliveryType = _mode == CheckoutMode.pickup ? 'pickup' : 'delivery';
       final success = await OrdersService().createOrder(
         cart,
         profile,
@@ -60,7 +56,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         Provider.of<CartModel>(context, listen: false).clear();
         if (context.mounted) {
           // Return user to the main screen while keeping them logged in.
-          Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);
+          Navigator.of(
+            context,
+          ).pushNamedAndRemoveUntil('/main', (route) => false);
         }
       } else {
         debugPrint('Не удалось создать заказ');
@@ -75,8 +73,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void showError(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   late final TextEditingController nameCtrl;
@@ -111,7 +110,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _update() => setState(() {});
-
 
   Future<void> _pickDateTime() async {
     final now = DateTime.now();
@@ -228,7 +226,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
-
   Widget _buildContactFields() {
     return Column(
       children: [
@@ -242,9 +239,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         TextField(
           controller: phoneCtrl,
           keyboardType: TextInputType.phone,
-          decoration: AppTheme.input('Телефон *', '').copyWith(
-            prefixIcon: const Icon(Icons.phone, color: Colors.red),
-          ),
+          decoration: AppTheme.input(
+            'Телефон *',
+            '',
+          ).copyWith(prefixIcon: const Icon(Icons.phone, color: Colors.red)),
         ),
       ],
     );
@@ -256,16 +254,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         TextField(
           controller: personsCtrl,
           keyboardType: TextInputType.number,
-          decoration: AppTheme.input('Количество персон *', '').copyWith(
-            prefixIcon: const Icon(Icons.people, color: Colors.red),
-          ),
+          decoration: AppTheme.input(
+            'Количество персон *',
+            '',
+          ).copyWith(prefixIcon: const Icon(Icons.people, color: Colors.red)),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: commentCtrl,
-          decoration: AppTheme.input('Комментарий', '').copyWith(
-            prefixIcon: const Icon(Icons.chat_bubble_outline),
-          ),
+          decoration: AppTheme.input(
+            'Комментарий',
+            '',
+          ).copyWith(prefixIcon: const Icon(Icons.chat_bubble_outline)),
         ),
       ],
     );
@@ -279,9 +279,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: AbsorbPointer(
             child: TextField(
               controller: timeCtrl,
-              decoration: AppTheme.input(timeLabel, '').copyWith(
-                prefixIcon: const Icon(Icons.schedule),
-              ),
+              decoration: AppTheme.input(
+                timeLabel,
+                '',
+              ).copyWith(prefixIcon: const Icon(Icons.schedule)),
             ),
           ),
         ),

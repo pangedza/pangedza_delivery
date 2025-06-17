@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../di.dart';
 import '../services/users_service.dart';
 import '../utils/shared_prefs.dart';
 
@@ -10,6 +9,7 @@ class ProfileModel extends ChangeNotifier {
   String _id = '';
   String _name = '';
   String _phone = '';
+
   /// Role of the current user. Defaults to `user`.
   String role = 'user';
   DateTime? birthDate;
