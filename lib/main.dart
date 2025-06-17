@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'constants/supabase_keys.dart';
 import 'models/profile_model.dart';
+import 'services/menu_loader.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/login_screen.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
+  await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
   runApp(
     MultiProvider(

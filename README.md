@@ -20,6 +20,8 @@ The menu is loaded entirely from Supabase. Ensure these tables are present:
 - `dish_modifiers` linking dishes and modifiers
 
 SQL patches for the database can be found in the [`database`](database) directory.
+Run `create_menu_tables.sql` first to create the `categories` and `dishes` tables,
+then import data from the provided Excel file if needed.
 
 A few resources to get you started if this is your first Flutter project:
 
