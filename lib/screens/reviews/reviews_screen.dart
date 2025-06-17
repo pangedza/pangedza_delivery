@@ -4,6 +4,8 @@ import '../../models/review.dart';
 import '../../widgets/reviews/review_card.dart';
 import '../../widgets/reviews/review_form_modal.dart';
 import '../../widgets/reviews/report_review_dialog.dart';
+import '../../services/reviews_service.dart';
+import '../../models/profile_model.dart';
 import 'my_reviews_screen.dart';
 
 class ReviewsScreen extends StatefulWidget {
@@ -14,22 +16,24 @@ class ReviewsScreen extends StatefulWidget {
 }
 
 class _ReviewsScreenState extends State<ReviewsScreen> {
-  final List<Review> _reviews = [
-    Review(
-      id: '1',
-      userName: 'Ирина',
-      text: 'Очень вкусно и быстро!',
-      isPositive: true,
-      createdAt: DateTime.now().subtract(const Duration(hours: 3)),
-    ),
-    Review(
-      id: '2',
-      userName: 'Дмитрий',
-      text: 'Доставка задержалась на 30 минут.',
-      isPositive: false,
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-  ];
+  final List<Review> _reviews = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final res = await ReviewsService().getGeneralReviews();
+    if (!mounted) return;
+    setState(() {
+      _reviews.clear();
+      _reviews.addAll(res);
+      _loading = false;
+    });
+  }
 
   void _openForm() {
     showModalBottomSheet(
@@ -39,7 +43,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     );
   }
 
-  void _addReview(Review review) {
+  Future<void> _addReview(Review review) async {
+    final userId = ProfileModel.instance.id;
+    if (userId != null) {
+      await ReviewsService().addReview(review, userId);
+    }
+    if (!mounted) return;
     setState(() {
       _reviews.insert(0, review);
     });
@@ -79,20 +88,22 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => MyReviewsScreen(reviews: _reviews),
+                  builder: (_) => const MyReviewsScreen(),
                 ),
               );
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: sorted.length,
-        itemBuilder: (context, i) => ReviewCard(
-          review: sorted[i],
-          onReport: () => _report(sorted[i]),
-        ),
-      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: sorted.length,
+              itemBuilder: (context, i) => ReviewCard(
+                review: sorted[i],
+                onReport: () => _report(sorted[i]),
+              ),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),

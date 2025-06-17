@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../models/profile_model.dart';
+import '../services/users_service.dart';
 import '../di.dart';
 
 class DateInputFormatter extends TextInputFormatter {
@@ -76,7 +77,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     }
   }
 
-  void _save() {
+  Future<void> _save() async {
     DateTime? manualDate;
     try {
       manualDate = DateFormat('dd/MM/yyyy', 'ru').parseStrict(_dateController.text);
@@ -85,12 +86,12 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     profile.updateName(_nameController.text);
     profile.updateBirthDate(_birthDate);
     profile.updateGender(_gender);
-    authService.saveUserProfile({
+    await UsersService().updateProfile(profile.id!, {
       'name': _nameController.text,
-      'birthDate': _birthDate?.toIso8601String(),
+      'birthdate': _birthDate?.toIso8601String(),
       'gender': _gender,
     });
-    Navigator.pop(context);
+    if (context.mounted) Navigator.pop(context);
   }
 
   @override
@@ -136,7 +137,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _save,
+                onPressed: () => _save(),
                 child: const Text('Сохранить'),
               ),
             ),

@@ -111,7 +111,7 @@ class _AddressFormContentState extends State<AddressFormContent> {
     if (_houseCtrl.text.trim().isEmpty) _errors['house'] = 'Обязательное поле';
   }
 
-  void _save() {
+  Future<void> _save() async {
     _validate();
     if (_errors.isNotEmpty) {
       setState(() {});
@@ -134,11 +134,11 @@ class _AddressFormContentState extends State<AddressFormContent> {
       lng: _latLng?.longitude,
     );
     if (widget.address == null) {
-      model.add(address);
+      await model.add(address);
     } else {
-      model.update(address);
+      await model.update(address);
     }
-    Navigator.pop(context, address);
+    if (context.mounted) Navigator.pop(context, address);
   }
 
   Widget _buildTextField({
@@ -292,7 +292,7 @@ class _AddressFormContentState extends State<AddressFormContent> {
             width: double.infinity,
             height: 56,
             child: ElevatedButton(
-              onPressed: _save,
+              onPressed: () => _save(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFE30613),
                 foregroundColor: Colors.white,
