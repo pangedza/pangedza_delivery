@@ -1,4 +1,3 @@
-import 'dish_variant.dart';
 import 'modifier.dart';
 
 class Dish {

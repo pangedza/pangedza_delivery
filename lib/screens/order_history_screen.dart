@@ -6,7 +6,6 @@ import '../models/cart_model.dart';
 import 'package:provider/provider.dart';
 import '../models/order.dart';
 import 'package:intl/intl.dart';
-import '../main.dart';
 import '../widgets/app_drawer.dart';
 import 'orders/active_order_screen.dart';
 
@@ -166,7 +165,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen>
                             const SizedBox(height: 4),
                             for (final item in order.items)
                               Text(
-                                '${item.dish.name} ${item.variant.title} ${item.modifiers.isNotEmpty ? '(' + item.modifiers.map((m) => m.name).join(', ') + ')' : ''} x${item.quantity}',
+                                '${item.dish.name} ${item.variant.title} ${item.modifiers.isNotEmpty ? '(${item.modifiers.map((m) => m.name).join(', ')})' : ''} x${item.quantity}',
                               ),
                             const SizedBox(height: 4),
                             if (order.pickup)

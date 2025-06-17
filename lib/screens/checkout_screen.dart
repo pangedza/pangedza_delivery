@@ -11,7 +11,6 @@ import '../models/profile_model.dart';
 import '../widgets/address_form_sheet.dart';
 import '../widgets/app_drawer.dart';
 import '../services/telegram_service.dart';
-import '../services/order_service.dart';
 import '../services/orders_service.dart';
 import '../services/admin_panel_service.dart';
 import '../di.dart';
@@ -89,7 +88,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   CheckoutMode _mode = CheckoutMode.delivery;
   PaymentMethod? _payment;
   AddressModel? _selectedAddress;
-  DateTime? _dateTime;
 
   @override
   void initState() {
@@ -114,18 +112,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void _update() => setState(() {});
 
-  bool get _canSubmit {
-    if (nameCtrl.text.isEmpty ||
-        phoneCtrl.text.isEmpty ||
-        personsCtrl.text.isEmpty ||
-        _payment == null) {
-      return false;
-    }
-    if (_mode == CheckoutMode.delivery && _selectedAddress == null) {
-      return false;
-    }
-    return true;
-  }
 
   Future<void> _pickDateTime() async {
     final now = DateTime.now();
@@ -150,13 +136,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (time == null) return;
     if (!context.mounted) return;
     setState(() {
-      _dateTime = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        time.hour,
-        time.minute,
-      );
       timeCtrl.text =
           '${DateFormat('dd/MM/yyyy', 'ru').format(date)} ${time.format(context)}';
     });
@@ -249,61 +228,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
-  void _confirm() {
-    final bool pickup = _mode == CheckoutMode.pickup;
-    final order = Order(
-      id: 'local',
-      orderNumber: 0,
-      date: DateTime.now(),
-      items: cart.items
-          .map(
-            (e) => CartItem(
-              dish: e.dish,
-              variant: e.variant,
-              modifiers: e.modifiers,
-              quantity: e.quantity,
-            ),
-          )
-          .toList(),
-      total: cart.total,
-      name: nameCtrl.text,
-      phone: phoneCtrl.text,
-      city: 'Новороссийск',
-      district: '',
-      street: pickup ? 'Коммунистическая' : (_selectedAddress?.street ?? ''),
-      house: pickup ? '51' : (_selectedAddress?.house ?? ''),
-      flat: pickup ? '' : (_selectedAddress?.flat ?? ''),
-      floor: pickup ? '' : (_selectedAddress?.floor ?? ''),
-      intercom: pickup ? '' : (_selectedAddress?.code ?? ''),
-      comment: commentCtrl.text,
-      payment: _payment!.name,
-      leaveAtDoor: false,
-      pickup: pickup,
-      deliveryType: pickup ? 'pickup' : 'delivery',
-    );
-    orderService.addOrder(order);
-    firestoreService.saveOrder(order.toMap());
-
-    TelegramService.sendOrderToTelegram(order);
-    AdminPanelService.sendOrderToAdmin(order);
-    cart.clear();
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Заказ оформлен'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/main', (route) => false);
-            },
-            child: const Text('Ок'),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildContactFields() {
     return Column(
@@ -418,8 +342,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final name = profile.name.isNotEmpty ? profile.name : 'Гость';
-    final phone = profile.phone.isNotEmpty ? profile.phone : '+7(900)000-00-00';
     return Scaffold(
       drawer: const MyAppDrawer(),
       appBar: AppBar(
