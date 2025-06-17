@@ -38,104 +38,98 @@ class DishCard extends StatelessWidget {
     return Stack(
       children: [
         Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AspectRatio(
-                aspectRatio: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    dish.imageUrl.isNotEmpty
-                        ? dish.imageUrl
-                        : 'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: Colors.grey[200],
-                      alignment: Alignment.center,
-                      child:
-                          const Icon(Icons.image, size: 48, color: Colors.grey),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(minHeight: 220),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: AspectRatio(
+                    aspectRatio: 4 / 3,
+                    child: Image.network(
+                      dish.imageUrl.isNotEmpty
+                          ? dish.imageUrl
+                          : 'https://via.placeholder.com/512x300.png?text=%D0%91%D0%BB%D1%8E%D0%B4%D0%BE',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      errorBuilder: (_, __, ___) => Container(
+                        color: Colors.grey[200],
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.image, size: 48, color: Colors.grey),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dish.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (dish.weight.isNotEmpty)
-                          Text(
-                            dish.weight,
-                            style:
-                                TextStyle(color: Colors.grey[600], fontSize: 12),
-                          ),
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            InkWell(
-                              onTap: stopped
-                                  ? null
-                                  : hasMods
-                                      ? () => _openDetail(context)
-                                      : add,
-                              child: CircleAvatar(
-                                radius: 18,
-                                backgroundColor: stopped
-                                    ? Colors.grey
-                                    : Theme.of(context).primaryColor,
-                                child:
-                                    const Icon(Icons.add, color: Colors.white),
+                const SizedBox(height: 8),
+                Text(
+                  '${dish.price} ₽',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  dish.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (dish.weight.isNotEmpty)
+                  Text(
+                    dish.weight,
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      InkWell(
+                        onTap: stopped
+                            ? null
+                            : hasMods
+                                ? () => _openDetail(context)
+                                : add,
+                        child: CircleAvatar(
+                          radius: 18,
+                          backgroundColor: stopped
+                              ? Colors.grey
+                              : Theme.of(context).primaryColor,
+                          child: const Icon(Icons.add, color: Colors.white),
+                        ),
+                      ),
+                      if (count > 0)
+                        Positioned(
+                          right: -4,
+                          top: -4,
+                          child: CircleAvatar(
+                            radius: 8,
+                            backgroundColor: Colors.white,
+                            child: Text(
+                              '$count',
+                              style: const TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
-                            if (count > 0)
-                              Positioned(
-                                right: -4,
-                                top: -4,
-                                child: CircleAvatar(
-                                  radius: 8,
-                                  backgroundColor: Colors.white,
-                                  child: Text(
-                                    '$count',
-                                    style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         if (stopped)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color:
-                    Colors.grey.withAlpha((0.7 * 255).toInt()), // deprecated .withOpacity()
+                color: Colors.grey.withAlpha((0.7 * 255).toInt()),
                 borderRadius: BorderRadius.circular(16),
               ),
               alignment: Alignment.center,
