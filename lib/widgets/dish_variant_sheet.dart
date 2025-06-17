@@ -22,7 +22,10 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   }
 
   void _add() {
-    final variant = DishVariant(title: '', price: widget.dish.price + _selected.price);
+    final variant = DishVariant(
+      title: '',
+      price: widget.dish.price + _selected.price,
+    );
     CartModel.instance.addItem(widget.dish, variant, [_selected]);
     Navigator.of(context).pop();
   }
@@ -66,7 +69,10 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
               const SizedBox(height: 8),
               Text(
                 dish.name,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               if (dish.description != null) ...[
                 const SizedBox(height: 8),
