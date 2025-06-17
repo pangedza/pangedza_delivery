@@ -30,6 +30,7 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
   @override
   Widget build(BuildContext context) {
     final dish = widget.dish;
+    final double imageHeight = MediaQuery.of(context).size.height * 0.4;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,11 +44,11 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                 child: dish.imageUrl.isNotEmpty
                     ? Image.network(
                         dish.imageUrl,
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: imageHeight,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Container(
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          height: imageHeight,
                           width: double.infinity,
                           color: Colors.grey.shade300,
                           alignment: Alignment.center,
@@ -55,7 +56,7 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                         ),
                       )
                     : Container(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: imageHeight,
                         width: double.infinity,
                         color: Colors.grey.shade300,
                         alignment: Alignment.center,

@@ -44,8 +44,8 @@ class DishCard extends StatelessWidget {
         padding: EdgeInsets.only(bottom: mediaQuery.viewInsets.bottom),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxHeight: mediaQuery.size.height * 0.7,
-            minHeight: math.max(220.0, mediaQuery.size.height * 0.3),
+            maxHeight: mediaQuery.size.height * 0.9,
+            minHeight: math.max(240.0, mediaQuery.size.height * 0.4),
           ),
           child: Stack(
             children: [
