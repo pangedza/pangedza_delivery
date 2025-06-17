@@ -77,8 +77,9 @@ class _ActiveOrderTileState extends State<_ActiveOrderTile> {
           Text('🧾 Заказ №${order.orderNumber}',
               style: const TextStyle(fontWeight: FontWeight.bold)),
           if (_expanded)
-            ...order.items.map((item) =>
-                Text('🍽 ${item.dish.name} ×${item.quantity}')).toList()
+            ...order.items.map(
+              (item) => Text('🍽 ${item.dish.name} ×${item.quantity}'),
+            )
           else if (firstItem != null)
             Text('🍽 ${firstItem.dish.name} ×${firstItem.quantity}'),
           Text('📦 ${order.deliveryType == 'pickup' ? 'Самовывоз' : 'Доставка'}'),

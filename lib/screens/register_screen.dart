@@ -6,11 +6,13 @@ import '../models/profile_model.dart';
 import '../theme/app_theme.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  RegisterScreenState createState() => RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _pinController = TextEditingController();
@@ -24,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (userId != null && mounted) {
       final profile = await UsersService().getProfile(userId);
+      if (!mounted) return;
       if (profile != null) {
         context.read<ProfileModel>().setUser(profile);
       }
@@ -36,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _phoneMask = MaskTextInputFormatter(
+    final phoneMask = MaskTextInputFormatter(
       mask: '+7 (###) ###-##-##',
       filter: {"#": RegExp(r'[0-9]')},
     );
@@ -57,7 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SizedBox(height: 16),
             TextField(
               controller: _phoneController,
-              inputFormatters: [_phoneMask],
+              inputFormatters: [phoneMask],
               keyboardType: TextInputType.phone,
               decoration: AppTheme.input("Ваш номер телефона", "+7 (900) 000-00-00"),
             ),

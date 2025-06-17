@@ -3,13 +3,13 @@ import '../services/orders_service.dart';
 import '../models/profile_model.dart';
 
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({Key? key}) : super(key: key);
+  const OrdersScreen({super.key});
 
   @override
-  _OrdersScreenState createState() => _OrdersScreenState();
+  OrdersScreenState createState() => OrdersScreenState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class OrdersScreenState extends State<OrdersScreen> {
   final OrdersService _service = OrdersService();
   List<Map<String, dynamic>> _orders = [];
   bool _loading = true;

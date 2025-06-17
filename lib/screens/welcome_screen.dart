@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../models/profile_model.dart';
 
 /// A simple welcome screen displayed on app start.
 class WelcomeScreen extends StatelessWidget {

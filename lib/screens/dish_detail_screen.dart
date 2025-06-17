@@ -142,7 +142,7 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _add,
-                child: Text('Добавить за ${_priceWithMods} ₽'),
+                child: Text('Добавить за $_priceWithMods ₽'),
               ),
             ),
           ],

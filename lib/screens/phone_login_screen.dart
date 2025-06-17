@@ -7,10 +7,10 @@ class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
 
   @override
-  _PhoneLoginScreenState createState() => _PhoneLoginScreenState();
+  PhoneLoginScreenState createState() => PhoneLoginScreenState();
 }
 
-class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
+class PhoneLoginScreenState extends State<PhoneLoginScreen> {
   final _phoneController = TextEditingController();
   final _codeController = TextEditingController();
   bool codeSent = false;
