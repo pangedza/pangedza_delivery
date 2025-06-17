@@ -58,14 +58,14 @@ class _MenuScreenState extends State<MenuScreen> {
   Future<void> _loadInitial() async {
     await loadStopList();
     final cats = await DishService().fetchCategories();
-    final filtered = cats.where((c) => c.name.toLowerCase() != 'комбо').toList();
+    final categories = cats.where((c) => c.name.trim().isNotEmpty).toList();
     if (!mounted) return;
     setState(() {
-      _categories = filtered;
+      _categories = categories;
       _loadingCategories = false;
     });
-    if (filtered.isNotEmpty) {
-      await _loadDishes(filtered.first.id);
+    if (categories.isNotEmpty) {
+      await _loadDishes(categories.first.id);
     }
   }
 
