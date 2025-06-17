@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../models/cart_model.dart';
 import '../models/category.dart';
@@ -22,11 +23,11 @@ class _MenuScreenState extends State<MenuScreen> {
   final CartModel cart = CartModel.instance;
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _categoryController = ScrollController();
-  final ScrollController _scrollController = ScrollController();
+  final ItemScrollController _scrollController = ItemScrollController();
+  final ItemPositionsListener _positionsListener = ItemPositionsListener.create();
 
   List<Category> _categories = [];
   final Map<String, List<Dish>> _dishesByCategory = {};
-  final List<GlobalKey> _categoryKeys = [];
   int _activeCategory = 0;
   bool _loadingCategories = true;
   bool _loadingDishes = false;
@@ -38,14 +39,13 @@ class _MenuScreenState extends State<MenuScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     cart.addListener(_cartUpdate);
-    _scrollController.addListener(_onScroll);
+    _positionsListener.itemPositions.addListener(_onScroll);
     _loadInitial();
   }
 
   @override
   void dispose() {
     _categoryController.dispose();
-    _scrollController.dispose();
     _debounce?.cancel();
     _searchController.dispose();
     cart.removeListener(_cartUpdate);
@@ -66,7 +66,6 @@ class _MenuScreenState extends State<MenuScreen> {
     if (!mounted) return;
     setState(() {
       _categories = categories;
-      _categoryKeys.addAll(List.generate(categories.length, (_) => GlobalKey()));
       _loadingCategories = false;
     });
     for (final c in categories) {
@@ -85,23 +84,15 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void _onScroll() {
-    int newActive = _activeCategory;
-    const double triggerOffset = 120;
-    for (int i = 0; i < _categoryKeys.length; i++) {
-      final ctx = _categoryKeys[i].currentContext;
-      if (ctx == null) continue;
-      final box = ctx.findRenderObject() as RenderBox;
-      final pos = box.localToGlobal(Offset.zero).dy;
-      if (pos <= triggerOffset) {
-        newActive = i;
-      } else {
-        break;
-      }
-    }
-    if (newActive != _activeCategory) {
-      setState(() => _activeCategory = newActive);
+    final positions = _positionsListener.itemPositions.value;
+    if (positions.isEmpty) return;
+    final first = positions
+        .where((p) => p.itemTrailingEdge > 0)
+        .reduce((a, b) => a.itemLeadingEdge < b.itemLeadingEdge ? a : b);
+    if (first.index != _activeCategory) {
+      setState(() => _activeCategory = first.index);
       _categoryController.animateTo(
-        56.0 * newActive,
+        56.0 * first.index,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
@@ -177,13 +168,11 @@ class _MenuScreenState extends State<MenuScreen> {
                         child: TextButton(
                           onPressed: () async {
                             setState(() => _activeCategory = index);
-                            final ctx = _categoryKeys[index].currentContext;
-                            if (ctx != null) {
-                              Scrollable.ensureVisible(
-                                ctx,
-                                duration: const Duration(milliseconds: 300),
-                              );
-                            }
+                            _scrollController.scrollTo(
+                              index: index,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
                             if (!_dishesByCategory.containsKey(c.id)) {
                               await _loadDishes(c.id);
                             }
@@ -245,8 +234,9 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildCategoryList(String query) {
     if (_categories.isEmpty) return const SizedBox.shrink();
-    return ListView.builder(
-      controller: _scrollController,
+    return ScrollablePositionedList.builder(
+      itemScrollController: _scrollController,
+      itemPositionsListener: _positionsListener,
       itemCount: _categories.length,
       itemBuilder: (context, index) {
         final c = _categories[index];
@@ -259,7 +249,6 @@ class _MenuScreenState extends State<MenuScreen> {
             .toList();
         if (filtered.isEmpty) return const SizedBox.shrink();
         return Padding(
-          key: _categoryKeys[index],
           padding: const EdgeInsets.only(bottom: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
