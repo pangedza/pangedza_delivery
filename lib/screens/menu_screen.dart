@@ -7,7 +7,6 @@ import '../models/dish.dart';
 import '../screens/cart_screen.dart';
 import '../screens/dish_detail_screen.dart';
 import '../services/api_service.dart';
-import '../services/cart_service.dart';
 import '../services/dish_service.dart';
 import '../widgets/dish_card.dart';
 import '../widgets/app_drawer.dart';
@@ -234,17 +233,13 @@ class _MenuScreenState extends State<MenuScreen> {
       itemBuilder: (_, index) {
         final dish = filtered[index];
         return GestureDetector(
-          onTap: () async {
-            final hasMods = await DishService().hasModifiers(dish.id);
-            if (hasMods) {
-              await showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
                 builder: (_) => DishDetailScreen(dish: dish),
-              );
-            } else {
-              CartService.instance.addDish(dish);
-            }
+              ),
+            );
           },
           child: DishCard(dish: dish),
         );
