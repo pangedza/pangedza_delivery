@@ -38,3 +38,13 @@ A few resources to get you started if this is your first Flutter project:
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
 For help getting started with Flutter development, view the [online documentation](https://docs.flutter.dev/), which offers tutorials, samples, guidance on mobile development, and a full API reference.
+
+### Row level security
+
+Enable RLS on the `categories` and `dishes` tables so the client can read the data:
+
+```sql
+\i database/enable_rls.sql
+```
+
+This script turns on row level security and adds simple `SELECT` policies allowing public read access.
