@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
 import '../models/cart_model.dart';
@@ -42,7 +43,10 @@ class DishCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: mediaQuery.viewInsets.bottom),
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxHeight: mediaQuery.size.height * 0.7),
+          constraints: BoxConstraints(
+            maxHeight: mediaQuery.size.height * 0.7,
+            minHeight: math.max(220.0, mediaQuery.size.height * 0.3),
+          ),
           child: Stack(
             children: [
               Card(

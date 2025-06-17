@@ -43,11 +43,11 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                 child: dish.imageUrl.isNotEmpty
                     ? Image.network(
                         dish.imageUrl,
-                        height: 120,
+                        height: MediaQuery.of(context).size.height * 0.4,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (_, __, ___) => Container(
-                          height: 120,
+                          height: MediaQuery.of(context).size.height * 0.4,
                           width: double.infinity,
                           color: Colors.grey.shade300,
                           alignment: Alignment.center,
@@ -55,7 +55,7 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                         ),
                       )
                     : Container(
-                        height: 120,
+                        height: MediaQuery.of(context).size.height * 0.4,
                         width: double.infinity,
                         color: Colors.grey.shade300,
                         alignment: Alignment.center,
