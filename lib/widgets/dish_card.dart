@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/dish.dart';
 import '../models/dish_variant.dart';
 import '../models/cart_model.dart';
+import '../models/cart_item.dart';
 import '../services/stop_list_service.dart';
 import '../di.dart';
 import '../screens/dish_detail_screen.dart';
@@ -82,43 +83,71 @@ class DishCard extends StatelessWidget {
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      InkWell(
-                        onTap: stopped
-                            ? null
-                            : hasMods
-                                ? () => _openDetail(context)
-                                : add,
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: stopped
-                              ? Colors.grey
-                              : Theme.of(context).primaryColor,
-                          child: const Icon(Icons.add, color: Colors.white),
-                        ),
-                      ),
-                      if (count > 0)
-                        Positioned(
-                          right: -4,
-                          top: -4,
-                          child: CircleAvatar(
-                            radius: 8,
-                            backgroundColor: Colors.white,
-                            child: Text(
-                              '$count',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: count == 0
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Theme.of(context).primaryColor,
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size.fromHeight(36),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
+                            onPressed: stopped
+                                ? null
+                                : hasMods
+                                    ? () => _openDetail(context)
+                                    : add,
+                            child: const Text('+ \u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c'),
+                          )
+                        : Container(
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  iconSize: 20,
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(Icons.remove, color: Colors.white),
+                                  onPressed: () {
+                                    CartItem? item;
+                                    for (final i in cart.items) {
+                                      if (i.dish.name == dish.name) {
+                                        item = i;
+                                        break;
+                                      }
+                                    }
+                                    if (item != null) cart.decrement(item);
+                                  },
+                                ),
+                                Text(
+                                  '$count',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  iconSize: 20,
+                                  padding: EdgeInsets.zero,
+                                  icon: const Icon(Icons.add, color: Colors.white),
+                                  onPressed: stopped
+                                      ? null
+                                      : hasMods
+                                          ? () => _openDetail(context)
+                                          : add,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
                   ),
                 ),
               ],
