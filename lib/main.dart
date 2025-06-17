@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'dart:io' show Platform;
+import 'dart:io';
 import 'package:pangedza_delivery/theme/app_theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -31,6 +31,9 @@ Future<void> main() async {
   } catch (e) {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
+  // Globally override the default User-Agent for all HTTP clients to avoid
+  // FormatException on Windows when localized OS strings are used.
+  HttpOverrides.global = _NoUserAgentHttpOverride();
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
@@ -161,5 +164,18 @@ class _MainScreenState extends State<MainScreen> {
         onTap: (index) => setState(() => _currentIndex = index),
       ),
     );
+  }
+}
+
+/// Overrides the default [HttpClient] to provide a simple User-Agent header
+/// for all outgoing HTTP requests. This prevents `FormatException` errors on
+/// Windows when the system provides a localized OS version string with
+/// non-ASCII characters.
+class _NoUserAgentHttpOverride extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    final client = super.createHttpClient(context);
+    client.userAgent = 'flutter-app';
+    return client;
   }
 }
