@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import '../services/users_service.dart';
 import '../utils/shared_prefs.dart';
+import 'address_model.dart';
 
 class ProfileModel extends ChangeNotifier {
   ProfileModel._();
@@ -31,7 +32,11 @@ class ProfileModel extends ChangeNotifier {
       if (profile != null) {
         _name = profile['name'] ?? '';
         _phone = profile['phone'] ?? '';
+        final bd = profile['birthdate'];
+        birthDate =
+            bd != null ? DateTime.tryParse(bd.toString()) : null;
       }
+      await AddressBookModel.instance.load(storedId);
     }
     notifyListeners();
   }
@@ -46,7 +51,10 @@ class ProfileModel extends ChangeNotifier {
     _id = data['id'] ?? '';
     _name = data['name'] ?? '';
     _phone = data['phone'] ?? '';
+    final bd = data['birthdate'];
+    birthDate = bd != null ? DateTime.tryParse(bd.toString()) : null;
     if (_id.isNotEmpty) SharedPrefs.instance.setUserId(_id);
+    if (_id.isNotEmpty) AddressBookModel.instance.load(_id);
     notifyListeners();
   }
 
@@ -76,6 +84,8 @@ class ProfileModel extends ChangeNotifier {
     _id = '';
     _name = '';
     _phone = '';
+    birthDate = null;
+    AddressBookModel.instance.addresses.clear();
     await SharedPrefs.instance.clearUserId();
     notifyListeners();
   }

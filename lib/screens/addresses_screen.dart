@@ -25,7 +25,7 @@ class AddressesScreen extends StatelessWidget {
       ),
     );
     if (result == true) {
-      model.remove(address);
+      await model.remove(address);
     }
   }
 

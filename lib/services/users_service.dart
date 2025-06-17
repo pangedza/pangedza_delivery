@@ -36,5 +36,9 @@ class UsersService {
         .maybeSingle();
     return response;
   }
+
+  Future<void> updateProfile(String id, Map<String, dynamic> data) async {
+    await supabase.from('users').update(data).eq('id', id);
+  }
 }
 
