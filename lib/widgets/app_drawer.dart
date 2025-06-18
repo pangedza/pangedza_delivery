@@ -73,14 +73,6 @@ class _MyAppDrawerState extends State<MyAppDrawer> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.feedback),
-              title: const Text('Отзывы'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/reviews');
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.notifications),
               title: const Text('Уведомления'),
               onTap: () {
