@@ -198,6 +198,15 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             ),
             const SizedBox(height: 8),
             Text(review.text),
+            if (review.photoUrl != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Image.network(
+                  review.photoUrl!,
+                  height: 120,
+                  fit: BoxFit.cover,
+                ),
+              ),
           ],
         ),
       ),
