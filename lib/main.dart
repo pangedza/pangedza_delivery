@@ -34,9 +34,6 @@ Future<void> main() async {
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
-    httpClient: CustomHttpClient(),
-    authFlowType: AuthFlowType.pkce,
-    persistSession: false,
   );
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
