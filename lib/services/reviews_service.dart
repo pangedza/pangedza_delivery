@@ -8,14 +8,13 @@ class ReviewsService {
   final _client = Supabase.instance.client;
 
   Future<List<Review>> fetchReviews({String? userId}) async {
-    var query = _client
-        .from('reviews')
-        .select('*, users(name)')
-        .order('created_at', ascending: false);
+    var query = _client.from('reviews');
     if (userId != null) {
       query = query.eq('user_id', userId);
     }
-    final data = await query;
+    final data = await query
+        .select('*, users(name)')
+        .order('created_at', ascending: false);
     return List<Map<String, dynamic>>.from(data)
         .map(Review.fromMap)
         .toList();
