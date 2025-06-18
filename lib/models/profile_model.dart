@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import '../services/users_service.dart';
-import '../utils/shared_prefs.dart';
 import 'address_model.dart';
 
 class ProfileModel extends ChangeNotifier {
@@ -25,25 +24,12 @@ class ProfileModel extends ChangeNotifier {
   // удалено временно отладочное поведение
 
   Future<void> load() async {
-    final storedId = await SharedPrefs.instance.getUserId() ?? '';
-    if (storedId.isNotEmpty) {
-      _id = storedId;
-      final profile = await UsersService().getProfile(storedId);
-      if (profile != null) {
-        _name = profile['name'] ?? '';
-        _phone = profile['phone'] ?? '';
-        final bd = profile['birthdate'];
-        birthDate = bd != null ? DateTime.tryParse(bd.toString()) : null;
-        gender = profile['gender'] ?? 'не выбрано';
-      }
-      await AddressBookModel.instance.load(storedId);
-    }
+    // session persistence disabled
     notifyListeners();
   }
 
   void setUserId(String id) {
     _id = id;
-    SharedPrefs.instance.setUserId(id);
     notifyListeners();
   }
 
@@ -54,7 +40,6 @@ class ProfileModel extends ChangeNotifier {
     final bd = data['birthdate'];
     birthDate = bd != null ? DateTime.tryParse(bd.toString()) : null;
     gender = data['gender'] ?? 'не выбрано';
-    if (_id.isNotEmpty) SharedPrefs.instance.setUserId(_id);
     if (_id.isNotEmpty) AddressBookModel.instance.load(_id);
     notifyListeners();
   }
@@ -88,7 +73,6 @@ class ProfileModel extends ChangeNotifier {
     birthDate = null;
     gender = 'не выбрано';
     AddressBookModel.instance.addresses.clear();
-    await SharedPrefs.instance.clearUserId();
     notifyListeners();
   }
 }
