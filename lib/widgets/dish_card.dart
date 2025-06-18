@@ -10,9 +10,14 @@ import '../screens/dish_detail_screen.dart';
 
 class DishCard extends StatelessWidget {
   final Dish dish;
-  const DishCard({super.key, required this.dish});
+  final void Function(BuildContext context)? onOpenDetail;
+  const DishCard({super.key, required this.dish, this.onOpenDetail});
 
   void _openDetail(BuildContext context) {
+    if (onOpenDetail != null) {
+      onOpenDetail!(context);
+      return;
+    }
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
