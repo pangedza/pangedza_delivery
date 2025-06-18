@@ -7,6 +7,7 @@ import '../models/category.dart';
 import '../models/dish.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/dish_add_modal.dart';
+import '../widgets/wok_add_modal.dart';
 import '../services/api_service.dart';
 import '../services/dish_service.dart';
 import '../widgets/dish_card.dart';
@@ -63,6 +64,12 @@ class _MenuScreenState extends State<MenuScreen> {
     await loadStopList();
     final cats = await DishService().fetchCategories();
     final categories = cats.where((c) => c.name.trim().isNotEmpty).toList();
+    final wokIndex =
+        categories.indexWhere((c) => c.name.toLowerCase() == 'wok');
+    if (wokIndex > 0) {
+      final wok = categories.removeAt(wokIndex);
+      categories.insert(0, wok);
+    }
     if (!mounted) return;
     setState(() {
       _categories = categories;
@@ -273,15 +280,21 @@ class _MenuScreenState extends State<MenuScreen> {
                 itemCount: filtered.length,
                 itemBuilder: (_, i) {
                   final dish = filtered[i];
+                  final isWok = c.name.toLowerCase() == 'wok';
+                  void open() {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (_) =>
+                          isWok ? WokAddModal(dish: dish) : DishAddModal(dish: dish),
+                    );
+                  }
                   return GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => DishAddModal(dish: dish),
-                      );
-                    },
-                    child: DishCard(dish: dish),
+                    onTap: open,
+                    child: DishCard(
+                      dish: dish,
+                      onOpenDetail: open,
+                    ),
                   );
                 },
               ),
