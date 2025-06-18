@@ -281,16 +281,16 @@ class _MenuScreenState extends State<MenuScreen> {
                 itemBuilder: (_, i) {
                   final dish = filtered[i];
                   final isWok = c.name.toLowerCase() == 'wok';
-                  void open() {
+                  void open(BuildContext ctx) {
                     showModalBottomSheet(
-                      context: context,
+                      context: ctx,
                       isScrollControlled: true,
                       builder: (_) =>
                           isWok ? WokAddModal(dish: dish) : DishAddModal(dish: dish),
                     );
                   }
                   return GestureDetector(
-                    onTap: open,
+                    onTap: () => open(context),
                     child: DishCard(
                       dish: dish,
                       onOpenDetail: open,
