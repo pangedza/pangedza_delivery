@@ -105,6 +105,7 @@ class DishCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: SizedBox(
                           width: double.infinity,
+                          height: 40,
                           child: count == 0
                               ? ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -130,6 +131,7 @@ class DishCard extends StatelessWidget {
                                   ),
                                 )
                               : Container(
+                                  height: 36,
                                   padding: const EdgeInsets.symmetric(
                                     vertical: 4,
                                   ),
