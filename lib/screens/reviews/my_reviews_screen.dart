@@ -24,9 +24,15 @@ class _MyReviewsScreenState extends State<MyReviewsScreen> {
         onSubmit: (r) async {
           final user = Supabase.instance.client.auth.currentUser;
           if (user != null) {
+            print('Отправляем отзыв: ${r.toMap()}');
             await ReviewsService().addReview(r, user.id);
+            if (context.mounted) Navigator.pop(context, r);
+          } else {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Необходимо авторизоваться')));
+            }
           }
-          if (context.mounted) Navigator.pop(context);
         },
       ),
     );

@@ -87,6 +87,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
   Future<void> _addReview(Review review) async {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId != null) {
+      // debug print before saving review
+      print('Отправляем отзыв: ${review.toMap()}');
       await ReviewsService().addReview(review, userId);
       await _loadAll();
       if (_myLoaded) await _loadMy();
@@ -94,8 +96,13 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Спасибо! Отзыв добавлен')));
       }
+      if (mounted) Navigator.pop(context, review);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Необходимо авторизоваться')));
+      }
     }
-    if (mounted) Navigator.pop(context);
   }
 
   Future<void> _editReview(Review review) async {
@@ -107,9 +114,15 @@ class _ReviewsScreenState extends State<ReviewsScreen>
         onSubmit: (r) async {
           final user = Supabase.instance.client.auth.currentUser;
           if (user != null) {
+            print('Отправляем отзыв: ${r.toMap()}');
             await ReviewsService().addReview(r, user.id);
+            if (context.mounted) Navigator.pop(context, r);
+          } else {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Необходимо авторизоваться')));
+            }
           }
-          if (context.mounted) Navigator.pop(context);
         },
       ),
     );
