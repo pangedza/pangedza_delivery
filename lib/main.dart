@@ -35,7 +35,13 @@ Future<void> main() async {
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
     httpClient: CustomHttpClient(),
+    authFlowType: AuthFlowType.pkce,
   );
+  print('Текущий пользователь: '
+      '${Supabase.instance.client.auth.currentUser}');
+  if (Supabase.instance.client.auth.currentUser == null) {
+    await Supabase.instance.client.auth.recoverSession();
+  }
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
   runApp(
