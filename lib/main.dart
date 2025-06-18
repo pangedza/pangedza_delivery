@@ -16,6 +16,7 @@ import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/reviews/reviews_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
@@ -138,6 +139,7 @@ class _MainScreenState extends State<MainScreen> {
       MenuScreen(),
       CartScreen(),
       OrderHistoryScreen(),
+      ReviewsScreen(),
     ];
     return IndexedStack(index: _currentIndex, children: screens);
   }

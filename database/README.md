@@ -12,5 +12,6 @@ Run the scripts on your Supabase instance or incorporate them into your migratio
 - `seed_image_placeholders.sql` – fills `dishes.image_url` with placeholder URLs if empty
 - `patch_orders_table.sql` – updates `orders` with required fields
 - `patch_users_table.sql` – adds a `gender` column to `users`
-- `seed_snacks_category.sql` – adds the "Закуски" category with a sample dish
-- `enable_rls.sql` – enables RLS and creates policies for `categories`, `dishes` and `reviews`
+- `patch_reviews_table.sql` – updates the `reviews` table with photo support
+  - `seed_snacks_category.sql` – adds the "Закуски" category with a sample dish
+  - `enable_rls.sql` – enables RLS and creates policies for `categories`, `dishes` and `reviews`

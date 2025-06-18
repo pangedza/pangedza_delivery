@@ -29,6 +29,10 @@ class BottomNavigation extends StatelessWidget {
         icon: Icon(Icons.history),
         label: 'История',
       ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.reviews),
+        label: 'Отзывы',
+      ),
     ];
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
