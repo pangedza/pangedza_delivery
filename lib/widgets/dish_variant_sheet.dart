@@ -57,20 +57,18 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
                         height: imageHeight,
                         width: double.infinity,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        errorBuilder: (_, __, ___) => Image.asset(
+                          'assets/images/placeholder.jpg',
                           height: imageHeight,
                           width: double.infinity,
-                          color: Colors.grey.shade300,
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.fastfood, size: 64),
+                          fit: BoxFit.cover,
                         ),
                       )
-                    : Container(
+                    : Image.asset(
+                        'assets/images/placeholder.jpg',
                         height: imageHeight,
                         width: double.infinity,
-                        color: Colors.grey.shade300,
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.fastfood, size: 64),
+                        fit: BoxFit.cover,
                       ),
               ),
               const SizedBox(height: 8),

@@ -60,6 +60,11 @@ class ReviewCard extends StatelessWidget {
                   review.photoUrl!,
                   height: 120,
                   fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Image.asset(
+                    'assets/images/placeholder.jpg',
+                    height: 120,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             const SizedBox(height: 8),
