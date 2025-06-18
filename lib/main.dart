@@ -36,12 +36,8 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
     httpClient: CustomHttpClient(),
     authFlowType: AuthFlowType.pkce,
+    persistSession: false,
   );
-  print('Текущий пользователь: '
-      '${Supabase.instance.client.auth.currentUser}');
-  if (Supabase.instance.client.auth.currentUser == null) {
-    await Supabase.instance.client.auth.recoverSession();
-  }
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
   runApp(
@@ -90,8 +86,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ru', '')],
-      initialRoute:
-          ProfileModel.instance.id != null ? '/main' : '/',
+      initialRoute: '/login',
       routes: {
         '/register': (_) => RegisterScreen(),
         '/login': (_) => LoginScreen(),

@@ -5,7 +5,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../services/users_service.dart';
 import '../models/profile_model.dart';
 import '../theme/app_theme.dart';
-import '../utils/shared_prefs.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,7 +38,6 @@ class LoginScreenState extends State<LoginScreen> {
     }
 
     final userId = response['id'] as String;
-    await SharedPrefs.instance.setUserId(userId);
     final profile = await UsersService().getProfile(userId);
     if (!mounted) return;
     if (profile != null) {
