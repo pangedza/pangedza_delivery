@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'dart:io';
+
 import 'package:pangedza_delivery/theme/app_theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
+import 'utils/custom_http_client.dart';
 import 'constants/supabase_keys.dart';
 import 'models/profile_model.dart';
 import 'services/menu_loader.dart';
@@ -25,23 +26,15 @@ import 'models/cart_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // print('Checking .env exists: ${File('.env').existsSync()}'); // [removed for production]
   try {
     await dotenv.load(fileName: '.env');
   } catch (e) {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
-  // Globally override the default User-Agent for all HTTP clients to avoid
-  // FormatException on Windows when localized OS strings are used.
-  HttpOverrides.global = _NoUserAgentHttpOverride();
   await Supabase.initialize(
     url: supabaseUrl,
     anonKey: supabaseAnonKey,
-    headers: {
-      // Provide a clean User-Agent so the Win32 HttpClient does not throw a
-      // FormatException when encountering localized OS version strings.
-      'User-Agent': 'flutter-${Platform.operatingSystem}',
-    },
+    httpClient: CustomHttpClient(),
   );
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
@@ -167,15 +160,3 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-/// Overrides the default [HttpClient] to provide a simple User-Agent header
-/// for all outgoing HTTP requests. This prevents `FormatException` errors on
-/// Windows when the system provides a localized OS version string with
-/// non-ASCII characters.
-class _NoUserAgentHttpOverride extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    final client = super.createHttpClient(context);
-    client.userAgent = 'flutter-app';
-    return client;
-  }
-}
