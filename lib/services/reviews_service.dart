@@ -28,23 +28,29 @@ class ReviewsService {
     String userId, {
     Uint8List? photo,
   }) async {
-    final data = review.toMap()
-      ..remove('id')
-      ..remove('user_name');
-    data['user_id'] = userId;
+    try {
+      final data = review.toMap()
+        ..remove('id')
+        ..remove('user_name');
+      data['user_id'] = userId;
 
-    if (photo != null) {
-      final fileName = 'review_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await _client.storage
-          .from('review-photos')
-          .uploadBinary(fileName, photo);
-      data['photo_url'] = _client.storage
-          .from('review-photos')
-          .getPublicUrl(fileName);
+      if (photo != null) {
+        final fileName = 'review_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        await _client.storage
+            .from('review-photos')
+            .uploadBinary(fileName, photo);
+        data['photo_url'] = _client.storage
+            .from('review-photos')
+            .getPublicUrl(fileName);
+      }
+
+      final response = await _client.from('reviews').insert(data).select();
+      print('Ответ Supabase: $response');
+    } catch (e, s) {
+      print('Ошибка при добавлении отзыва: $e');
+      print(s);
+      rethrow;
     }
-
-    final response = await _client.from('reviews').insert(data).select();
-    print('Ответ Supabase: $response');
   }
 
   Future<void> updateReview(Review review, {Uint8List? photo}) async {
