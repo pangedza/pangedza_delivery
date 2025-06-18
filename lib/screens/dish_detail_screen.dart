@@ -4,6 +4,7 @@ import '../models/dish_variant.dart';
 import '../models/modifier.dart';
 import '../models/cart_model.dart';
 import '../services/dish_service.dart';
+import '../widgets/modifier_counter_tile.dart';
 
 class DishDetailScreen extends StatefulWidget {
   final Dish dish;
@@ -14,13 +15,16 @@ class DishDetailScreen extends StatefulWidget {
 }
 
 class _DishDetailScreenState extends State<DishDetailScreen> {
-  final Set<Modifier> _selectedMods = {};
+  final Map<String, int> _modCounts = {};
   List<Modifier> _mods = [];
   
   @override
   void initState() {
     super.initState();
     _mods = widget.dish.modifiers;
+    for (final m in _mods) {
+      _modCounts.putIfAbsent(m.id, () => 0);
+    }
     if (_mods.isEmpty) {
       _loadModifiers();
     }
@@ -30,9 +34,12 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
     try {
       final mods = await DishService().fetchModifiers(widget.dish.id);
       if (mounted) {
-        setState(() {
-          _mods = mods;
-        });
+          setState(() {
+            _mods = mods;
+            for (final m in _mods) {
+              _modCounts.putIfAbsent(m.id, () => 0);
+            }
+          });
       }
     } catch (_) {
       // ignore errors
@@ -41,12 +48,23 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
 
   void _add() {
     final variant = DishVariant(title: '', price: widget.dish.price);
-    CartModel.instance.addItem(widget.dish, variant, _selectedMods.toList());
+    final mods = <Modifier>[];
+    _modCounts.forEach((id, count) {
+      final mod = _mods.firstWhere((m) => m.id == id);
+      for (int i = 0; i < count; i++) {
+        mods.add(mod);
+      }
+    });
+    CartModel.instance.addItem(widget.dish, variant, mods);
     Navigator.of(context).pop();
   }
 
   int get _priceWithMods =>
-      widget.dish.price + _selectedMods.fold(0, (s, m) => s + m.price);
+      widget.dish.price +
+          _modCounts.entries.fold(0, (s, e) {
+            final mod = _mods.firstWhere((m) => m.id == e.key);
+            return s + mod.price * e.value;
+          });
 
   List<Widget> _buildModifierWidgets() {
     if (_mods.isEmpty) return [];
@@ -63,19 +81,17 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
         ));
       }
       for (final m in list) {
-        final checked = _selectedMods.contains(m);
-        widgets.add(CheckboxListTile(
-          title: Text('${m.name}${m.price > 0 ? ' +${m.price} ₽' : ''}'),
-          value: checked,
-          onChanged: (_) {
-            setState(() {
-              if (checked) {
-                _selectedMods.remove(m);
-              } else {
-                _selectedMods.add(m);
-              }
-            });
-          },
+        _modCounts.putIfAbsent(m.id, () => 0);
+        final count = _modCounts[m.id]!;
+        widgets.add(ModifierCounterTile(
+          modifier: m,
+          count: count,
+          onDecrement: () => setState(() {
+            if (count > 0) _modCounts[m.id] = count - 1;
+          }),
+          onIncrement: () => setState(() {
+            _modCounts[m.id] = count + 1;
+          }),
         ));
       }
     });

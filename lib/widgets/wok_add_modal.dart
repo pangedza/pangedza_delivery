@@ -4,6 +4,7 @@ import '../models/dish.dart';
 import '../models/dish_variant.dart';
 import '../models/modifier.dart';
 import '../services/dish_service.dart';
+import 'modifier_counter_tile.dart';
 
 class WokAddModal extends StatefulWidget {
   final Dish dish;
@@ -16,13 +17,16 @@ class WokAddModal extends StatefulWidget {
 class _WokAddModalState extends State<WokAddModal> {
   int _qty = 1;
   Modifier? _selectedNoodle;
-  final Set<Modifier> _selectedAddons = {};
+  final Map<String, int> _addonCounts = {};
   List<Modifier> _mods = [];
 
   @override
   void initState() {
     super.initState();
     _mods = widget.dish.modifiers;
+    for (final m in _addonMods) {
+      _addonCounts.putIfAbsent(m.id, () => 0);
+    }
     if (_mods.isEmpty) {
       _loadModifiers();
     } else {
@@ -37,6 +41,9 @@ class _WokAddModalState extends State<WokAddModal> {
         setState(() {
           _mods = mods;
           _initDefaults();
+          for (final m in _addonMods) {
+            _addonCounts.putIfAbsent(m.id, () => 0);
+          }
         });
       }
     } catch (_) {}
@@ -49,10 +56,16 @@ class _WokAddModalState extends State<WokAddModal> {
     if (noodles.isNotEmpty && _selectedNoodle == null) {
       _selectedNoodle = noodles.first;
     }
+    for (final m in _addonMods) {
+      _addonCounts.putIfAbsent(m.id, () => 0);
+    }
   }
 
-  int get _priceWithMods =>
-      widget.dish.price + _selectedAddons.fold(0, (s, m) => s + m.price);
+  int get _priceWithMods => widget.dish.price +
+      _addonCounts.entries.fold(0, (s, e) {
+        final mod = _mods.firstWhere((m) => m.id == e.key, orElse: () => Modifier(id: '', name: '', price: 0));
+        return s + mod.price * e.value;
+      });
 
   List<Modifier> get _noodleMods => _mods
       .where((m) => (m.groupName ?? '').toLowerCase() == 'лапша')
@@ -66,7 +79,12 @@ class _WokAddModalState extends State<WokAddModal> {
     final variant = DishVariant(title: widget.dish.weight, price: widget.dish.price);
     final mods = <Modifier>[];
     if (_selectedNoodle != null) mods.add(_selectedNoodle!);
-    mods.addAll(_selectedAddons);
+    _addonCounts.forEach((id, count) {
+      final mod = _mods.firstWhere((m) => m.id == id);
+      for (int i = 0; i < count; i++) {
+        mods.add(mod);
+      }
+    });
     for (int i = 0; i < _qty; i++) {
       CartModel.instance.addItem(widget.dish, variant, mods);
     }
@@ -104,19 +122,17 @@ class _WokAddModalState extends State<WokAddModal> {
           child: Text('Добавки', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         ...addons.map((m) {
-          final checked = _selectedAddons.contains(m);
-          return CheckboxListTile(
-            title: Text('${m.name}${m.price > 0 ? ' +${m.price} ₽' : ''}'),
-            value: checked,
-            onChanged: (_) {
-              setState(() {
-                if (checked) {
-                  _selectedAddons.remove(m);
-                } else {
-                  _selectedAddons.add(m);
-                }
-              });
-            },
+          _addonCounts.putIfAbsent(m.id, () => 0);
+          final count = _addonCounts[m.id]!;
+          return ModifierCounterTile(
+            modifier: m,
+            count: count,
+            onDecrement: () => setState(() {
+              if (count > 0) _addonCounts[m.id] = count - 1;
+            }),
+            onIncrement: () => setState(() {
+              _addonCounts[m.id] = count + 1;
+            }),
           );
         }),
       ],
@@ -134,6 +150,13 @@ class _WokAddModalState extends State<WokAddModal> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: d.imageUrl.isNotEmpty
