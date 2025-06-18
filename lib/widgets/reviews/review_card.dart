@@ -53,6 +53,25 @@ class ReviewCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(review.text),
+            if (review.photoUrl != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Image.network(
+                  review.photoUrl!,
+                  height: 120,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            const SizedBox(height: 8),
+            Row(
+              children: const [
+                Icon(Icons.thumb_up_alt_outlined, size: 16, color: Colors.grey),
+                SizedBox(width: 12),
+                Icon(Icons.mode_comment_outlined, size: 16, color: Colors.grey),
+                SizedBox(width: 12),
+                Icon(Icons.photo_outlined, size: 16, color: Colors.grey),
+              ],
+            ),
           ],
         ),
       ),

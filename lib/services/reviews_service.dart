@@ -26,24 +26,33 @@ class ReviewsService {
         .toList();
   }
 
-  Future<void> addReview(Review review, String userId) async {
+  Future<void> addReview(Review review, String userId, {Uint8List? photo}) async {
     final data = review.toMap()
       ..remove('id')
-      ..remove('user_name')
-      ..remove('photo_url')
-      ..['user_id'] = userId;
-    // debug print before sending review to Supabase
-    print('Добавляем отзыв: $data');
+      ..remove('user_name');
+    data['user_id'] = userId;
+
+    if (photo != null) {
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _client.storage.from('reviews').uploadBinary(fileName, photo);
+      data['photo_url'] = _client.storage.from('reviews').getPublicUrl(fileName);
+    }
+
     final response = await _client.from('reviews').insert(data).select();
-    // debug print with Supabase response
     print('Ответ Supabase: $response');
   }
 
-  Future<void> updateReview(Review review) async {
+  Future<void> updateReview(Review review, {Uint8List? photo}) async {
     final data = review.toMap()
       ..remove('id')
-      ..remove('user_name')
-      ..remove('photo_url');
+      ..remove('user_name');
+
+    if (photo != null) {
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _client.storage.from('reviews').uploadBinary(fileName, photo);
+      data['photo_url'] = _client.storage.from('reviews').getPublicUrl(fileName);
+    }
+
     await _client.from('reviews').update(data).eq('id', review.id);
   }
 
