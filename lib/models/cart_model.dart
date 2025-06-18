@@ -30,9 +30,19 @@ class CartModel extends ChangeNotifier {
 
   bool _modsEqual(List<Modifier> a, List<Modifier> b) {
     if (a.length != b.length) return false;
-    final aNames = a.map((e) => e.name).toSet();
-    final bNames = b.map((e) => e.name).toSet();
-    return setEquals(aNames, bNames);
+    final Map<String, int> aCount = {};
+    final Map<String, int> bCount = {};
+    for (final m in a) {
+      aCount[m.name] = (aCount[m.name] ?? 0) + 1;
+    }
+    for (final m in b) {
+      bCount[m.name] = (bCount[m.name] ?? 0) + 1;
+    }
+    if (aCount.length != bCount.length) return false;
+    for (final entry in aCount.entries) {
+      if (bCount[entry.key] != entry.value) return false;
+    }
+    return true;
   }
 
   void increment(CartItem item) {

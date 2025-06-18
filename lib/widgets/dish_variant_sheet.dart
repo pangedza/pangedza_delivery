@@ -42,6 +42,13 @@ class _DishVariantSheetState extends State<DishVariantSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ),
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: dish.imageUrl.isNotEmpty
