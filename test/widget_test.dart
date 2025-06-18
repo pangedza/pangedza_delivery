@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pangedza_delivery/main.dart';
 
 void main() {
-  testWidgets('App starts with login screen', (WidgetTester tester) async {
+  testWidgets('App starts with welcome screen', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
+    expect(find.text('Регистрация'), findsOneWidget);
     expect(find.text('Вход'), findsOneWidget);
-    expect(find.text('Войти'), findsOneWidget);
   });
 }
