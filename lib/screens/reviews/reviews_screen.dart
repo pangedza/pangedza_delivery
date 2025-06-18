@@ -99,19 +99,22 @@ class _ReviewsScreenState extends State<ReviewsScreen>
   }
 
   Future<void> _editReview(Review review) async {
-    final updated = await showModalBottomSheet<Review>(
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (_) => ReviewFormModal(
         review: review,
-        onSubmit: (r) => Navigator.pop(context, r),
+        onSubmit: (r) async {
+          final user = Supabase.instance.client.auth.currentUser;
+          if (user != null) {
+            await ReviewsService().addReview(r, user.id);
+          }
+          if (context.mounted) Navigator.pop(context);
+        },
       ),
     );
-    if (updated != null) {
-      await ReviewsService().updateReview(updated);
-      await _loadAll();
-      if (_myLoaded) await _loadMy();
-    }
+    await _loadAll();
+    if (_myLoaded) await _loadMy();
   }
 
   Future<void> _deleteReview(Review review) async {
