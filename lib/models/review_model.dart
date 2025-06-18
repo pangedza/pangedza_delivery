@@ -6,26 +6,9 @@ class ReviewModel extends ChangeNotifier {
   ReviewModel._();
   static final ReviewModel instance = ReviewModel._();
 
-  final List<LegacyReview> reviews = [
-    LegacyReview(
-      id: '1',
-      userId: 'user2',
-      dishId: 'Жареный рай',
-      stars: 5,
-      text: 'Очень вкусно!',
-      emoji: '😍',
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    ),
-    LegacyReview(
-      id: '2',
-      userId: 'user3',
-      dishId: 'Острые ощущения',
-      stars: 4,
-      text: 'Неплохо',
-      emoji: '🔥',
-      createdAt: DateTime.now().subtract(const Duration(days: 2)),
-    ),
-  ];
+  /// In-memory list of reviews. It starts empty and new reviews are added
+  /// using the current user's id from Supabase authentication.
+  final List<LegacyReview> reviews = [];
 
   void addReview(LegacyReview review) {
     reviews.insert(0, review);
