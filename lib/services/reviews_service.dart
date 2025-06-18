@@ -27,12 +27,20 @@ class ReviewsService {
   }
 
   Future<void> addReview(Review review, String userId) async {
-    final data = review.toMap()..['user_id'] = userId;
+    final data = review.toMap()
+      ..remove('id')
+      ..remove('user_name')
+      ..remove('photo_url')
+      ..['user_id'] = userId;
+    print('Добавляем отзыв: $data');
     await _client.from('reviews').insert(data);
   }
 
   Future<void> updateReview(Review review) async {
-    final data = review.toMap()..remove('id');
+    final data = review.toMap()
+      ..remove('id')
+      ..remove('user_name')
+      ..remove('photo_url');
     await _client.from('reviews').update(data).eq('id', review.id);
   }
 

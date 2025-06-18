@@ -27,10 +27,8 @@ class Review {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'user_name': userName,
         'text': text,
         'rating': rating,
         'created_at': createdAt.toIso8601String(),
-        'photo_url': photoUrl,
       };
 }
