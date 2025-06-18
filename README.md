@@ -42,10 +42,10 @@ For help getting started with Flutter development, view the [online documentatio
 
 ### Row level security
 
-Enable RLS on the `categories` and `dishes` tables so the client can read the data:
+Enable RLS on the `categories`, `dishes` and `reviews` tables so the client can read the data and authenticated users can create reviews:
 
 ```sql
 \i database/enable_rls.sql
 ```
 
-This script turns on row level security and adds simple `SELECT` policies allowing public read access.
+This script turns on row level security for all three tables. `categories` and `dishes` get public `SELECT` access, while `reviews` also restricts `INSERT` to the review author.
