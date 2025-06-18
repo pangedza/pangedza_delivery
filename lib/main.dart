@@ -83,7 +83,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('ru', '')],
-      initialRoute: '/login',
+      home: const WelcomeScreen(),
       routes: {
         '/register': (_) => RegisterScreen(),
         '/login': (_) => LoginScreen(),
