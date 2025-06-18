@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/review_model.dart';
 import '../models/legacy_review.dart';
 import '../widgets/app_drawer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LegacyReviewsScreen extends StatefulWidget {
   const LegacyReviewsScreen({super.key});
@@ -36,9 +37,15 @@ class _LegacyReviewsScreenState extends State<LegacyReviewsScreen>
           .showSnackBar(const SnackBar(content: Text('Выберите блюдо')));
       return;
     }
+    final user = Supabase.instance.client.auth.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Авторизуйтесь, чтобы оставить отзыв')));
+      return;
+    }
     final review = LegacyReview(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: currentUserId,
+      userId: user.id,
       dishId: _selectedDish!,
       stars: _stars,
       text: _textController.text.isEmpty ? null : _textController.text,
@@ -119,9 +126,11 @@ class _LegacyReviewsScreenState extends State<LegacyReviewsScreen>
   }
 
   Widget _buildMyReviews() {
-    final reviews = model.reviews
-        .where((r) => r.userId == currentUserId)
-        .toList();
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    if (userId == null) {
+      return const Center(child: Text('Авторизуйтесь, чтобы увидеть свои отзывы'));
+    }
+    final reviews = model.reviews.where((r) => r.userId == userId).toList();
     if (reviews.isEmpty) {
       return const Center(child: Text('Нет отзывов'));
     }
