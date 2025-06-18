@@ -23,6 +23,7 @@ dependencies:
   excel: ^2.0.4
   shared_preferences: ^2.2.2
   scrollable_positioned_list: ^0.3.8
+  image_picker: ^1.0.4
   flutter_localizations:
     sdk: flutter
 
