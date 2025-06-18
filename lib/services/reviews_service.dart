@@ -34,10 +34,12 @@ class ReviewsService {
     data['user_id'] = userId;
 
     if (photo != null) {
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await _client.storage.from('reviews').uploadBinary(fileName, photo);
+      final fileName = 'review_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _client.storage
+          .from('review-photos')
+          .uploadBinary(fileName, photo);
       data['photo_url'] = _client.storage
-          .from('reviews')
+          .from('review-photos')
           .getPublicUrl(fileName);
     }
 
@@ -51,10 +53,12 @@ class ReviewsService {
       ..remove('user_name');
 
     if (photo != null) {
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      await _client.storage.from('reviews').uploadBinary(fileName, photo);
+      final fileName = 'review_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _client.storage
+          .from('review-photos')
+          .uploadBinary(fileName, photo);
       data['photo_url'] = _client.storage
-          .from('reviews')
+          .from('review-photos')
           .getPublicUrl(fileName);
     }
 
