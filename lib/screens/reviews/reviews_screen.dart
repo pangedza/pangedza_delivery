@@ -100,7 +100,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Необходимо авторизоваться')));
+            const SnackBar(content: Text('Сначала нужно авторизоваться')));
       }
     }
   }
@@ -120,7 +120,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           } else {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Необходимо авторизоваться')));
+                  const SnackBar(content: Text('Сначала нужно авторизоваться')));
             }
           }
         },
