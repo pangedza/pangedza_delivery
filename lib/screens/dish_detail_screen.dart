@@ -116,20 +116,18 @@ class _DishDetailScreenState extends State<DishDetailScreen> {
                       height: 200,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
+                      errorBuilder: (_, __, ___) => Image.asset(
+                        'assets/images/placeholder.jpg',
                         height: 200,
                         width: double.infinity,
-                        color: Colors.grey.shade300,
-                        alignment: Alignment.center,
-                        child: const Icon(Icons.fastfood, size: 64),
+                        fit: BoxFit.cover,
                       ),
                     )
-                  : Container(
+                  : Image.asset(
+                      'assets/images/placeholder.jpg',
                       height: 200,
                       width: double.infinity,
-                      color: Colors.grey.shade300,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.fastfood, size: 64),
+                      fit: BoxFit.cover,
                     ),
             ),
             const SizedBox(height: 16),
