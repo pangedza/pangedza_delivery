@@ -13,4 +13,4 @@ Run the scripts on your Supabase instance or incorporate them into your migratio
 - `patch_orders_table.sql` – updates `orders` with required fields
 - `patch_users_table.sql` – adds a `gender` column to `users`
 - `seed_snacks_category.sql` – adds the "Закуски" category with a sample dish
-- `enable_rls.sql` – enables RLS and creates public SELECT policies for `categories` and `dishes` tables
+- `enable_rls.sql` – enables RLS and creates policies for `categories`, `dishes` and `reviews`
