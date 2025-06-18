@@ -18,6 +18,7 @@ The menu is loaded entirely from Supabase. Ensure these tables are present:
 - `dishes` with fields `id`, `name`, `price`, `weight`, `description`, `image_url`, `category_id`
 - `modifiers` with `id`, `name`, `price` and optional `group_name`
 - `dish_modifiers` linking dishes and modifiers
+- `reviews` for storing user reviews
 
 SQL patches for the database can be found in the [`database`](database) directory.
 Run `create_menu_tables.sql` first to create the `categories` and `dishes` tables,
