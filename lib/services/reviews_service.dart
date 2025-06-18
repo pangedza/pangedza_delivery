@@ -32,8 +32,11 @@ class ReviewsService {
       ..remove('user_name')
       ..remove('photo_url')
       ..['user_id'] = userId;
+    // debug print before sending review to Supabase
     print('Добавляем отзыв: $data');
-    await _client.from('reviews').insert(data);
+    final response = await _client.from('reviews').insert(data).select();
+    // debug print with Supabase response
+    print('Ответ Supabase: $response');
   }
 
   Future<void> updateReview(Review review) async {

@@ -30,6 +30,8 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
   void _submit() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
+    // debug print with review data before submit
+    print('Submit review text: "$text" rating: $_rating');
     final review = Review(
       id: widget.review?.id ??
           DateTime.now().millisecondsSinceEpoch.toString(),
@@ -38,6 +40,9 @@ class _ReviewFormModalState extends State<ReviewFormModal> {
       rating: _rating,
       createdAt: widget.review?.createdAt ?? DateTime.now(),
     );
+    // debug print with resulting review map
+    print('Review object: ${review.toMap()}');
+    // pass review to callback
     widget.onSubmit(review);
   }
 
