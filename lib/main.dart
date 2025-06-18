@@ -16,7 +16,6 @@ import 'screens/menu_screen.dart';
 import 'screens/cart_screen.dart';
 import 'screens/order_history_screen.dart';
 import 'screens/profile_screen.dart';
-import 'screens/reviews/reviews_screen.dart';
 import 'screens/notifications_screen.dart';
 import 'screens/about_screen.dart';
 import 'screens/addresses_screen.dart';
@@ -91,7 +90,6 @@ class MyApp extends StatelessWidget {
         '/profile': (_) => const MainScreen(initialIndex: 0),
         '/cart': (_) => const MainScreen(initialIndex: 2),
         '/history': (_) => const MainScreen(initialIndex: 3),
-        '/reviews': (_) => const MainScreen(initialIndex: 4),
         '/notifications': (_) => const NotificationsScreen(),
         '/about': (_) => const AboutScreen(),
         '/addresses': (_) => const AddressesScreen(),
@@ -140,7 +138,6 @@ class _MainScreenState extends State<MainScreen> {
       MenuScreen(),
       CartScreen(),
       OrderHistoryScreen(),
-      ReviewsScreen(),
     ];
     return IndexedStack(index: _currentIndex, children: screens);
   }
