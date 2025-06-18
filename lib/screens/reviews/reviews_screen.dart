@@ -3,9 +3,11 @@ import '../../widgets/app_drawer.dart';
 import '../../models/review.dart';
 import '../../widgets/reviews/review_card.dart';
 import '../../widgets/reviews/review_form_modal.dart';
+import '../../widgets/reviews/review_form.dart';
 import '../../widgets/reviews/report_review_dialog.dart';
 import '../../services/reviews_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:typed_data';
 
 class ReviewsScreen extends StatefulWidget {
   const ReviewsScreen({super.key});
@@ -76,27 +78,18 @@ class _ReviewsScreenState extends State<ReviewsScreen>
     });
   }
 
-  void _openForm() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => ReviewFormModal(onSubmit: _addReview),
-    );
-  }
-
-  Future<void> _addReview(Review review) async {
+  Future<void> _addReview(Review review, Uint8List? image) async {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId != null) {
       // debug print before saving review
       print('Отправляем отзыв: ${review.toMap()}');
-      await ReviewsService().addReview(review, userId);
+      await ReviewsService().addReview(review, userId, photo: image);
       await _loadAll();
       if (_myLoaded) await _loadMy();
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Спасибо! Отзыв добавлен')));
       }
-      if (mounted) Navigator.pop(context, review);
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -115,7 +108,7 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           final user = Supabase.instance.client.auth.currentUser;
           if (user != null) {
             print('Отправляем отзыв: ${r.toMap()}');
-            await ReviewsService().addReview(r, user.id);
+            await ReviewsService().addReview(r, user.id, photo: null);
             if (context.mounted) Navigator.pop(context, r);
           } else {
             if (context.mounted) {
@@ -255,15 +248,19 @@ class _ReviewsScreenState extends State<ReviewsScreen>
           children: [
             _loadingAll
                 ? const Center(child: CircularProgressIndicator())
-                : sortedAll.isEmpty
-                    ? const Center(child: Text('Пока нет отзывов'))
-                    : ListView.builder(
-                        itemCount: sortedAll.length,
-                        itemBuilder: (context, i) => ReviewCard(
-                          review: sortedAll[i],
-                          onReport: () => _report(sortedAll[i]),
-                        ),
-                      ),
+                : ListView.builder(
+                    itemCount: sortedAll.length + 1,
+                    itemBuilder: (context, i) {
+                      if (i == 0) {
+                        return ReviewForm(onSubmit: _addReview);
+                      }
+                      final review = sortedAll[i - 1];
+                      return ReviewCard(
+                        review: review,
+                        onReport: () => _report(review),
+                      );
+                    },
+                  ),
             _loadingMy
                 ? const Center(child: CircularProgressIndicator())
                 : sortedMy.isEmpty
@@ -273,22 +270,6 @@ class _ReviewsScreenState extends State<ReviewsScreen>
                         itemBuilder: (context, i) => _buildMyCard(sortedMy[i]),
                       ),
           ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFE30613),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              onPressed: _openForm,
-              child: const Text('Оставить отзыв'),
-            ),
-          ),
         ),
       ),
     );
