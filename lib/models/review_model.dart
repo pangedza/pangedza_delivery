@@ -54,5 +54,3 @@ class ReviewModel extends ChangeNotifier {
   }
 }
 
-const currentUserId = 'user1';
-
