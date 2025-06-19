@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.pangedza_delivery"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 33
     ndkVersion = "27.0.12077973"
 
     compileOptions {
