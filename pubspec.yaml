@@ -7,6 +7,7 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
+  sign_in_with_apple: ^5.0.0
   flutter:
     sdk: flutter
   mask_text_input_formatter: ^2.4.0
@@ -41,10 +42,3 @@ flutter:
     - assets/data/pangedza_menu_full_template (3).xlsx
     - assets/images/placeholder.jpg
 
-dependency_overrides:
-  sign_in_with_apple:
-    path: overrides/sign_in_with_apple
-  sign_in_with_apple_platform_interface:
-    path: overrides/sign_in_with_apple_platform_interface
-  sign_in_with_apple_web:
-    path: overrides/sign_in_with_apple_web
