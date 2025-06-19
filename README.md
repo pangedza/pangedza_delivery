@@ -1,6 +1,7 @@
 # pangedza_delivery
 
-A Flutter project with support for Android, Web and Windows platforms.
+A Flutter project with support for Android, Web and Windows platforms. iOS and
+macOS files have been removed to avoid the need for Xcode.
 
 ## Getting Started
 
