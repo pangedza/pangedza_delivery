@@ -37,5 +37,5 @@ tasks.register<Delete>("clean") {
 }
 
 dependencies {
-    classpath 'com.android.tools.build:gradle:8.1.0' // или новее
+    classpath("com.android.tools.build:gradle:8.2.1")
 }
