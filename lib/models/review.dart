@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Review {
   final String id;
   final String? userId;
@@ -31,7 +29,8 @@ class Review {
           : int.tryParse(map['rating']?.toString() ?? '') ?? 1,
       photoUrl: map['photo_url']?.toString(),
       createdAt:
-          DateTime.tryParse(map['created_at']?.toString() ?? '') ?? DateTime.now(),
+          DateTime.tryParse(map['created_at']?.toString() ?? '') ??
+          DateTime.now(),
     );
   }
 }

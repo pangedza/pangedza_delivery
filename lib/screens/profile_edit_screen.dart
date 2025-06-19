@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../models/profile_model.dart';
 import '../services/users_service.dart';
-import '../di.dart';
 
 class DateInputFormatter extends TextInputFormatter {
   @override
@@ -71,8 +70,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     if (picked != null) {
       setState(() {
         _birthDate = picked;
-        _dateController.text =
-            DateFormat('dd/MM/yyyy', 'ru').format(_birthDate!);
+        _dateController.text = DateFormat(
+          'dd/MM/yyyy',
+          'ru',
+        ).format(_birthDate!);
       });
     }
   }
@@ -80,7 +81,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   Future<void> _save() async {
     DateTime? manualDate;
     try {
-      manualDate = DateFormat('dd/MM/yyyy', 'ru').parseStrict(_dateController.text);
+      manualDate = DateFormat(
+        'dd/MM/yyyy',
+        'ru',
+      ).parseStrict(_dateController.text);
     } catch (_) {}
     _birthDate = manualDate ?? _birthDate;
     profile.updateName(_nameController.text);
@@ -97,9 +101,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Редактировать профиль'),
-      ),
+      appBar: AppBar(title: const Text('Редактировать профиль')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -116,9 +118,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                   controller: _dateController,
                   keyboardType: TextInputType.datetime,
                   inputFormatters: [DateInputFormatter()],
-                  decoration: const InputDecoration(
-                    labelText: 'Дата рождения',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Дата рождения'),
                 ),
               ),
             ),
@@ -126,7 +126,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
             DropdownButtonFormField<String>(
               value: _gender,
               items: const [
-                DropdownMenuItem(value: 'не выбрано', child: Text('Не выбрано')),
+                DropdownMenuItem(
+                  value: 'не выбрано',
+                  child: Text('Не выбрано'),
+                ),
                 DropdownMenuItem(value: 'мужчина', child: Text('Мужчина')),
                 DropdownMenuItem(value: 'женщина', child: Text('Женщина')),
               ],

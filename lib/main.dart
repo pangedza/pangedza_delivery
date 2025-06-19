@@ -5,7 +5,6 @@ import 'package:pangedza_delivery/theme/app_theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
-import 'utils/custom_http_client.dart';
 import 'constants/supabase_keys.dart';
 import 'models/profile_model.dart';
 import 'services/menu_loader.dart';
@@ -31,10 +30,7 @@ Future<void> main() async {
   } catch (e) {
     // print('Ошибка загрузки .env: $e'); // [removed for production]
   }
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnonKey);
   await MenuLoader.loadIfNeeded();
   await ProfileModel.instance.load();
   runApp(
@@ -119,8 +115,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     profile.addListener(_profileChanged);
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => profile.load());
+    WidgetsBinding.instance.addPostFrameCallback((_) => profile.load());
   }
 
   @override
@@ -155,4 +150,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-

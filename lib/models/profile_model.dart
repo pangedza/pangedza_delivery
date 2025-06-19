@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import '../services/users_service.dart';
 import 'address_model.dart';
 
 class ProfileModel extends ChangeNotifier {

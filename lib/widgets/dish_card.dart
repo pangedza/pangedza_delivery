@@ -63,7 +63,7 @@ class DishCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         height: 100,
                         width: double.infinity,
                         child: ClipRRect(
@@ -124,9 +124,7 @@ class DishCard extends StatelessWidget {
                                       : hasMods
                                       ? () => _openDetail(context)
                                       : add,
-                                  child: const Text(
-                                    'Добавить',
-                                  ),
+                                  child: const Text('Добавить'),
                                 )
                               : Container(
                                   height: 36,
@@ -138,7 +136,8 @@ class DishCard extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       IconButton(
                                         iconSize: 20,
@@ -155,8 +154,9 @@ class DishCard extends StatelessWidget {
                                               break;
                                             }
                                           }
-                                          if (item != null)
+                                          if (item != null) {
                                             cart.decrement(item);
+                                          }
                                         },
                                       ),
                                       Text(
