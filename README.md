@@ -1,6 +1,6 @@
 # pangedza_delivery
 
-A new Flutter project.
+A Flutter project with support for Android, Web and Windows platforms.
 
 ## Getting Started
 
