@@ -40,3 +40,8 @@ flutter:
     - assets/icons/
     - assets/data/pangedza_menu_full_template (3).xlsx
     - assets/images/placeholder.jpg
+
+dependency_overrides:
+  sign_in_with_apple: ^0.1.0
+  sign_in_with_apple_platform_interface: ^1.0.0
+  sign_in_with_apple_web: ^1.0.0
