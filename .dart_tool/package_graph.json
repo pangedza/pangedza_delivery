@@ -598,16 +598,6 @@
       ]
     },
     {
-      "name": "sign_in_with_apple",
-      "version": "5.0.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "sign_in_with_apple_platform_interface",
-        "sign_in_with_apple_web"
-      ]
-    },
-    {
       "name": "hive_flutter",
       "version": "1.1.0",
       "dependencies": [
@@ -1032,25 +1022,6 @@
       ]
     },
     {
-      "name": "sign_in_with_apple_web",
-      "version": "1.0.1",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
-        "js",
-        "sign_in_with_apple_platform_interface"
-      ]
-    },
-    {
-      "name": "sign_in_with_apple_platform_interface",
-      "version": "1.1.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "plugin_platform_interface"
-      ]
-    },
-    {
       "name": "typed_data",
       "version": "1.4.0",
       "dependencies": [
@@ -1125,13 +1096,6 @@
       "dependencies": []
     },
     {
-      "name": "js",
-      "version": "0.6.7",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
       "name": "html",
       "version": "0.15.6",
       "dependencies": [
@@ -1144,6 +1108,42 @@
       "version": "1.0.2",
       "dependencies": [
         "source_span"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple",
+      "version": "5.0.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "sign_in_with_apple_platform_interface",
+        "sign_in_with_apple_web"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple_web",
+      "version": "1.0.1",
+      "dependencies": [
+        "flutter",
+        "flutter_web_plugins",
+        "js",
+        "sign_in_with_apple_platform_interface"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "sign_in_with_apple_platform_interface",
+      "version": "1.1.0",
+      "dependencies": [
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
       ]
     }
   ],
