@@ -6,6 +6,13 @@ plugins {
 }
 
 android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 33
+        ...
+    }
     namespace = "com.example.pangedza_delivery"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"

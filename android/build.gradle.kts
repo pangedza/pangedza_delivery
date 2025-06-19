@@ -1,4 +1,6 @@
 buildscript {
+    ext.kotlin_version = '1.9.0' // ✅ обязательно!
+    ...
     repositories {
         google()
         mavenCentral()
@@ -27,4 +29,8 @@ subprojects {
 
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
+}
+
+dependencies {
+    classpath 'com.android.tools.build:gradle:8.1.0' // или новее
 }
