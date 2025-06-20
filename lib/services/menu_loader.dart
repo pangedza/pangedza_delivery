@@ -14,7 +14,7 @@ class MenuLoader {
     final client = Supabase.instance.client;
     try {
       final existing = await client.from('categories').select('id').limit(1);
-      if (existing is List && existing.isNotEmpty) return;
+      if (existing.isNotEmpty) return;
     } catch (_) {
       // ignore errors
     }
@@ -35,22 +35,18 @@ class MenuLoader {
     // preload existing categories
     try {
       final data = await client.from('categories').select('id, name');
-      if (data is List) {
-        for (final row in data) {
-          categories[row['name'] as String] = row['id'].toString();
-        }
-        sortOrder = categories.length;
+      for (final row in data) {
+        categories[row['name'] as String] = row['id'].toString();
       }
+      sortOrder = categories.length;
     } catch (_) {}
 
     // preload existing dishes to avoid duplicates
     final Set<String> dishNames = {};
     try {
       final list = await client.from('dishes').select('name');
-      if (list is List) {
-        for (final r in list) {
-          dishNames.add(r['name'] as String);
-        }
+      for (final r in list) {
+        dishNames.add(r['name'] as String);
       }
     } catch (_) {}
 
@@ -61,8 +57,12 @@ class MenuLoader {
       final title = row[1]?.value.toString().trim();
       final weight = row[2]?.value.toString().trim();
       final price = int.tryParse(row[3]?.value.toString() ?? '') ?? 0;
-      final description = row.length > 4 ? row[4]?.value.toString().trim() : null;
-      if (category == null || category.isEmpty || title == null || title.isEmpty) {
+      final description =
+          row.length > 4 ? row[4]?.value.toString().trim() : null;
+      if (category == null ||
+          category.isEmpty ||
+          title == null ||
+          title.isEmpty) {
         continue;
       }
       var categoryId = categories[category];

@@ -1,3 +1,3 @@
-const supabaseUrl = 'https://ezbnovazgamshjcovjhy.supabase.co';
+const supabaseUrl = 'https://ldncamguwbrpoouphewl.supabase.co';
 const supabaseAnonKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV6Ym5vdmF6Z2Ftc2hqY292amh5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk2NjIzNzQsImV4cCI6MjA2NTIzODM3NH0.bbM9xsLyhbFYfaD_EddrdLXrSOZ3v_jmZHWynW9zK-s';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkbmNhbWd1d2JycG9vdXBoZXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MjI0MzksImV4cCI6MjA2NTk5ODQzOX0.tLQJugzPRJJhduarE2pbHS_ov1bnmklsWoyaiNS3Wk8';

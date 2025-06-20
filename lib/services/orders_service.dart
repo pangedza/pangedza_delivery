@@ -22,12 +22,12 @@ class OrdersService {
   }
 
   Future<bool> createOrder(
-      CartModel cart,
-      ProfileModel profile,
-      String deliveryType, {
-      AddressModel? address,
-      String payment = '',
-    }) async {
+    CartModel cart,
+    ProfileModel profile,
+    String deliveryType, {
+    AddressModel? address,
+    String payment = '',
+  }) async {
     final userId = profile.id;
     if (userId == null) {
       debugPrint('User ID is null – unable to create order');
@@ -48,13 +48,10 @@ class OrdersService {
     debugPrint('Creating order payload: ${jsonEncode(orderData)}');
 
     try {
-      final response = await _client
-          .from('orders')
-          .insert(orderData)
-          .select()
-          .single();
+      final response =
+          await _client.from('orders').insert(orderData).select().single();
 
-      if (response == null || response['id'] == null) {
+      if (response['id'] == null) {
         debugPrint('Ошибка создания заказа: пустой ответ от сервера');
         return false;
       }
@@ -63,9 +60,8 @@ class OrdersService {
       final orderNumberRaw = response['order_number'];
       final pickup = deliveryType == 'pickup';
 
-      final numericId = idRaw is int
-          ? idRaw
-          : int.tryParse(idRaw?.toString() ?? '') ?? 0;
+      final numericId =
+          idRaw is int ? idRaw : int.tryParse(idRaw?.toString() ?? '') ?? 0;
 
       final orderNumber =
           (orderNumberRaw is int ? orderNumberRaw : null) ?? numericId;
@@ -73,9 +69,11 @@ class OrdersService {
       final order = Order(
         id: idRaw.toString(),
         orderNumber: orderNumber,
-        date: DateTime.tryParse(response['created_at']?.toString() ?? '') ?? DateTime.now(),
+        date: DateTime.tryParse(response['created_at']?.toString() ?? '') ??
+            DateTime.now(),
         items: cart.items
-            .map((e) => CartItem(dish: e.dish, variant: e.variant, quantity: e.quantity))
+            .map((e) => CartItem(
+                dish: e.dish, variant: e.variant, quantity: e.quantity))
             .toList(),
         total: cart.total,
         name: profile.name,
@@ -106,8 +104,7 @@ class OrdersService {
     try {
       await _client
           .from('orders')
-          .update({'status': 'cancelled'})
-          .eq('id', order.id);
+          .update({'status': 'cancelled'}).eq('id', order.id);
       final orderIdForMessage =
           order.orderNumber != 0 ? order.orderNumber.toString() : order.id;
       await TelegramService.sendOrder(
