@@ -18,7 +18,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Menu')),
+      appBar: AppBar(title: const Text('Меню')),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: _loadCategories(),
         builder: (context, snapshot) {
