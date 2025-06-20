@@ -45,24 +45,24 @@ const kErrorBorderSide = BorderSide(color: Colors.red, width: 1);
 
 // Validator
 final passwordValidator = MultiValidator([
-  RequiredValidator(errorText: 'Password is required'),
-  MinLengthValidator(8, errorText: 'Password must be at least 8 digits long'),
+  RequiredValidator(errorText: 'Пароль обязателен'),
+  MinLengthValidator(8, errorText: 'Пароль должен быть не менее 8 символов'),
   PatternValidator(r'(?=.*?[#?!@$%^&*-/])',
-      errorText: 'Passwords must have at least one special character')
+      errorText: 'Пароль должен содержать специальный символ')
 ]);
 
 final emailValidator = MultiValidator([
-  RequiredValidator(errorText: 'Email is required'),
-  EmailValidator(errorText: 'Enter a valid email address')
+  RequiredValidator(errorText: 'Email обязателен'),
+  EmailValidator(errorText: 'Введите корректный адрес email')
 ]);
 
 final requiredValidator =
-    RequiredValidator(errorText: 'This field is required');
-final matchValidator = MatchValidator(errorText: 'passwords do not match');
+    RequiredValidator(errorText: 'Поле обязательно для заполнения');
+final matchValidator = MatchValidator(errorText: 'Пароли не совпадают');
 
 final phoneNumberValidator = MinLengthValidator(10,
-    errorText: 'Phone Number must be at least 10 digits long');
+    errorText: 'Номер телефона должен содержать минимум 10 цифр');
 
 // Common Text
 final Center kOrText = Center(
-    child: Text("Or", style: TextStyle(color: titleColor.withOpacity(0.7))));
+    child: Text('Или', style: TextStyle(color: titleColor.withOpacity(0.7))));
