@@ -1,0 +1,42 @@
+name: pangedza_delivery
+description: Приложение для доставки еды
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  scrollable_positioned_list: ^0.3.8
+  flutter:
+    sdk: flutter
+
+  # Пакеты из анализа
+  shared_preferences: ^2.2.2
+  provider: ^6.1.1
+  image_picker: ^1.0.4
+  uuid: ^4.2.1
+  mask_text_input_formatter: ^2.5.0
+  geocoding: ^4.0.0
+
+  # Web и платформенная поддержка
+  flutter_web_plugins:
+    sdk: flutter
+
+  # Работа с JSON и системными API
+  flutter_localizations:
+    sdk: flutter
+  intl: 0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
