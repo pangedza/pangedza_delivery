@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:foodly_ui/constants.dart';
 
 import '../../components/dot_indicators.dart';
-import '../auth/sign_in_screen.dart';
+import '../auth_screen.dart';
 import 'components/onboard_content.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -53,7 +53,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
+                      builder: (context) => const AuthScreen(),
                     ),
                   );
                 },

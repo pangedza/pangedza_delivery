@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:foodly_ui/screens/auth/sign_in_screen.dart';
+import 'package:foodly_ui/screens/auth_screen.dart';
 
 import '../../components/buttons/socal_button.dart';
 import '../../components/welcome_text.dart';
@@ -49,7 +49,7 @@ class SignUpScreen extends StatelessWidget {
                           ..onTap = () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignInScreen(),
+                                  builder: (context) => const AuthScreen(),
                                 ),
                               ),
                       ),

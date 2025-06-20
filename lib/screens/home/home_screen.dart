@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FittedBox(
               fit: BoxFit.cover,
               child: Image.network(
-                FirebaseAuth.instance.currentUser?.photoURL ??
+                Supabase.instance.client.auth.currentUser?.userMetadata?['avatar_url'] ??
                     'https://www.ilovejapantours.com/images/easyblog_articles/6/doraemon-gadget-cat-from-the-future-wallpaper-4.jpg',
               ),
             ),
