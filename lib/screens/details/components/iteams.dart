@@ -5,16 +5,18 @@ import 'package:foodly_ui/constants.dart';
 import 'components/item_card.dart'; // import ItemCard
 
 class Items extends StatelessWidget {
-  const Items({Key? key, required this.demoData}) : super(key: key); // Add required parameter demoData
+  const Items(
+      {super.key, required this.demoData}); // Add required parameter demoData
 
-  final List<Map<String, dynamic>> demoData; // Add demoData as a required parameter
+  final List<Map<String, dynamic>>
+      demoData; // Add demoData as a required parameter
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: defaultPadding / 2),
+        const SizedBox(height: defaultPadding / 2),
         ...List.generate(
           demoData.length,
           (index) => Padding(
@@ -25,9 +27,9 @@ class Items extends StatelessWidget {
               description: demoData[index]["location"] ?? "No Location",
               image: demoData[index]["image"] ?? "No Image",
               foodType: demoData[index]["foodType"] ?? "Fried",
-              price: 0, 
-              priceRange: "\$ \$", 
-              press: () {}, 
+              price: 0,
+              priceRange: "\$ \$",
+              press: () {},
             ),
           ),
         ),

@@ -16,7 +16,7 @@ import 'components/medium_card_list.dart';
 import 'components/promotion_banner.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -30,29 +30,29 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void requestLocation() async {
-    Location location = new Location();
+    Location location = Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
         return;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
         return;
       }
     }
 
-    _locationData = await location.getLocation();
+    locationData = await location.getLocation();
     location.onLocationChanged.listen((LocationData currentLocation) async {
       double? lat = currentLocation.latitude;
       double? lon = currentLocation.longitude;
@@ -91,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FittedBox(
               fit: BoxFit.cover,
               child: Image.network(
-                Supabase.instance.client.auth.currentUser?.userMetadata?['avatar_url'] ??
+                Supabase.instance.client.auth.currentUser
+                        ?.userMetadata?['avatar_url'] ??
                     'https://www.ilovejapantours.com/images/easyblog_articles/6/doraemon-gadget-cat-from-the-future-wallpaper-4.jpg',
               ),
             ),
@@ -159,7 +160,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: demoMediumCardData.map((restaurant) {
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(
-                      defaultPadding, 0, defaultPadding, defaultPadding),
+                        defaultPadding, 0, defaultPadding, defaultPadding),
                     child: RestaurantInfoBigCard(
                       // Use demoBigImages list
                       images: [restaurant["image"]],
@@ -186,4 +187,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

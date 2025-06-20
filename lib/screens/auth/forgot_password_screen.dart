@@ -33,8 +33,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
 class ForgotPassForm extends StatefulWidget {
   const ForgotPassForm({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _ForgotPassFormState createState() => _ForgotPassFormState();
@@ -51,7 +51,7 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
         children: [
           // Email Field
           TextFormField(
-            validator: emailValidator,
+            validator: emailValidator.call,
             onSaved: (value) {},
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(hintText: "Email Address"),

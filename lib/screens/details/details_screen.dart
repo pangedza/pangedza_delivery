@@ -4,13 +4,13 @@ import 'package:foodly_ui/demoData.dart';
 import '../../constants.dart';
 
 class DetailsScreen extends StatelessWidget {
-  const DetailsScreen({Key? key}) : super(key: key);
+  const DetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [],
+        actions: const [],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -21,26 +21,26 @@ class DetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: defaultPadding,
                       vertical: defaultPadding / 2,
                     ),
                     child: Text(
                       restaurantName,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8.0,
                   ),
                   ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: restaurantMenu[restaurantName]!.length,
                     itemBuilder: (context, index) {
                       final item = restaurantMenu[restaurantName]![index];
                       return Padding(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: defaultPadding,
                           vertical: defaultPadding / 2,
                         ),

@@ -7,7 +7,7 @@ import '../../../constants.dart';
 import '../../../demoData.dart';
 
 class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+  const Body({super.key});
 
   @override
   _BodyState createState() => _BodyState();

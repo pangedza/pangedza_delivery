@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../constants.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
