@@ -15,11 +15,10 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application. dd
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'The Flutter Way - Foodly UI Kit',
+      title: 'Доставка еды',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: primaryColor),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -41,6 +40,7 @@ class MyApp extends StatelessWidget {
           hintStyle: TextStyle(color: bodyTextColor),
         ),
       ),
+      debugShowCheckedModeBanner: false,
       home: const OnboardingScreen(),
     );
   }
