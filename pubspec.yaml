@@ -19,6 +19,10 @@ dependencies:
   uuid: ^4.2.1
   mask_text_input_formatter: ^2.5.0
   geocoding: ^4.0.0
+  supabase_flutter: ^2.0.6
+  flutter_dotenv: ^5.1.0
+  http: ^1.2.1
+  excel: ^2.0.1
 
   # Web и платформенная поддержка
   flutter_web_plugins:
