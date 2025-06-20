@@ -4,7 +4,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../constants.dart';
 import 'menu_screen.dart';
-import 'register_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -15,36 +14,25 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final _phoneController = TextEditingController();
-  final _pinController = TextEditingController();
   bool _loading = false;
 
   Future<void> _login() async {
     final phone = _phoneController.text.trim();
-    final pin = _pinController.text.trim();
-    if (phone.isEmpty || pin.length != 4) return;
+    if (phone.isEmpty) return;
     setState(() => _loading = true);
     try {
-      final data = await Supabase.instance.client
+      Map<String, dynamic>? data = await Supabase.instance.client
           .from('users')
-          .select('id,pin')
+          .select('id')
           .eq('phone', phone)
           .maybeSingle();
-      if (data == null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Номер не найден')),
-          );
-        }
-        return;
-      }
-      if (data['pin'] != pin) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Неправильный PIN')),
-          );
-        }
-        return;
-      }
+
+      data ??= await Supabase.instance.client
+          .from('users')
+          .insert({'phone': phone})
+          .select('id')
+          .single();
+
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('user_id', data['id'] as int);
       if (mounted) {
@@ -78,29 +66,12 @@ class _AuthScreenState extends State<AuthScreen> {
               decoration: const InputDecoration(hintText: 'Номер телефона'),
             ),
             const SizedBox(height: defaultPadding),
-            TextField(
-              controller: _pinController,
-              keyboardType: TextInputType.number,
-              maxLength: 4,
-              obscureText: true,
-              decoration: const InputDecoration(hintText: 'Пин-код (4 цифры)'),
-            ),
-            const SizedBox(height: defaultPadding),
             ElevatedButton(
               onPressed: _loading ? null : _login,
               child: _loading
                   ? const CircularProgressIndicator()
                   : const Text('Войти'),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                );
-              },
-              child: const Text('Зарегистрироваться'),
-            )
           ],
         ),
       ),
