@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../components/buttons/socal_button.dart';
 import '../../../components/welcome_text.dart';
 import '../../../constants.dart';
-import '../../auth/sign_in_screen.dart';
+import '../../auth_screen.dart';
 import 'sign_up_form.dart';
 
 class Body extends StatelessWidget {
@@ -46,7 +46,7 @@ class Body extends StatelessWidget {
                           ..onTap = () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignInScreen(),
+                                  builder: (context) => const AuthScreen(),
                                 ),
                               ),
                       ),

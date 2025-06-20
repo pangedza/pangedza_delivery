@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
+// Supabase keys
+const String supabaseUrl = 'https://ldncamguwbrpoouphewl.supabase.co';
+const String supabaseAnonKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkbmNhbWd1d2JycG9vdXBoZXdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MjI0MzksImV4cCI6MjA2NTk5ODQzOX0.tLQJugzPRJJhduarE2pbHS_ov1bnmklsWoyaiNS3Wk8';
+
 // clolors that we use in our app
 const titleColor = Color(0xFF010F07);
 const primaryColor = Color(0xFFffc8dd);

@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:foodly_ui/constants.dart';
-import 'package:foodly_ui/screens/auth/sign_in_screen.dart';
+import 'package:foodly_ui/screens/auth_screen.dart';
 import 'package:foodly_ui/screens/profile/order_history_screen.dart';
 
 class Body extends StatelessWidget {
@@ -43,11 +43,11 @@ class Body extends StatelessWidget {
                 title: "Logout",
                 subTitle: "click here when you want logout",
                 press: () async {
-                  await FirebaseAuth.instance.signOut();
+                  await Supabase.instance.client.auth.signOut();
 
                   if (!context.mounted) return;
-                  Route route = MaterialPageRoute(
-                      builder: (context) => const SignInScreen());
+                  Route route =
+                      MaterialPageRoute(builder: (context) => const AuthScreen());
                   Navigator.pushReplacement(context, route);
                 },
               )
