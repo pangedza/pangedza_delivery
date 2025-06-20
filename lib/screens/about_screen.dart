@@ -1,8 +1,4 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geocoding/geocoding.dart';
 
 import '../services/info_service.dart';
 import '../models/about_info.dart';
@@ -17,8 +13,6 @@ class AboutScreen extends StatefulWidget {
 
 class _AboutScreenState extends State<AboutScreen> {
   AboutInfo? _info;
-  LatLng? _latLng;
-  GoogleMapController? _mapCtrl;
   bool _loading = true;
 
   @override
@@ -29,19 +23,9 @@ class _AboutScreenState extends State<AboutScreen> {
 
   Future<void> _load() async {
     final info = await InfoService().fetchAbout();
-    LatLng? coords;
-    if (info != null) {
-      try {
-        final res = await locationFromAddress(info.address);
-        if (res.isNotEmpty) {
-          coords = LatLng(res.first.latitude, res.first.longitude);
-        }
-      } catch (_) {}
-    }
     if (mounted) {
       setState(() {
         _info = info;
-        _latLng = coords;
         _loading = false;
       });
     }
@@ -49,7 +33,6 @@ class _AboutScreenState extends State<AboutScreen> {
 
   @override
   void dispose() {
-    _mapCtrl?.dispose();
     super.dispose();
   }
 
@@ -73,21 +56,6 @@ class _AboutScreenState extends State<AboutScreen> {
               : ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    if (Platform.isAndroid && _latLng != null)
-                      SizedBox(
-                        height: 200,
-                        child: GoogleMap(
-                          onMapCreated: (c) => _mapCtrl = c,
-                          initialCameraPosition:
-                              CameraPosition(target: _latLng!, zoom: 16),
-                          markers: {
-                            Marker(
-                              markerId: const MarkerId('pickup'),
-                              position: _latLng!,
-                            ),
-                          },
-                        ),
-                      ),
                     const SizedBox(height: 16),
                     ListTile(
                       leading: const Icon(Icons.location_on),
