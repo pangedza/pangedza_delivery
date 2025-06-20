@@ -37,26 +37,35 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: const Text('Вход')),
       body: Padding(
         padding: const EdgeInsets.all(defaultPadding),
         child: Column(
           children: [
             TextField(
               controller: _phoneController,
-              decoration: const InputDecoration(hintText: 'Phone number'),
+              decoration: const InputDecoration(hintText: 'Номер телефона'),
             ),
             if (_codeSent) ...[
               const SizedBox(height: defaultPadding),
               TextField(
                 controller: _otpController,
-                decoration: const InputDecoration(hintText: 'OTP Code'),
+                decoration: const InputDecoration(hintText: 'Код из SMS'),
               ),
             ],
             const SizedBox(height: defaultPadding),
             ElevatedButton(
               onPressed: _codeSent ? _verify : _sendCode,
-              child: Text(_codeSent ? 'Verify' : 'Send Code'),
+              child: Text(_codeSent ? 'Проверить' : 'Отправить код'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (_) => const MenuScreen()),
+                );
+              },
+              child: const Text('Войти как админ'),
             ),
           ],
         ),

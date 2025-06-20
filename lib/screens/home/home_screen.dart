@@ -23,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String locationStr = "loading...";
+  String locationStr = "загрузка...";
 
   _HomeScreenState() {
     requestLocation();
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Column(
           children: [
             Text(
-              "Delivery to".toUpperCase(),
+              "Доставка в".toUpperCase(),
               style: Theme.of(context)
                   .textTheme
                   .bodySmall!
@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: defaultPadding * 2),
               SectionTitle(
-                title: "Featured Partners",
+                title: "Избранные партнёры",
                 press: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // const PromotionBanner(), หน้าโปรโมชั่น
               const SizedBox(height: 20),
               SectionTitle(
-                title: "Best Pick",
+                title: "Лучший выбор",
                 press: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -151,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               const MediumCardList(),
               const SizedBox(height: 20),
-              SectionTitle(title: "All Restaurants", press: () {}),
+              SectionTitle(title: "Все рестораны", press: () {}),
               const SizedBox(height: 16),
 
               // Demo list of Big Cards
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       rating: restaurant["rating"],
                       numOfRating: 200,
                       deliveryTime: restaurant["delivertTime"],
-                      foodType: const ["Fried Chicken"],
+                      foodType: const ["Жареный цыплёнок"],
                       press: () => Navigator.push(
                         context,
                         MaterialPageRoute(
