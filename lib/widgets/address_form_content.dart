@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../models/address_model.dart';
-import '../screens/address_map_screen.dart';
 
 class AddressFormContent extends StatefulWidget {
   final AddressModel? address;
@@ -23,7 +20,6 @@ class _AddressFormContentState extends State<AddressFormContent> {
   late final TextEditingController _flatCtrl;
 
   String _type = '';
-  LatLng? _latLng;
 
   final _errors = <String, String?>{};
 
@@ -40,9 +36,6 @@ class _AddressFormContentState extends State<AddressFormContent> {
     _floorCtrl = TextEditingController(text: a?.floor ?? '');
     _flatCtrl = TextEditingController(text: a?.flat ?? '');
     _type = a?.type ?? '';
-    if (a?.lat != null && a?.lng != null) {
-      _latLng = LatLng(a!.lat!, a.lng!);
-    }
   }
 
   @override
@@ -90,19 +83,6 @@ class _AddressFormContentState extends State<AddressFormContent> {
     }
   }
 
-  Future<void> _showOnMap() async {
-    final addr = '${_streetCtrl.text} ${_houseCtrl.text}'.trim();
-    final result = await Navigator.push<LatLng?>(
-      context,
-      MaterialPageRoute(
-        builder: (_) => AddressMapScreen(address: addr, initial: _latLng),
-      ),
-    );
-    if (!context.mounted) return;
-    if (result != null) {
-      setState(() => _latLng = result);
-    }
-  }
 
   void _validate() {
     _errors.clear();
@@ -130,8 +110,6 @@ class _AddressFormContentState extends State<AddressFormContent> {
       code: _codeCtrl.text.isEmpty ? null : _codeCtrl.text,
       floor: _floorCtrl.text.isEmpty ? null : _floorCtrl.text,
       flat: _flatCtrl.text.isEmpty ? null : _flatCtrl.text,
-      lat: _latLng?.latitude,
-      lng: _latLng?.longitude,
     );
     if (widget.address == null) {
       await model.add(address);
@@ -272,15 +250,7 @@ class _AddressFormContentState extends State<AddressFormContent> {
                     icon: Icons.apartment,
                     label: 'Квартира/Офис',
                   ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: _showOnMap,
-                      child: const Text('Показать на карте'),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                 ],
               ),
             ),
