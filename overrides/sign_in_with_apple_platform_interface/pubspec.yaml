@@ -1,5 +1,0 @@
-name: sign_in_with_apple_platform_interface
-description: Dummy override
-version: 9.9.9
-environment:
-  sdk: '>=3.0.0 <4.0.0'
