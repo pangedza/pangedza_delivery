@@ -12,7 +12,7 @@ class DishService {
     final data =
         await _client.from('categories').select('*').order('sort_order');
     return data
-        .map((e) => Category.fromJson(e as Map<String, dynamic>))
+        .map((e) => Category.fromJson(e))
         .toList();
     return [];
   }
@@ -21,7 +21,7 @@ class DishService {
   Future<List<Dish>> fetchDishes(String categoryId) async {
     final data =
         await _client.from('dishes').select('*').eq('category_id', categoryId);
-    return data.map((e) => Dish.fromJson(e as Map<String, dynamic>)).toList();
+    return data.map((e) => Dish.fromJson(e)).toList();
     return [];
   }
 
